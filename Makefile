@@ -1,19 +1,19 @@
-NAME = minishell
+NAME       = minishell
 
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -Iinclude -Ilibft
-LDFLAGS = -lreadline
+CC         = cc
+CFLAGS     = -Wall -Wextra -Werror -Iinclude -Ilibft
+LDFLAGS    = -lreadline
 
-SRC_DIR  = .
-OBJ_DIR  = obj
-LIBFT_DIR = libft
+SRC_DIR    = src
+OBJ_DIR    = obj
+LIBFT_DIR  = libft
 
-SRCS = main.c
-OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
+SRCS       = $(wildcard $(SRC_DIR)/*.c)
+OBJS       = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT      = $(LIBFT_DIR)/libft.a
 
-all: $(NAME)
+all: $(OBJ_DIR) $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $@
@@ -21,11 +21,11 @@ $(NAME): $(LIBFT) $(OBJS)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	$(MAKE) clean -C $(LIBFT_DIR)
