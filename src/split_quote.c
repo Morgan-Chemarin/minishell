@@ -6,11 +6,18 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/04/22 14:11:14 by dev              ###   ########.fr       */
+/*   Updated: 2025/05/02 16:46:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static void	free_tokens(char **tokens, int count)
+{
+	while (count > 0)
+		free(tokens[--count]);
+	free(tokens);
+}
 
 char	*extract_word(char *line, int *i)
 {
@@ -33,7 +40,8 @@ char	*extract_word(char *line, int *i)
 		}
 		if (line[*i] == quote)
 			(*i)++;
-		// else si ya pas de qote pour fermer
+		else
+			return (NULL);
 	}
 	else
 	{
@@ -52,8 +60,11 @@ char	**split_with_quote(char *line)
 	char	**tokens;
 	int		i;
 	int		j;
+	char	*word;
 
-	tokens = malloc(sizeof(char *) * 256); // trouver moyen davoir le nombre de mot avant
+	tokens = malloc(sizeof(char *) * 256);
+	if (!tokens)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (line[i])
@@ -65,28 +76,22 @@ char	**split_with_quote(char *line)
 		if (line[i] == '|' || line[i] == '<' || line[i] == '>')
 		{
 			if (line[i] == '<' && line[i + 1] == '<')
-			{
-				tokens[j] = strndup("<<", 2);
-				j++;
-				i += 2;
-			}
+				tokens[j++] = strndup("<<", 2), i += 2;
 			else if (line[i] == '>' && line[i + 1] == '>')
-			{
-				tokens[j] = strndup(">>", 2);
-				j++;
-				i += 2;
-			}
+				tokens[j++] = strndup(">>", 2), i += 2;
 			else
-			{
-				tokens[j] = strndup(&line[i], 1);
-				j++;
-				i++;
-			}
+				tokens[j++] = strndup(&line[i++], 1);
 		}
 		else
 		{
-			tokens[j] = extract_word(line, &i);
-			j++;
+			word = extract_word(line, &i);
+			if (!word)
+			{
+				printf("Error: quote not close\n");
+				free_tokens(tokens, j);
+				return (NULL);
+			}
+			tokens[j++] = word;
 		}
 	}
 	tokens[j] = NULL;

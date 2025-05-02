@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/04/22 14:11:27 by dev              ###   ########.fr       */
+/*   Updated: 2025/05/02 16:19:57 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,56 @@
 
 t_cmd	*parser(t_token *tokens)
 {
-	t_cmd	*cmd;
-	t_token	*tmp;
-	int		arg_count;
+	t_cmd	*head = NULL;
+	t_cmd	*current = NULL;
 
-	cmd = malloc(sizeof(t_cmd));
-	tmp = tokens;
-	arg_count = 0;
-	cmd->args = malloc(sizeof(char *) * 100); // trouver moyen davoir le nombre de mot avant
-	cmd->input_file = NULL;
-	cmd->output_file = NULL;
-	cmd->append = 0;
-	cmd->next = NULL;
-	while (tmp)
+	while (tokens)
 	{
-		if (tmp->type == WORD)
-			cmd->args[arg_count++] = ft_strdup(tmp->value);
-		else if (tmp->type == REDIR_IN && tmp->next)
-			cmd->input_file = ft_strdup(tmp->next->value);
-		else if (tmp->type == REDIR_OUT && tmp->next)
-			cmd->output_file = ft_strdup(tmp->next->value);
-		else if (tmp->type == REDIR_APPEND && tmp->next)
+		t_cmd *new = new_cmd();
+		if (!head)
+			head = new;
+		else
+			current->next = new;
+		current = new;
+		int	arg_count = count_args(tokens);
+		current->args = malloc(sizeof(char *) * (arg_count + 1));
+		int	i = 0;
+
+		while (tokens && tokens->type != PIPE)
 		{
-			cmd->output_file = ft_strdup(tmp->next->value);
-			cmd->append = 1;
+			if (tokens->type == WORD)
+				current->args[i++] = strdup(tokens->value);
+			else if (tokens->type == REDIR_IN)
+			{
+				tokens = tokens->next;
+				if (tokens)
+					current->input_file = strdup(tokens->value);
+			}
+			else if (tokens->type == REDIR_OUT)
+			{
+				tokens = tokens->next;
+				if (tokens)
+				{
+					current->output_file = strdup(tokens->value);
+					current->append = 0;
+				}
+			}
+			else if (tokens->type == REDIR_APPEND)
+			{
+				tokens = tokens->next;
+				if (tokens)
+				{
+					current->output_file = strdup(tokens->value);
+					current->append = 1;
+				}
+			}
+			tokens = tokens->next;
 		}
-		tmp = tmp->next;
+		current->args[i] = NULL;
+		if (tokens && tokens->type == PIPE)
+			tokens = tokens->next;
 	}
-	cmd->args[arg_count] = NULL;
-	return (cmd);
+	return (head);
 }
 
 t_token_type	get_token_type(char *s)
