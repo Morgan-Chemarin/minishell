@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/05/02 16:37:28 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/18 16:23:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	char	**pre_tokens;
 	t_token	*tokens;
+	// t_env	*env;	
+	// t_env	*head;	
 	t_cmd	*cmd;
-	int		i;
+	// int		i;
 
-	i = 0;
+	(void)envp;
+	// i = 0;
 	while (1)
 	{
 		line = readline("minishell> ");
@@ -37,63 +40,11 @@ int	main(int argc, char **argv, char **envp)
 			if (!check_syntax_errors(tokens))
 				continue ;
 			cmd = parser(tokens);
-		}
-		
-		// fct exec
-		// if (!strcmp(cmd->args[0], "echo"))
-		// 	printf("cmd echo\n");
-		// else if (!strcmp(cmd->args[0], "cd"))
-		// 	printf("cmd cd\n");
-		// else
-		// 	printf("cmd inconne\n");
-
-		while (envp[i])
-		{
-			printf("%s\n", envp[i]);
-			i++;
-		}
-		
-
-		
-		t_cmd *current = cmd;
-		while (current)
-		{
-			pid_t pid = fork();
-			if (pid == 0)
-			{
-				if (!strcmp(current->args[0], "echo"))
-				{
-					int j = 1;
-					while (current->args[j])
-					{
-						printf("%s ", current->args[j]);
-						j++;
-					}
-					printf("\n");
-					exit(0);
-				}
-				else
-				{
-					execvp(current->args[0], current->args);
-					perror("execvp");
-					exit(EXIT_FAILURE);
-				}
-			}
-			else if (pid > 0)
-			{
-				int status;
-				waitpid(pid, &status, 0);
-			}
-			else
-			{
-				perror("fork");
-				exit(EXIT_FAILURE);
-			}
-			current = current->next;
+			printf("%d", cmd->type);
+			exec_cmd(cmd);
+			// check_args_builtin(); // fonction verifier l'ordre et la validité des argus pour une fonction builtin
 		}
 
-		
-		
 		// while (cmd->args[i])
 		// {
 		// 	printf("arg[%d] = %s\n", i, cmd->args[i]);
@@ -104,6 +55,71 @@ int	main(int argc, char **argv, char **envp)
 		// 	printf("input: %s\n", cmd->input_file);
 		// if (cmd->output_file)
 		// 	printf("output: %s\n", cmd->output_file);
+	}
+	//supprimer historique a la fin ctrl c ?
+	return (0);
+}
+
+
+	// env = new_env();
+		// head = env;
+
+		// while (envp[i])
+		// {
+		// 	env->name = ft_strdup(envp[i]); // fonction split =
+		// 	if (envp[i + 1])
+		// 	{
+		// 		env->next = new_env();
+		// 		env = env->next;
+		// 	}
+		// 	i++;
+		// }
+
+		
+
+		// env = head;
+
+		// while (env)
+		// {
+		// 	printf("%s\n", env->name);
+		// 	env = env->next;
+		// }
+
+	
+		// t_cmd *current = cmd;
+		// while (current)
+		// {
+		// 	pid_t pid = fork();
+		// 	if (pid == 0)
+		// 	{
+		// 		if (!strcmp(current->args[0], "echo"))
+		// 		{
+		// 			echo(current);
+		// 			exit(0);
+		// 		}
+		// 		else
+		// 		{
+		// 			execvp(current->args[0], current->args);
+		// 			perror("execvp");
+		// 			exit(EXIT_FAILURE);
+		// 		}
+		// 	}
+		// 	else if (pid > 0)
+		// 	{
+		// 		int status;
+		// 		waitpid(pid, &status, 0);
+		// 	}
+		// 	else
+		// 	{
+		// 		perror("fork");
+		// 		exit(EXIT_FAILURE);
+		// 	}
+		// 	current = current->next;
+		// }
+
+		
+		
+		
 
 
 		
@@ -127,7 +143,17 @@ int	main(int argc, char **argv, char **envp)
 		// 	j++;
 		// }
 
-	}
-	//supprimer historique a la fin ctrl c ?
-	return (0);
-}
+// exec_cmd
+		// t_cmd	*tmp = cmd;
+		// 	while (tmp)
+		// 	{
+		// 		if (tmp->type == CMD_BUILTNS)
+		// 		{
+		// 			if (check_builtins_args(tmp))
+		// 			{
+		// 				printf("la syntaxe est  pas good\n");
+		// 				break;
+		// 			}
+		// 		}
+		// 		tmp = tmp->next;
+		// 	}

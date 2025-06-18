@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/05/02 16:21:18 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/18 16:12:27 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,19 @@
 #include <sys/wait.h> 
 
 // ajouter strndup / strcmp / printf
+
+typedef struct s_env
+{
+	char			*name;
+	char			*value;
+	struct s_env	*next; 
+}	t_env;
+
+typedef enum e_cmd_type
+{
+	CMD_EXTERNAL,
+	CMD_BUILTNS
+}	t_cmd_type;
 
 typedef enum e_token_type
 {
@@ -47,6 +60,7 @@ typedef struct s_cmd
 	char			*input_file;
 	char			*output_file;
 	int				append;
+	t_cmd_type		type;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -60,5 +74,14 @@ char			**split_with_quote(char *line);
 
 t_cmd			*new_cmd(void);
 int				count_args(t_token *token);
+t_env			*new_env(void);
+
+int				check_builtins_args(t_cmd *cmd);
+
+void			exec_cmd(t_cmd *cmd);
+
+// void	ft_putstr(char *str);
+// int		ft_strcmp(char *s1, char *s2);
+// void	echo(t_cmd *cmd);
 
 #endif

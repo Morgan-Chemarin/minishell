@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:14:36 by dev               #+#    #+#             */
-/*   Updated: 2025/05/02 16:16:18 by dev              ###   ########.fr       */
+/*   Updated: 2025/05/12 18:53:15 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,15 @@ int	count_args(t_token *token)
 		token = token->next;
 	}
 	return (count);
+}
+
+t_env	*new_env(void)
+{
+	t_env	*env = malloc(sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->name = NULL;
+	env->value = NULL;
+	env->next = NULL;
+	return (env);
 }
