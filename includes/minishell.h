@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/06/18 16:12:27 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/19 00:11:46 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h> 
+
+# define RESET       "\001\033[0m\002"
+# define RED         "\001\033[1;31m\002"
+# define GREEN       "\001\033[0;32m\002"
+# define YELLOW      "\001\033[1;33m\002"
+# define BLUE        "\001\033[1;34m\002"
+# define MAGENTA     "\001\033[1;35m\002"
+# define CYAN        "\001\033[1;36m\002"
+# define WHITE       "\001\033[1;37m\002"
 
 // ajouter strndup / strcmp / printf
 
@@ -80,8 +89,14 @@ int				check_builtins_args(t_cmd *cmd);
 
 void			exec_cmd(t_cmd *cmd);
 
-// void	ft_putstr(char *str);
-// int		ft_strcmp(char *s1, char *s2);
-// void	echo(t_cmd *cmd);
+void	ft_putstr(char *str);
+int		ft_strcmp(char *s1, char *s2);
+
+void	ft_echo(t_cmd *cmd);
+// void	ft_env(t_env *envp);
+char	*ft_cd(t_cmd *cmd);
+void	ft_exit(t_cmd *cmd);
+// void	ft_export(t_cmd *cmd, t_env **env);
+void	ft_pwd(void);
 
 #endif

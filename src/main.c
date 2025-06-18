@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/06/18 16:23:29 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/19 00:11:42 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **envp)
 	// i = 0;
 	while (1)
 	{
-		line = readline("minishell> ");
+		line = readline(BLUE "minishell> " GREEN);
 		if (!line)
 			break ;
 		else {
@@ -40,7 +40,6 @@ int	main(int argc, char **argv, char **envp)
 			if (!check_syntax_errors(tokens))
 				continue ;
 			cmd = parser(tokens);
-			printf("%d", cmd->type);
 			exec_cmd(cmd);
 			// check_args_builtin(); // fonction verifier l'ordre et la validité des argus pour une fonction builtin
 		}

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/06/18 16:47:09 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/18 18:57:37 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,24 @@ void    exec_cmd(t_cmd *cmd)
         {
             if (!check_builtins_args(tmp))
                 return ;
-            printf("ya pas la fonction mais elle est reocnnu est bonne challah\n");
-            //appel buitlins une fois que la syntaxe des symboles est good + syntaxe de la collande 
+
+            if (!strcmp(tmp->args[0], "echo"))
+                ft_echo(tmp);
+            if (!strcmp(tmp->args[0], "cd"))
+                ft_cd(tmp);
+            if (!strcmp(tmp->args[0], "pwd"))
+                ft_pwd();
+            // if (!strcmp(tmp->args[0], "export"))
+            //     ft_export(tmp, env);
+            // if (!strcmp(tmp->args[0], "unset"))
+            //     ft_cd(tmp);
+            // if (!strcmp(tmp->args[0], "env"))
+            //     ft_env(tmp);
+            if (!strcmp(tmp->args[0], "exit"))
+                ft_exit(tmp);
+                // retour modifier env pwd
+            // printf("ya pas la fonction mais elle est reocnnu est bonne challah\n");
+            // appel buitlins une fois que la syntaxe des symboles est good + syntaxe de la collande 
         }
         else
         {
@@ -38,7 +54,7 @@ void    exec_cmd(t_cmd *cmd)
             else
                 waitpid(pid, NULL, 0);
 
-            printf("fct execv\n");
+            // printf("fct execv\n");
             //appel execv
         }
         tmp = tmp->next;

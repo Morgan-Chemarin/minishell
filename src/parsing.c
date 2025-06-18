@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/06/18 16:44:55 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/18 17:35:49 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ t_cmd	*parser(t_token *tokens)
 		current->args[i] = NULL;
 		if (current->args[0]
 			&& (!strcmp(current->args[0], "cd")
-			|| !strcmp(current->args[0], "exit")))
+			|| !strcmp(current->args[0], "exit")
+			|| !strcmp(current->args[0], "echo")))
 			current->type = CMD_BUILTNS;
 		else
 			current->type = CMD_EXTERNAL;
