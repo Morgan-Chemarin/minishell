@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 14:44:05 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 16:11:22 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void exec_builtin(t_cmd *cmd, t_env **env)
 		ft_cd(cmd, env);
 	else if (!strcmp(cmd->args[0], "pwd"))
 		ft_pwd();
-	// else if (!strcmp(cmd->args[0], "export"))
-	// 	ft_export(cmd, env);
+	else if (!strcmp(cmd->args[0], "export"))
+		ft_export(cmd, env);
 	else if (!strcmp(cmd->args[0], "unset"))
 		ft_unset(env, cmd);
 	else if (!strcmp(cmd->args[0], "env"))

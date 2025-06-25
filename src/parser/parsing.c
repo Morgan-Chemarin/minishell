@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 14:44:05 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 16:11:58 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_cmd	*parser(t_token *tokens)
 			|| !strcmp(current->args[0], "echo")
 			|| !strcmp(current->args[0], "env")
 			|| !strcmp(current->args[0], "exit")
-			// || !strcmp(current->args[0], "export")
+			|| !strcmp(current->args[0], "export")
 			|| !strcmp(current->args[0], "unset")
 			|| !strcmp(current->args[0], "pwd")))
 			current->type = CMD_BUILTNS;
