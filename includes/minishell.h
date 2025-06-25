@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/06/19 16:16:05 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 02:48:50 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+#include <sys/ioctl.h>
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h> 
 
@@ -29,7 +31,7 @@
 # define BLUE        "\001\033[1;34m\002"
 # define MAGENTA     "\001\033[1;35m\002"
 # define CYAN        "\001\033[1;36m\002"
-# define WHITE       "\001\033[1;37m\002"
+# define WHITE       "\001\033[0;37m\002"
 
 // ajouter strndup / strcmp / printf
 
@@ -39,12 +41,6 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next; 
 }	t_env;
-
-typedef enum e_cmd_type
-{
-	CMD_EXTERNAL,
-	CMD_BUILTNS
-}	t_cmd_type;
 
 typedef enum e_token_type
 {
@@ -62,6 +58,12 @@ typedef struct s_token
 	t_token_type	type;
 	struct s_token	*next;
 }	t_token;
+
+typedef enum e_cmd_type
+{
+	CMD_EXTERNAL,
+	CMD_BUILTNS
+}	t_cmd_type;
 
 typedef struct s_cmd
 {
@@ -83,19 +85,25 @@ char			**split_with_quote(char *line);
 
 t_cmd			*new_cmd(void);
 int				count_args(t_token *token);
-t_env			*new_env(void);
+
+// banner.c
+void			print_ascii_banner(void);
+
+// init_env.c
+t_env			*envp_to_list(char **envp);
 
 int				check_builtins_args(t_cmd *cmd);
 
-void			exec_cmd(t_cmd *cmd);
+void    exec_cmd(t_cmd *cmd, t_env *env);
 
 void	ft_putstr(char *str);
 int		ft_strcmp(char *s1, char *s2);
 
 void	ft_echo(t_cmd *cmd);
-// void	ft_env(t_env *envp);
-char	*ft_cd(t_cmd *cmd);
+void	ft_env(t_env *envp);
+void	ft_cd(t_cmd *cmd, t_env **env);
 void	ft_exit(t_cmd *cmd);
+void	ft_unset(t_env **env, t_cmd *cmd);
 // void	ft_export(t_cmd *cmd, t_env **env);
 void	ft_pwd(void);
 

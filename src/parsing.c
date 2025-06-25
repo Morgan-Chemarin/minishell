@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/06/18 17:35:49 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 02:54:49 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,23 @@
 
 t_cmd	*parser(t_token *tokens)
 {
-	t_cmd	*head = NULL;
-	t_cmd	*current = NULL;
+	t_cmd	*head;
+	t_cmd	*current;
+	t_cmd	*new;
+	int		i;
 
+	head = NULL;
+	current = NULL;
 	while (tokens)
 	{
-		t_cmd *new = new_cmd();
+		new = new_cmd();
 		if (!head)
 			head = new;
 		else
 			current->next = new;
 		current = new;
-		int	arg_count = count_args(tokens);
-		current->args = malloc(sizeof(char *) * (arg_count + 1));
-		int	i = 0;
-
+		current->args = malloc(sizeof(char *) * (count_args(tokens) + 1));
+		i = 0;
 		while (tokens && tokens->type != PIPE)
 		{
 			if (tokens->type == WORD)
@@ -39,6 +41,7 @@ t_cmd	*parser(t_token *tokens)
 				if (tokens)
 					current->input_file = strdup(tokens->value);
 			}
+			// REDIR_HEREDOC
 			else if (tokens->type == REDIR_OUT)
 			{
 				tokens = tokens->next;
@@ -62,8 +65,12 @@ t_cmd	*parser(t_token *tokens)
 		current->args[i] = NULL;
 		if (current->args[0]
 			&& (!strcmp(current->args[0], "cd")
+			|| !strcmp(current->args[0], "echo")
+			|| !strcmp(current->args[0], "env")
 			|| !strcmp(current->args[0], "exit")
-			|| !strcmp(current->args[0], "echo")))
+			// || !strcmp(current->args[0], "export")
+			|| !strcmp(current->args[0], "unset")
+			|| !strcmp(current->args[0], "pwd")))
 			current->type = CMD_BUILTNS;
 		else
 			current->type = CMD_EXTERNAL;

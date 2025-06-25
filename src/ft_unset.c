@@ -1,31 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 16:05:22 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/06/24 17:01:16 by dev              ###   ########.fr       */
+/*   Created: 2025/06/24 17:11:29 by dev               #+#    #+#             */
+/*   Updated: 2025/06/24 17:14:18 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_env(t_env *env)
+void	ft_unset(t_env **env, t_cmd *cmd)
 {
-	int	i;
+	int		i;
+	t_env	*current;
+	t_env	*previous;
 
 	i = 0;
-	while (env)
+	while (cmd->args[++i])
 	{
-		if (env->value)
+		previous = NULL;
+		current = *env;
+		while (current)
 		{
-			ft_putstr(env->name);
-			write(1, "=", 1);
-			ft_putstr(env->value);
-			write(1, "\n", 1);
+			if (ft_strcmp(current->name, cmd->args[i]) == 0)
+			{
+				if (previous)
+					previous->next = current->next;
+				else
+					*env = current->next;
+				free(current->name);
+				free(current->value);
+				free(current);
+			}
+			previous = current;
+			current = current->next;
 		}
-		env = env->next;
 	}
 }
