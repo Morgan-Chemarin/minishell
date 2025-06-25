@@ -3,40 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mchemari <mchemari@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 14:54:37 by mchemari          #+#    #+#             */
-/*   Updated: 2024/11/15 15:48:31 by mchemari         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:03:04 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *s)
+int	ft_atoi(char *str)
 {
 	int				i;
-	int				neg;
 	unsigned long	result;
+	int				sign;
 
 	i = 0;
+	sign = 1;
 	result = 0;
-	neg = 1;
-	while ((s[i] >= 9 && s[i] <= 13) || s[i] == 32)
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
 		i++;
-	if (s[i] == '+' || s[i] == '-')
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (s[i] == '-')
-			neg *= -1;
+		if (str[i] == '-')
+			sign *= -1;
 		i++;
 	}
-	while (s[i] >= '0' && s[i] <= '9')
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (result > 9223372036854775807 && neg == 1)
-			return (-1);
-		if (result > 9223372036854775807 && neg == -1)
+		if (result > 9223372036854775807 && (sign == -1))
 			return (0);
-		result = result * 10 + (s[i] - 48);
+		if (result > 9223372036854775807 && (sign == 1))
+			return (-1);
+		result = result * 10 + (str[i] - 48);
 		i++;
 	}
-	return (result * neg);
+	return (result * sign);
 }

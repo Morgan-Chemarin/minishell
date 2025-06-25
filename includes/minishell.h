@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 02:48:50 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 16:08:50 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <stdlib.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
@@ -75,36 +77,66 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-t_cmd			*parser(t_token *tokens);
-int				check_syntax_errors(t_token *tokens);
-t_token_type	get_token_type(char *s);
-t_token			*create_struct_tokens(char **split);
 
-char			*extract_word(char *line, int *i);
-char			**split_with_quote(char *line);
-
-t_cmd			*new_cmd(void);
-int				count_args(t_token *token);
-
-// banner.c
-void			print_ascii_banner(void);
-
-// init_env.c
-t_env			*envp_to_list(char **envp);
-
-int				check_builtins_args(t_cmd *cmd);
-
-void    exec_cmd(t_cmd *cmd, t_env *env);
-
-void	ft_putstr(char *str);
-int		ft_strcmp(char *s1, char *s2);
+// ** BUILTINS **
 
 void	ft_echo(t_cmd *cmd);
 void	ft_env(t_env *envp);
 void	ft_cd(t_cmd *cmd, t_env **env);
 void	ft_exit(t_cmd *cmd);
 void	ft_unset(t_env **env, t_cmd *cmd);
-// void	ft_export(t_cmd *cmd, t_env **env);
 void	ft_pwd(void);
+
+// export
+void	ft_env_export(t_env *envp);
+void	ft_export(t_cmd *cmd, t_env **env);
+
+// utils_builtins
+int		count_arg(char **arg);
+
+// ** ENV **
+
+// env_expansion.c
+char	*expand_variables(char *str, t_env *env);
+
+// init_env.c
+t_env	*envp_to_list(char **envp);
+
+
+// ** EXEC **
+
+// exec_cmd.c
+void    exec_cmd(t_cmd *cmd, t_env *env);
+
+// pipe_cmd.c
+t_cmd			*new_cmd(void);
+int				count_args(t_token *token);
+
+
+// ** PARSER **
+
+// parsing.c
+t_cmd			*parser(t_token *tokens);
+t_token			*create_struct_tokens(char **split);
+
+// split_quote.c
+char			**split_with_quote(char *line, t_env *env);
+int				count_unclosed_quotes(const char *line);
+
+
+// ** UTILS **
+
+// banner.c
+void			print_ascii_banner(void);
+
+// check_builtins_args.c
+int				check_builtins_args(t_cmd *cmd);
+
+// check_error.c
+int				check_syntax_errors(t_token *tokens);
+
+// utils_minishell.c
+void			ft_putstr(char *str);
+int				ft_strcmp(char *s1, char *s2);
 
 #endif

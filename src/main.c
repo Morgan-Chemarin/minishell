@@ -6,11 +6,36 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 02:37:58 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 14:53:57 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	*read_full_line(void)
+{
+	char	*line;
+	char	*tmp;
+	char	*new_line;
+
+	line = readline(GREEN "➜ " BLUE " minishell> " WHITE);
+	if (!line)
+		return (NULL);
+	while (count_unclosed_quotes(line))
+	{
+		new_line = readline("> ");
+		if (!new_line)
+			break ;
+		tmp = line;
+		line = ft_strjoin(tmp, "\n");
+		free(tmp);
+		tmp = line;
+		line = ft_strjoin(tmp, new_line);
+		free(tmp);
+		free(new_line);
+	}
+	return (line);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -27,7 +52,7 @@ int	main(int argc, char **argv, char **envp)
 	print_ascii_banner();
 	while (1)
 	{
-		line = readline(GREEN "➜ " BLUE " minishell> " WHITE);
+		line = read_full_line();
 		if (!line)
 			break ;
 		i = 0;
@@ -39,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 			continue;
 		}
 		add_history(line);
-		pre_tokens = split_with_quote(line);
+		pre_tokens = split_with_quote(line, env);
 		if (!pre_tokens)
 		{
 			free(line);

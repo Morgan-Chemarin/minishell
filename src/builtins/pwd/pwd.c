@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/25 16:05:26 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 16:05:28 by dev              ###   ########.fr       */
+/*   Created: 2025/04/27 15:29:57 by pibreiss          #+#    #+#             */
+/*   Updated: 2025/06/25 00:03:26 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../../includes/minishell.h"
 
-void	*ft_memset(void	*s, int c, size_t n)
+void	ft_pwd(void)
 {
-	size_t			i;
-	unsigned char	*p;
+	char	*cwd;
 
-	p = (unsigned char *)s;
-	i = 0;
-	while (i < n)
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
 	{
-		p[i] = (unsigned char)c;
-		i++;
+		perror("pwd");
+		free(cwd);
 	}
-	return (s);
+	else
+	{
+		ft_putstr(cwd);
+		write(1, "\n", 1);
+		free(cwd);
+	}
 }

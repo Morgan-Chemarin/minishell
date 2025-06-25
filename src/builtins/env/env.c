@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/25 16:05:26 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 16:05:28 by dev              ###   ########.fr       */
+/*   Created: 2025/04/27 16:05:22 by pibreiss          #+#    #+#             */
+/*   Updated: 2025/06/24 22:16:54 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../../includes/minishell.h"
 
-void	*ft_memset(void	*s, int c, size_t n)
+void	ft_env(t_env *env)
 {
-	size_t			i;
-	unsigned char	*p;
+	int	i;
 
-	p = (unsigned char *)s;
 	i = 0;
-	while (i < n)
+	while (env)
 	{
-		p[i] = (unsigned char)c;
-		i++;
+		if (env->value)
+		{
+			ft_putstr(env->name);
+			write(1, "=", 1);
+			ft_putstr(env->value);
+			write(1, "\n", 1);
+		}
+		env = env->next;
 	}
-	return (s);
 }
