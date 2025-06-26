@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 14:53:57 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/25 23:39:07 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,16 @@ char	*read_full_line(void)
 	return (line);
 }
 
+void    siging_handler(int sig)
+{
+    (void)sig;
+    write(130, "^C", 2);
+    write(1, "\n", 1);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -50,6 +60,8 @@ int	main(int argc, char **argv, char **envp)
 	
 	env = envp_to_list(envp);
 	print_ascii_banner();
+	signal(SIGINT, siging_handler);
+    signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		line = read_full_line();
