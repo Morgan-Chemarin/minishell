@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 23:39:07 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/26 19:46:35 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ int	main(int argc, char **argv, char **envp)
 	{
 		line = read_full_line();
 		if (!line)
-			break ;
+        {
+            write(1, "exit\n", 5);
+            break ;
+        }
 		i = 0;
 		while (line[i] && (line[i] == ' ' || line[i] == '\t'))
 			i++;

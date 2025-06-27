@@ -25,7 +25,6 @@ SRCS = \
 		$(SRC_DIR)/exec/exec_cmd.c \
 		$(SRC_DIR)/exec/pipe_cmd.c \
 		$(SRC_DIR)/utils/check_error.c \
-		$(SRC_DIR)/utils/check_builtins_args.c \
 		$(SRC_DIR)/utils/banner.c
 
 OBJS	= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/06/25 01:36:36 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/06/26 22:43:14 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,17 @@ void	ft_exit(t_cmd *cmd)
 	int	i;
 
 	i = 0;
-	write(1, "exit\n", 5);
+	int tty_fd = open("/dev/tty", O_WRONLY);
+	if (tty_fd >= 0)
+	{
+		write(tty_fd, "exit\n", 5);
+	}
+	else
+		write(STDOUT_FILENO, "exit\n", 5);
 	if (count_arg(cmd->args) == 1)
 	{
 		//IL FAUT TOUS FREE
+		close(tty_fd);
 		exit(0);
 	}
 	else if (count_arg(cmd->args) == 2)
@@ -40,13 +47,16 @@ void	ft_exit(t_cmd *cmd)
 		{
 			if (!(cmd->args[1][i] >= '0' && cmd->args[1][i] <= '9'))
 			{
-				write(2, "exit: numeric argument required\n", 32);
+				write(tty_fd, "exit: numeric argument required\n", 32);
+				close(tty_fd);
 				exit(2);
 			}
 			i++;
 		}
 		exit(ft_atoi(cmd->args[1]));
+		close(tty_fd);
 	}
 	else if (count_arg(cmd->args) > 2)
-		write(2, "exit: too many arguments\n", 25);
+		write(tty_fd, "exit: too many arguments\n", 25);
+		close(tty_fd);
 }

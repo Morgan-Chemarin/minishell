@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 23:41:14 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/26 20:01:39 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,6 @@ int				count_unclosed_quotes(const char *line);
 
 // banner.c
 void			print_ascii_banner(void);
-
-// check_builtins_args.c
-int				check_builtins_args(t_cmd *cmd);
 
 // check_error.c
 int				check_syntax_errors(t_token *tokens);

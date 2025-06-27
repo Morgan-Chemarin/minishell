@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 16:11:22 by dev              ###   ########.fr       */
+/*   Updated: 2025/06/26 22:34:51 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,31 +77,43 @@ void exec_builtin(t_cmd *cmd, t_env **env)
 		ft_exit(cmd);
 }
 
+
 void exec_cmd(t_cmd *cmd, t_env *env)
 {
-	int		in_fd;
+	int		in_fd = 0;
 	int		pipe_fd[2];
 	pid_t	pid;
 
-	in_fd = 0;
-	if (!cmd->next && is_stateful_builtin(cmd))
-	{
-		handle_redirections(cmd);
-		if (!check_builtins_args(cmd))
-			return;
-		exec_builtin(cmd, &env);
-		return;
-	}
 	while (cmd)
 	{
+		int is_last = (cmd->next == NULL);
+		int is_stateful = is_stateful_builtin(cmd);
+
+		// Cas 1 : built-in stateful, sans pipe
+		if (is_last && is_stateful)
+		{
+			int saved_stdin = dup(STDIN_FILENO);
+			int saved_stdout = dup(STDOUT_FILENO);
+			handle_redirections(cmd);
+			exec_builtin(cmd, &env);
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
+			return;
+		}
+
+		// Sinon, gestion avec pipe + fork
 		if (cmd->next && pipe(pipe_fd) < 0)
 		{
 			perror("pipe");
 			return;
 		}
+
 		pid = fork();
 		if (pid == 0)
 		{
+			// Child
 			if (in_fd != 0)
 			{
 				dup2(in_fd, STDIN_FILENO);
@@ -116,12 +128,10 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 			handle_redirections(cmd);
 			if (cmd->type == CMD_BUILTNS)
 			{
-				if (!check_builtins_args(cmd))
-					exit(1);
 				exec_builtin(cmd, &env);
-				exit(0);
+				exit(0); // quitte sans execvp
 			}
-			execvp(cmd->args[0], cmd->args); // rajouter list to char pour execvp
+			execvp(cmd->args[0], cmd->args);
 			perror("execvp");
 			exit(127);
 		}
@@ -130,6 +140,8 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 			perror("fork");
 			return;
 		}
+
+		// Parent
 		waitpid(pid, NULL, 0);
 		if (in_fd != 0)
 			close(in_fd);
@@ -141,3 +153,75 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 		cmd = cmd->next;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// void exec_cmd(t_cmd *cmd, t_env *env)
+// {
+// 	int		in_fd;
+// 	int		pipe_fd[2];
+// 	pid_t	pid;
+
+// 	in_fd = 0;
+// 	if (!cmd->next && is_stateful_builtin(cmd))
+// 	{
+// 		handle_redirections(cmd);
+// 		exec_builtin(cmd, &env);
+// 		return;
+// 	}
+// 	while (cmd)
+// 	{
+// 		if (cmd->next && pipe(pipe_fd) < 0)
+// 		{
+// 			perror("pipe");
+// 			return;
+// 		}
+// 		pid = fork();
+// 		if (pid == 0)
+// 		{
+// 			if (in_fd != 0)
+// 			{
+// 				dup2(in_fd, STDIN_FILENO);
+// 				close(in_fd);
+// 			}
+// 			if (cmd->next)
+// 			{
+// 				close(pipe_fd[0]);
+// 				dup2(pipe_fd[1], STDOUT_FILENO);
+// 				close(pipe_fd[1]);
+// 			}
+// 			handle_redirections(cmd);
+// 			if (cmd->type == CMD_BUILTNS)
+// 			{
+// 				exec_builtin(cmd, &env);
+// 				exit(0);
+// 			}
+// 			execvp(cmd->args[0], cmd->args); // rajouter list to char pour execvp
+// 			perror("execvp");
+// 			exit(127);
+// 		}
+// 		else if (pid < 0)
+// 		{
+// 			perror("fork");
+// 			return;
+// 		}
+// 		waitpid(pid, NULL, 0);
+// 		if (in_fd != 0)
+// 			close(in_fd);
+// 		if (cmd->next)
+// 		{
+// 			close(pipe_fd[1]);
+// 			in_fd = pipe_fd[0];
+// 		}
+// 		cmd = cmd->next;
+// 	}
+// }

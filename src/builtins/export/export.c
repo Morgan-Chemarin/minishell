@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:57:04 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/06/25 01:38:18 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/06/26 21:00:28 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	update_env(t_env **env, char **arg)
 	t_env	*tmp;
 
 	tmp = *env;
-	while (tmp->next != NULL)
+	while (tmp)
 	{
 		if (ft_strcmp(tmp->name, arg[0]) == 0)
 		{
