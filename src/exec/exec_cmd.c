@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/06/26 22:34:51 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/04 16:47:49 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 		int is_last = (cmd->next == NULL);
 		int is_stateful = is_stateful_builtin(cmd);
 
-		// Cas 1 : built-in stateful, sans pipe
 		if (is_last && is_stateful)
 		{
 			int saved_stdin = dup(STDIN_FILENO);
@@ -102,18 +101,15 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 			close(saved_stdout);
 			return;
 		}
-
-		// Sinon, gestion avec pipe + fork
 		if (cmd->next && pipe(pipe_fd) < 0)
 		{
 			perror("pipe");
 			return;
 		}
-
 		pid = fork();
 		if (pid == 0)
 		{
-			// Child
+			// Fils
 			if (in_fd != 0)
 			{
 				dup2(in_fd, STDIN_FILENO);

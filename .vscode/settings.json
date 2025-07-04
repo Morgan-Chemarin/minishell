@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "libft.h": "c",
-        "utils.C": "cpp",
-        "types.h": "c",
-        "readline.h": "c"
-    }
-}
