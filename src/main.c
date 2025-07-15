@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 19:30:14 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 20:42:48 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,15 @@ char	*read_full_line(void)
 	char	*tmp;
 	char	*new_line;
 
+	// if (isatty(fileno(stdin)))
+	// 	line = readline(">");
+	// else
+	// {
+	// 	char *line;
+	// 	line = get_next_line(fileno(stdin));
+	// 	line = ft_strtrim(line, "\n");
+	// 	free(line);
+	// }
 	line = readline(GREEN "➜ " BLUE " minishell> " WHITE);
 	if (!line)
 		return (NULL);
@@ -113,7 +122,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!check_syntax_errors(tokens))
 		{
 			free(line);
-			free(pre_tokens);
+			// free(pre_tokens);
 			continue ;
 		}
 		cmd = parser(tokens);

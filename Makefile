@@ -1,7 +1,7 @@
 NAME       = minishell
 
-CC         = cc
-CFLAGS     =  -Iinclude -Ilibft -Werror -Wextra -Wall
+CC         = cc 
+CFLAGS     =  -Iinclude -Ilibft -Werror -Wextra -Wall -g3
 LDFLAGS    = -lreadline
 
 SRC_DIR    = src
