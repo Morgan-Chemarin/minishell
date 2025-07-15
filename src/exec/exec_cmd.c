@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 13:46:37 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 19:29:42 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void handle_redirections(t_cmd *cmd)
 	}
 }
 
-void exec_builtin(t_cmd *cmd, t_env **env)
+void exec_builtin(t_cmd *cmd, t_env **env, t_token *token, char *line)
 {
 	if (!strcmp(cmd->args[0], "echo"))
 		g_last_status_exit = ft_echo(cmd);
@@ -85,11 +85,11 @@ void exec_builtin(t_cmd *cmd, t_env **env)
 	else if (!strcmp(cmd->args[0], "env"))
 		g_last_status_exit = ft_env(*env);
 	else if (!strcmp(cmd->args[0], "exit"))
-		ft_exit(cmd);
+		ft_exit(cmd, token, *env, line);
 }
 
 
-void exec_cmd(t_cmd *cmd, t_env *env)
+void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 {
 	int		in_fd;
 	int		pipe_fd[2];
@@ -121,7 +121,7 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 				dup2(heredoc_fd, STDIN_FILENO);
 				close(heredoc_fd);
 			}
-			exec_builtin(cmd, &env);
+			exec_builtin(cmd, &env, token, line);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);
@@ -156,8 +156,8 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 			}
 			if (cmd->type == CMD_BUILTNS)
 			{
-				exec_builtin(cmd, &env);
-				exit(0); // quitte sans execvp
+				exec_builtin(cmd, &env, token, line);
+				exit(0);
 			}
 			path = get_path(cmd->args[0], env);
 			envp_arr = env_list_to_array(env);

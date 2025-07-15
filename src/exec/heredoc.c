@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 12:39:07 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 13:29:56 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 19:30:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 			expanded = expand_variables(line, env);
 			free(line);
 			line = expanded;
+			free(expanded);
 		}
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);

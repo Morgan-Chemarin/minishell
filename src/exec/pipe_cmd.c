@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:14:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 12:31:38 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 18:46:51 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 t_cmd	*new_cmd(void)
 {
-	t_cmd	*cmd = malloc(sizeof(t_cmd));
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
 	cmd->args = NULL;
@@ -29,7 +31,9 @@ t_cmd	*new_cmd(void)
 
 int	count_args(t_token *token)
 {
-	int	count = 0;
+	int	count;
+
+	count = 0;
 	while (token && token->type != PIPE)
 	{
 		if (token->type == WORD)

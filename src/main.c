@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 14:28:07 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 19:30:14 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ int	count_unclosed_quotes(const char *line)
 {
 	int		i;
 	char	quote;
-	int		open;
 
 	i = 0;
-	open = 0;
 	quote = 0;
 	while (line[i])
 	{
@@ -120,7 +118,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		cmd = parser(tokens);
 		if (cmd)
-			exec_cmd(cmd, env);
+			exec_cmd(cmd, env, tokens, line);
 		// free all
 	}
 	//supprimer historique a la fin ctrl c ?

@@ -1,7 +1,7 @@
 NAME       = minishell
 
 CC         = cc
-CFLAGS     =  -Iinclude -Ilibft
+CFLAGS     =  -Iinclude -Ilibft -Werror -Wextra -Wall
 LDFLAGS    = -lreadline
 
 SRC_DIR    = src
@@ -24,12 +24,14 @@ SRCS = \
 		$(SRC_DIR)/parser/split_quote.c \
 		$(SRC_DIR)/parser/split_utils.c \
 		$(SRC_DIR)/parser/split_quote_helper.c \
+		$(SRC_DIR)/parser/token_builder.c \
 		$(SRC_DIR)/parser/parsing.c \
 		$(SRC_DIR)/exec/exec_cmd.c \
 		$(SRC_DIR)/exec/pipe_cmd.c \
 		$(SRC_DIR)/exec/heredoc.c \
 		$(SRC_DIR)/exec/execve_utils.c \
 		$(SRC_DIR)/utils/check_error.c \
+		$(SRC_DIR)/utils/free_functions.c \
 
 OBJS	= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

@@ -6,11 +6,10 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:18:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 14:19:00 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 17:12:44 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// MAKEFILE .H
 #include "../../includes/minishell.h"
 
 void	skip_spaces(char *line, int *i)
@@ -36,7 +35,9 @@ int	is_double_operator(char *s, const char *op, int *i)
 
 char	*extract_delimiter(char *line, int *i)
 {
-	int	start = *i;
+	int	start;
+
+	start = *i;
 	while (line[*i] && !isspace(line[*i])
 		&& line[*i] != '<' && line[*i] != '>' && line[*i] != '|')
 		(*i)++;

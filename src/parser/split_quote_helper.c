@@ -6,40 +6,58 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:19:43 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 14:19:47 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 18:25:01 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+char	*expand_if_needed(char *line, char quote, t_env *env)
+{
+	char	*expanded;
+	char	*res;
+
+	res = ft_substr(line, 0, ft_strlen(line));
+	if (quote == '"')
+	{
+		expanded = expand_variables(res, env);
+		free(res);
+		return (expanded);
+	}
+	return (res);
+}
+
 char	*extract_quoted(char *line, int *i, int skip_expand, t_env *env)
 {
-	char	quote = line[*i];
+	char	quote;
 	int		start;
-	int		len = 0;
+	int		len;
 	char	*word;
-	char	*expanded;
 
+	quote = line[*i];
 	(*i)++;
 	start = *i;
+	len = 0;
 	while (line[*i] && line[*i] != quote)
-		(*i)++, len++;
-	(*i)++;
-	word = ft_substr(line, start, len);
-	if (!skip_expand && quote == '"')
 	{
-		expanded = expand_variables(word, env);
-		free(word);
-		word = expanded;
+		(*i)++;
+		len++;
 	}
+	(*i)++;
+	if (skip_expand)
+		word = ft_substr(line, start - 1, len + 2);
+	else
+		word = expand_if_needed(&line[start], quote, env);
 	return (word);
 }
 
 int	count_tokens(char *line)
 {
-	int	i = 0;
-	int	count = 0;
+	int	i;
+	int	count;
 
+	i = 0;
+	count = 0;
 	while (line[i])
 	{
 		while (isspace(line[i]))

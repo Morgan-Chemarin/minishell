@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:57 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 14:03:36 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 17:07:20 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	check_syntax_errors(t_token *tokens)
 				|| tmp->type == REDIR_APPEND || tmp->type == REDIR_HEREDOC)
 			&& (!tmp->next || tmp->next->type != WORD))
 		{
-			printf("Fichier manque apres '%s'\n", tmp->value);
+			printf("syntax error near unexpected token '%s'\n", tmp->value);
 			return (0);
 		}
 		tmp = tmp->next;

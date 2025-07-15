@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 14:25:43 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 19:26:56 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ extern int	g_last_status_exit;
 int		ft_echo(t_cmd *cmd);
 int		ft_env(t_env *envp);
 int		ft_cd(t_cmd *cmd, t_env **env);
-void	ft_exit(t_cmd *cmd);
+void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line);
 int		ft_unset(t_env **env, t_cmd *cmd);
 int		ft_pwd(void);
 
@@ -114,7 +114,7 @@ void	ft_free_split(char **arr);
 // ** EXEC **
 
 // exec_cmd.c
-void	exec_cmd(t_cmd *cmd, t_env *env);
+void    exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
 
 // pipe_cmd.c
 t_cmd	*new_cmd(void);
@@ -130,7 +130,6 @@ char	*get_path(char *cmd, t_env *env);
 
 // parsing.c
 t_cmd	*parser(t_token *tokens);
-t_token	*create_struct_tokens(char **split);
 
 // split_quote.c
 char	**split_with_quote(char *line, t_env *env);
@@ -146,13 +145,18 @@ int		is_single_operator(char c);
 int		is_double_operator(char *s, const char *op, int *i);
 char	*extract_delimiter(char *line, int *i);
 
+// token_builder.c
+t_token	*create_struct_tokens(char **split);
+
 // ** UTILS **
 
 // check_error.c
 int		check_syntax_errors(t_token *tokens);
 
-// utils_minishell.c
-void	ft_putstr(char *str);
-int		ft_strcmp(char *s1, char *s2);
+//free_utils
+void    free_array_str(char    **str);
+void    free_cmd(t_cmd *cmd);
+void    free_token(t_token *token);
+void    free_env(t_env *env);
 
 #endif
