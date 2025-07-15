@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:57:04 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/06/26 21:00:28 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/08 01:46:21 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	ft_export_exec(char *arg, t_env **env)
 		update_env(env, split_arg);
 }
 
-void	ft_export(t_cmd *cmd, t_env **env)
+int	ft_export(t_cmd *cmd, t_env **env)
 {
 	int	i;
 
@@ -103,10 +103,12 @@ void	ft_export(t_cmd *cmd, t_env **env)
 				|| (cmd->args[i][0] >= 'A' && cmd->args[i][0] <= 'Z')))
 			{
 				write(2, "export : not a valid identifier\n", 32);
+				return (1);
 			}
 			else
 				ft_export_exec(cmd->args[i], env);
 			i++;
 		}
 	}
+	return (0);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_expension.c                                    :+:      :+:    :+:   */
+/*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 14:44:04 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/07 16:54:51 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,23 @@ char	*get_env_value(char *name, t_env *env)
 		env = env->next;
 	}
 	return ("");
+}
+
+char	*expand_exit_value(char *result, char *tmp)
+{
+	char	*status;
+
+	status = ft_itoa(g_last_status_exit);
+	if (!status)
+	{
+		free(result);
+		return (NULL);
+	}
+	tmp = result;
+	result = ft_strjoin(tmp, status);
+	free(tmp);
+	free(status);
+	return (result);
 }
 
 char	*expand_variables(char *str, t_env *env)
@@ -39,7 +56,14 @@ char	*expand_variables(char *str, t_env *env)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && \
+		if (str[i] == '$' && str[i + 1] == '?')
+		{
+			result = expand_exit_value(result, tmp);
+			if (!result)
+				return (NULL);
+			i += 2;
+		}
+		else if (str[i] == '$' && str[i + 1] && \
 			(ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
 		{
 			i++;

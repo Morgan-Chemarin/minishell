@@ -19,13 +19,17 @@ SRCS = \
 		$(SRC_DIR)/builtins/pwd/pwd.c \
 		$(SRC_DIR)/builtins/env/env.c \
 		$(SRC_DIR)/env/init_env.c \
+		$(SRC_DIR)/env/env_array.c \
 		$(SRC_DIR)/env/env_expansion.c \
 		$(SRC_DIR)/parser/split_quote.c \
+		$(SRC_DIR)/parser/split_utils.c \
+		$(SRC_DIR)/parser/split_quote_helper.c \
 		$(SRC_DIR)/parser/parsing.c \
 		$(SRC_DIR)/exec/exec_cmd.c \
 		$(SRC_DIR)/exec/pipe_cmd.c \
+		$(SRC_DIR)/exec/heredoc.c \
+		$(SRC_DIR)/exec/execve_utils.c \
 		$(SRC_DIR)/utils/check_error.c \
-		$(SRC_DIR)/utils/banner.c
 
 OBJS	= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

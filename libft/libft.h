@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:48:31 by mchemari          #+#    #+#             */
-/*   Updated: 2025/06/25 16:07:50 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/12 17:02:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,11 @@ void	*ft_memset(void	*s, int c, size_t n);
 void	ft_putstr(char *str);
 int		ft_strlen(char const *str);
 char	*ft_strdup(char *source);
+char	*ft_strchr(char *s, int c);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	**ft_split(char *s, char c);
+char	*ft_itoa(int n);
 
 #endif

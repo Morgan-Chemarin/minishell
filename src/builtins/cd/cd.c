@@ -6,7 +6,7 @@
 /*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 06:56:42 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/06/25 01:38:48 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/08 01:39:03 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ char	*find_home(t_env **env)
 	t_env	*tmp;
 
 	tmp = *env;
+	path = NULL;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->name, "HOME") == 0)
@@ -59,7 +60,15 @@ char	*find_home(t_env **env)
 	return (path);
 }
 
-void	ft_cd_exec(t_cmd *cmd, t_env **env)
+int	no_home(char *old_cwd, char *path)
+{
+	perror("cd");
+	free(old_cwd);
+	free(path);
+	return (1);
+}
+
+int	ft_cd_exec(t_cmd *cmd, t_env **env)
 {
 	int		result_path;
 	char	*path;
@@ -71,25 +80,33 @@ void	ft_cd_exec(t_cmd *cmd, t_env **env)
 		path = find_home(env);
 		if (!path)
 		{
-			perror("cd");
+			write(2, "cd: HOME not set\n", 17);
 			free(old_cwd);
-			return ;
+			return (1);
 		}
 	}
 	else
 		path = ft_strdup(cmd->args[1]);
 	result_path = chdir(path);
 	if (result_path == -1)
-		perror("cd");
+		return (no_home(old_cwd, path));
 	else
 		update_envp(env, old_cwd);
 	free(old_cwd);
 	free(path);
+	return (0);
 }
 
-void	ft_cd(t_cmd *cmd, t_env **env)
+int	ft_cd(t_cmd *cmd, t_env **env)
 {
+	int	status;
+
+	status = 0;
 	if (count_arg(cmd->args) > 2)
-		return ;
-	ft_cd_exec(cmd, env);
+	{
+		write(2, "cd: too many arguments\n", 23);
+		return (1);
+	}
+	status = ft_cd_exec(cmd, env);
+	return (status);
 }

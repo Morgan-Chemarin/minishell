@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 16:11:58 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/12 18:29:54 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,15 @@ t_cmd	*parser(t_token *tokens)
 				if (tokens)
 					current->input_file = strdup(tokens->value);
 			}
-			// REDIR_HEREDOC
+			else if (tokens->type == REDIR_HEREDOC)
+			{
+				tokens = tokens->next;
+				if (tokens)
+				{
+					current->heredoc_delim = ft_strdup(tokens->value);
+					current->has_heredoc = 1;
+				}
+			}
 			else if (tokens->type == REDIR_OUT)
 			{
 				tokens = tokens->next;

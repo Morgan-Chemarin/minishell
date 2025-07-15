@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/04 16:47:49 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 13:46:37 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,17 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>
+
+void	wait_pid_remastered(pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		g_last_status_exit = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		g_last_status_exit = 128 + WTERMSIG(status);
+}
 
 int is_stateful_builtin(t_cmd *cmd)
 {
@@ -62,17 +73,17 @@ void handle_redirections(t_cmd *cmd)
 void exec_builtin(t_cmd *cmd, t_env **env)
 {
 	if (!strcmp(cmd->args[0], "echo"))
-		ft_echo(cmd);
+		g_last_status_exit = ft_echo(cmd);
 	else if (!strcmp(cmd->args[0], "cd"))
-		ft_cd(cmd, env);
+		g_last_status_exit = ft_cd(cmd, env);
 	else if (!strcmp(cmd->args[0], "pwd"))
-		ft_pwd();
+		g_last_status_exit = ft_pwd();
 	else if (!strcmp(cmd->args[0], "export"))
-		ft_export(cmd, env);
+		g_last_status_exit = ft_export(cmd, env);
 	else if (!strcmp(cmd->args[0], "unset"))
-		ft_unset(env, cmd);
+		g_last_status_exit = ft_unset(env, cmd);
 	else if (!strcmp(cmd->args[0], "env"))
-		ft_env(*env);
+		g_last_status_exit = ft_env(*env);
 	else if (!strcmp(cmd->args[0], "exit"))
 		ft_exit(cmd);
 }
@@ -80,12 +91,23 @@ void exec_builtin(t_cmd *cmd, t_env **env)
 
 void exec_cmd(t_cmd *cmd, t_env *env)
 {
-	int		in_fd = 0;
+	int		in_fd;
 	int		pipe_fd[2];
 	pid_t	pid;
+	char	*path;
+	char	**envp_arr;
 
+	in_fd = 0;
 	while (cmd)
 	{
+		int heredoc_fd = -1;
+		if (cmd->has_heredoc)
+		{
+			heredoc_fd = handle_heredoc(cmd, env);
+			if (heredoc_fd < 0)
+				return ;
+		}
+
 		int is_last = (cmd->next == NULL);
 		int is_stateful = is_stateful_builtin(cmd);
 
@@ -94,6 +116,11 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 			int saved_stdin = dup(STDIN_FILENO);
 			int saved_stdout = dup(STDOUT_FILENO);
 			handle_redirections(cmd);
+			if (heredoc_fd != -1)
+			{
+				dup2(heredoc_fd, STDIN_FILENO);
+				close(heredoc_fd);
+			}
 			exec_builtin(cmd, &env);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
@@ -122,13 +149,23 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 				close(pipe_fd[1]);
 			}
 			handle_redirections(cmd);
+			if (heredoc_fd != -1)
+			{
+				dup2(heredoc_fd, STDIN_FILENO);
+				close(heredoc_fd);
+			}
 			if (cmd->type == CMD_BUILTNS)
 			{
 				exec_builtin(cmd, &env);
 				exit(0); // quitte sans execvp
 			}
-			execvp(cmd->args[0], cmd->args);
-			perror("execvp");
+			path = get_path(cmd->args[0], env);
+			envp_arr = env_list_to_array(env);
+			if (path)
+				execve(path, cmd->args, envp_arr);
+			perror("execve");
+			ft_free_split(envp_arr);
+			free(path);
 			exit(127);
 		}
 		else if (pid < 0)
@@ -138,7 +175,7 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 		}
 
 		// Parent
-		waitpid(pid, NULL, 0);
+		wait_pid_remastered(pid);
 		if (in_fd != 0)
 			close(in_fd);
 		if (cmd->next)
@@ -146,78 +183,8 @@ void exec_cmd(t_cmd *cmd, t_env *env)
 			close(pipe_fd[1]);
 			in_fd = pipe_fd[0];
 		}
+		if (heredoc_fd != -1)
+			close(heredoc_fd);
 		cmd = cmd->next;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// void exec_cmd(t_cmd *cmd, t_env *env)
-// {
-// 	int		in_fd;
-// 	int		pipe_fd[2];
-// 	pid_t	pid;
-
-// 	in_fd = 0;
-// 	if (!cmd->next && is_stateful_builtin(cmd))
-// 	{
-// 		handle_redirections(cmd);
-// 		exec_builtin(cmd, &env);
-// 		return;
-// 	}
-// 	while (cmd)
-// 	{
-// 		if (cmd->next && pipe(pipe_fd) < 0)
-// 		{
-// 			perror("pipe");
-// 			return;
-// 		}
-// 		pid = fork();
-// 		if (pid == 0)
-// 		{
-// 			if (in_fd != 0)
-// 			{
-// 				dup2(in_fd, STDIN_FILENO);
-// 				close(in_fd);
-// 			}
-// 			if (cmd->next)
-// 			{
-// 				close(pipe_fd[0]);
-// 				dup2(pipe_fd[1], STDOUT_FILENO);
-// 				close(pipe_fd[1]);
-// 			}
-// 			handle_redirections(cmd);
-// 			if (cmd->type == CMD_BUILTNS)
-// 			{
-// 				exec_builtin(cmd, &env);
-// 				exit(0);
-// 			}
-// 			execvp(cmd->args[0], cmd->args); // rajouter list to char pour execvp
-// 			perror("execvp");
-// 			exit(127);
-// 		}
-// 		else if (pid < 0)
-// 		{
-// 			perror("fork");
-// 			return;
-// 		}
-// 		waitpid(pid, NULL, 0);
-// 		if (in_fd != 0)
-// 			close(in_fd);
-// 		if (cmd->next)
-// 		{
-// 			close(pipe_fd[1]);
-// 			in_fd = pipe_fd[0];
-// 		}
-// 		cmd = cmd->next;
-// 	}
-// }

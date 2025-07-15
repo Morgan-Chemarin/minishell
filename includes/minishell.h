@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/06/26 20:01:39 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 14:25:43 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
-#include <sys/ioctl.h>
+# include <sys/ioctl.h>
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/wait.h> 
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h> 
 
 # define RESET       "\001\033[0m\002"
 # define RED         "\001\033[1;31m\002"
@@ -42,7 +42,7 @@ typedef struct s_env
 {
 	char			*name;
 	char			*value;
-	struct s_env	*next; 
+	struct s_env	*next;
 }	t_env;
 
 typedef enum e_token_type
@@ -70,27 +70,30 @@ typedef enum e_cmd_type
 
 typedef struct s_cmd
 {
-	char			**args; 
+	char			**args;
 	char			*input_file;
 	char			*output_file;
 	int				append;
+	int				has_heredoc;
+	char			*heredoc_delim;
 	t_cmd_type		type;
 	struct s_cmd	*next;
 }	t_cmd;
 
+extern int	g_last_status_exit;
 
 // ** BUILTINS **
 
-void	ft_echo(t_cmd *cmd);
-void	ft_env(t_env *envp);
-void	ft_cd(t_cmd *cmd, t_env **env);
+int		ft_echo(t_cmd *cmd);
+int		ft_env(t_env *envp);
+int		ft_cd(t_cmd *cmd, t_env **env);
 void	ft_exit(t_cmd *cmd);
-void	ft_unset(t_env **env, t_cmd *cmd);
-void	ft_pwd(void);
+int		ft_unset(t_env **env, t_cmd *cmd);
+int		ft_pwd(void);
 
 // export
 void	ft_env_export(t_env *envp);
-void	ft_export(t_cmd *cmd, t_env **env);
+int		ft_export(t_cmd *cmd, t_env **env);
 
 // utils_builtins
 int		count_arg(char **arg);
@@ -103,38 +106,53 @@ char	*expand_variables(char *str, t_env *env);
 // init_env.c
 t_env	*envp_to_list(char **envp);
 
+// env_array.c
+char	*ft_strjoin_3(char *s1, char *s2, char *s3);
+char	**env_list_to_array(t_env *env);
+void	ft_free_split(char **arr);
 
 // ** EXEC **
 
 // exec_cmd.c
-void    exec_cmd(t_cmd *cmd, t_env *env);
+void	exec_cmd(t_cmd *cmd, t_env *env);
 
 // pipe_cmd.c
-t_cmd			*new_cmd(void);
-int				count_args(t_token *token);
+t_cmd	*new_cmd(void);
+int		count_args(t_token *token);
 
+// heredoc.c
+int		handle_heredoc(t_cmd *cmd, t_env *env);
+
+// execve_utils.c
+char	*get_path(char *cmd, t_env *env);
 
 // ** PARSER **
 
 // parsing.c
-t_cmd			*parser(t_token *tokens);
-t_token			*create_struct_tokens(char **split);
+t_cmd	*parser(t_token *tokens);
+t_token	*create_struct_tokens(char **split);
 
 // split_quote.c
-char			**split_with_quote(char *line, t_env *env);
-int				count_unclosed_quotes(const char *line);
+char	**split_with_quote(char *line, t_env *env);
+char	*extract_word(char *line, int *i, t_env *env, int skip_expand);
 
+// split_quote_helper.c
+char	*extract_quoted(char *line, int *i, int skip_expand, t_env *env);
+int		count_tokens(char *line);
+
+// split_utils.c
+void	skip_spaces(char *line, int *i);
+int		is_single_operator(char c);
+int		is_double_operator(char *s, const char *op, int *i);
+char	*extract_delimiter(char *line, int *i);
 
 // ** UTILS **
 
-// banner.c
-void			print_ascii_banner(void);
-
 // check_error.c
-int				check_syntax_errors(t_token *tokens);
+int		check_syntax_errors(t_token *tokens);
 
 // utils_minishell.c
-void			ft_putstr(char *str);
-int				ft_strcmp(char *s1, char *s2);
+void	ft_putstr(char *str);
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

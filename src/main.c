@@ -6,11 +6,38 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/06/26 19:46:35 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 14:28:07 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	g_last_status_exit = 0;
+
+int	count_unclosed_quotes(const char *line)
+{
+	int		i;
+	char	quote;
+	int		open;
+
+	i = 0;
+	open = 0;
+	quote = 0;
+	while (line[i])
+	{
+		if ((line[i] == '\'' || line[i] == '"') && (!quote || quote == line[i]))
+		{
+			if (!quote)
+				quote = line[i];
+			else
+				quote = 0;
+		}
+		i++;
+	}
+	if (quote)
+		return (1);
+	return (0);
+}
 
 char	*read_full_line(void)
 {
@@ -59,7 +86,6 @@ int	main(int argc, char **argv, char **envp)
 	int		i;
 	
 	env = envp_to_list(envp);
-	print_ascii_banner();
 	signal(SIGINT, siging_handler);
     signal(SIGQUIT, SIG_IGN);
 	while (1)

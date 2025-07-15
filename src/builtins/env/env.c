@@ -6,13 +6,13 @@
 /*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 16:05:22 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/06/24 22:16:54 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/08 01:44:19 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	ft_env(t_env *env)
+int	ft_env(t_env *env)
 {
 	int	i;
 
@@ -28,4 +28,5 @@ void	ft_env(t_env *env)
 		}
 		env = env->next;
 	}
+	return (0);
 }

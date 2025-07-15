@@ -5,7 +5,8 @@ AR          = ar rcs
 HEADER      = libft.h
 
 SRCS        = ft_atoi.c ft_calloc.c ft_isalnum.c ft_isalpha.c split.c ft_strdup.c \
-				ft_strjoin.c ft_strlen.c ft_strcmp.c ft_substr.c ft_putstr.c ft_memset.c
+				ft_strjoin.c ft_strlen.c ft_strcmp.c ft_strchr.c ft_substr.c ft_putstr.c ft_memset.c \
+				ft_itoa.c
 
 
 OBJDIR      = obj

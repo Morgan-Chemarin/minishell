@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:14:36 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 14:44:05 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/15 12:31:38 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ t_cmd	*new_cmd(void)
 	cmd->input_file = NULL;
 	cmd->output_file = NULL;
 	cmd->append = 0;
+	cmd->has_heredoc = 0;
+	cmd->heredoc_delim = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }
