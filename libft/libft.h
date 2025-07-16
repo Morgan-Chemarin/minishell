@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:48:31 by mchemari          #+#    #+#             */
-/*   Updated: 2025/07/12 17:02:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 17:20:59 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	**ft_split(char *s, char c);
 char	*ft_itoa(int n);
+char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strndup(const char *s, size_t n);
+int		ft_isspace(char c);
+size_t	ft_strlcpy(char *dest, char *src, size_t size);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 19:26:56 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 16:33:03 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+# include "../gnl/get_next_line.h"
 # include <sys/ioctl.h>
 
 # include <unistd.h>
@@ -130,6 +131,7 @@ char	*get_path(char *cmd, t_env *env);
 
 // parsing.c
 t_cmd	*parser(t_token *tokens);
+t_token	*create_struct_tokens(char **split);
 
 // split_quote.c
 char	**split_with_quote(char *line, t_env *env);
@@ -146,7 +148,7 @@ int		is_double_operator(char *s, const char *op, int *i);
 char	*extract_delimiter(char *line, int *i);
 
 // token_builder.c
-t_token	*create_struct_tokens(char **split);
+
 
 // ** UTILS **
 

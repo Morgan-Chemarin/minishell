@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:17:17 by dev               #+#    #+#             */
-/*   Updated: 2025/06/25 14:44:04 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 16:30:51 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ t_env *create_env_node(char *env_str)
 	node =  malloc(sizeof(t_env));
 	if (!node)
 	    return (NULL);
-	equal_sign = strchr(env_str, '=');
+	equal_sign = ft_strchr(env_str, '=');
 	if (!equal_sign)
 	{
-	    free(node);
+	    // free(node);
 	    return (NULL);
 	}
 	size_t name_len = equal_sign - env_str;
-	node->name = strndup(env_str, name_len);
-	node->value = strdup(equal_sign + 1);
+	node->name = ft_strndup(env_str, name_len);
+	node->value = ft_strdup(equal_sign + 1);
 	node->next = NULL;
 	return (node);
 }

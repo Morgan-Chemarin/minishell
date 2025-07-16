@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 20:40:56 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 15:35:31 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 			if (path)
 				execve(path, cmd->args, envp_arr);
 			perror("execve");
-			ft_free_split(envp_arr);
+			// ft_free_split(envp_arr);
 			free(path);
 			exit(127);
 		}

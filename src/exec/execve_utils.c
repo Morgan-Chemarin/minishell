@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 13:44:49 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 15:35:42 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char	*search_in_paths(char **paths, char *cmd)
 			break ;
 		if (access(path, X_OK) == 0)
 			return (path);
-		free(path);
+		// free(path);
 		path = NULL;
 		i++;
 	}
@@ -50,6 +50,6 @@ char	*get_path(char *cmd, t_env *env)
 	if (!paths)
 		return (NULL);
 	path = search_in_paths(paths, cmd);
-	ft_free_split(paths);
+	// ft_free_split(paths);
 	return (path);
 }

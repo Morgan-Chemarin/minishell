@@ -6,61 +6,43 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:19:43 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 18:25:01 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 16:30:07 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*expand_if_needed(char *line, char quote, t_env *env)
-{
-	char	*expanded;
-	char	*res;
-
-	res = ft_substr(line, 0, ft_strlen(line));
-	if (quote == '"')
-	{
-		expanded = expand_variables(res, env);
-		free(res);
-		return (expanded);
-	}
-	return (res);
-}
-
 char	*extract_quoted(char *line, int *i, int skip_expand, t_env *env)
 {
-	char	quote;
+	char	quote = line[*i];
 	int		start;
-	int		len;
+	int		len = 0;
 	char	*word;
+	char	*expanded;
 
-	quote = line[*i];
 	(*i)++;
 	start = *i;
-	len = 0;
 	while (line[*i] && line[*i] != quote)
-	{
-		(*i)++;
-		len++;
-	}
+		(*i)++, len++;
 	(*i)++;
-	if (skip_expand)
-		word = ft_substr(line, start - 1, len + 2);
-	else
-		word = expand_if_needed(&line[start], quote, env);
+	word = ft_substr(line, start, len);
+	if (!skip_expand && quote == '"')
+	{
+		expanded = expand_variables(word, env);
+		// free(word);
+		word = expanded;
+	}
 	return (word);
 }
 
 int	count_tokens(char *line)
 {
-	int	i;
-	int	count;
+	int	i = 0;
+	int	count = 0;
 
-	i = 0;
-	count = 0;
 	while (line[i])
 	{
-		while (isspace(line[i]))
+		while (ft_isspace(line[i]))
 			i++;
 		if (!line[i])
 			break ;
@@ -70,7 +52,7 @@ int	count_tokens(char *line)
 		else if (line[i] == '|' || line[i] == '<' || line[i] == '>')
 			i++;
 		else
-			while (line[i] && !isspace(line[i])
+			while (line[i] && !ft_isspace(line[i])
 				&& line[i] != '|' && line[i] != '<' && line[i] != '>')
 				i++;
 		count++;

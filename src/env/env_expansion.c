@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/07/07 16:54:51 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/16 15:35:17 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ char	*expand_exit_value(char *result, char *tmp)
 	status = ft_itoa(g_last_status_exit);
 	if (!status)
 	{
-		free(result);
+		// free(result);
 		return (NULL);
 	}
 	tmp = result;
 	result = ft_strjoin(tmp, status);
-	free(tmp);
-	free(status);
+	// free(tmp);
+	// free(status);
 	return (result);
 }
 
@@ -72,12 +72,15 @@ char	*expand_variables(char *str, t_env *env)
 				i++;
 			var_name = ft_substr(str, start, i - start);
 			if (!var_name)
-				return (free(result), NULL);
+			{
+				// free(result);
+				return (NULL);
+			}
 			value = get_env_value(var_name, env);
 			tmp = result;
 			result = ft_strjoin(tmp, value);
-			free(tmp);
-			free(var_name);
+			// free(tmp);
+			// free(var_name);
 			if (!result)
 				return (NULL);
 		}
@@ -88,7 +91,7 @@ char	*expand_variables(char *str, t_env *env)
 			i++;
 			tmp = result;
 			result = ft_strjoin(tmp, tmp_char);
-			free(tmp);
+			// free(tmp);
 			if (!result)
 				return (NULL);
 		}
