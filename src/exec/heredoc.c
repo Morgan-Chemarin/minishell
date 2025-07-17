@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 12:39:07 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 15:35:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 02:30:38 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,19 @@ static void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 		line = readline("> ");
 		if (!line || !ft_strcmp(line, delimiter))
 		{
-			// free(line);
+			if (line)
+				free(line);
 			break ;
 		}
 		if (expand)
 		{
 			expanded = expand_variables(line, env);
-			// free(line);
+			free(line);
 			line = expanded;
-			// free(expanded);
 		}
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
-		// free(line);
+		free(line);
 	}
 }
 
@@ -73,7 +73,7 @@ int	handle_heredoc(t_cmd *cmd, t_env *env)
 	expand = !is_quoted(cmd->heredoc_delim);
 	clean_delim = strip_quotes(cmd->heredoc_delim);
 	heredoc_loop(pipefd[1], clean_delim, expand, env);
-	// free(clean_delim);
+	free(clean_delim);
 	close(pipefd[1]);
 	return (pipefd[0]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 16:30:15 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 02:21:42 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,36 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 {
 	char	*word;
 	char	*expanded;
-	int		start = *i;
-	int		len = 0;
+	char	*result;
+	int		start;
 
-	if (line[*i] == '\'' || line[*i] == '"')
-		return (extract_quoted(line, i, skip_expand, env));
+	result = ft_calloc(1, 1);
 	while (line[*i] && !ft_isspace(line[*i]) && \
 			line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
-		(*i)++, len++;
-	word = ft_substr(line, start, len);
-	if (!skip_expand)
 	{
-		expanded = expand_variables(word, env);
+		if (line[*i] == '\'' || line[*i] == '"')
+		{
+			word = extract_quoted(line, i, skip_expand, env);
+		}
+		else
+		{
+			start = *i;
+			while (line[*i] && !ft_isspace(line[*i]) && \
+				line[*i] != '|' && line[*i] != '<' && line[*i] != '>' && \
+				line[*i] != '\'' && line[*i] != '"')
+				(*i)++;
+			word = ft_substr(line, start, *i - start);
+			if (!skip_expand)
+			{
+				expanded = expand_variables(word, env);
+				free(word);
+				word = expanded;
+			}
+		}
+		expanded = result;
+		result = ft_strjoin(expanded, word);
+		free(expanded);
 		free(word);
-		word = expanded;
 	}
-	return (word);
+	return (result);
 }

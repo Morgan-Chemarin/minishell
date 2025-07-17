@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 17:42:58 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 02:25:26 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,11 @@ t_cmd	*parser(t_token *tokens)
 			{
 				tokens = tokens->next;
 				if (tokens)
+				{
+					if (current->input_file)
+						free(current->input_file);
 					current->input_file = ft_strdup(tokens->value);
+				}
 			}
 			else if (tokens->type == REDIR_HEREDOC)
 			{
@@ -55,6 +59,8 @@ t_cmd	*parser(t_token *tokens)
 				tokens = tokens->next;
 				if (tokens)
 				{
+					if (current->output_file)
+						free(current->output_file);
 					current->output_file = ft_strdup(tokens->value);
 					current->append = 0;
 				}
@@ -64,6 +70,8 @@ t_cmd	*parser(t_token *tokens)
 				tokens = tokens->next;
 				if (tokens)
 				{
+					if (current->output_file)
+						free(current->output_file);
 					current->output_file = ft_strdup(tokens->value);
 					current->append = 1;
 				}
@@ -104,7 +112,7 @@ t_token_type	get_token_type(char *s)
 		return (WORD);
 }
 
-t_token	*create_struct_tokens(char **split)
+t_token	*create_struct_tokens(char **pre_token)
 {
 	t_token	*head;
 	t_token	*new;
@@ -113,11 +121,11 @@ t_token	*create_struct_tokens(char **split)
 
 	head = NULL;
 	i = 0;
-	while (split[i])
+	while (pre_token[i])
 	{
 		new = malloc(sizeof(t_token));
-		new->value = ft_strdup(split[i]);
-		new->type = get_token_type(split[i]);
+		new->value = ft_strdup(pre_token[i]);
+		new->type = get_token_type(pre_token[i]);
 		new->next = NULL;
 		if (!head)
 			head = new;
@@ -130,6 +138,6 @@ t_token	*create_struct_tokens(char **split)
 		}
 		i++;
 	}
-	// free_array_str(split);
+	free_array_str(pre_token);
 	return (head);
 }

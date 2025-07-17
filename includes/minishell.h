@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 16:33:03 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 12:22:11 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ int		handle_heredoc(t_cmd *cmd, t_env *env);
 
 // execve_utils.c
 char	*get_path(char *cmd, t_env *env);
+void	check_access_exec(char *cmd, char **args, char **envp);
 
 // ** PARSER **
 

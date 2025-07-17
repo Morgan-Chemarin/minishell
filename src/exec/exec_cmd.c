@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 15:35:31 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 12:26:54 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,21 +159,24 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 				exec_builtin(cmd, &env, token, line);
 				exit(0);
 			}
-			path = get_path(cmd->args[0], env);
 			envp_arr = env_list_to_array(env);
-			if (path)
-				execve(path, cmd->args, envp_arr);
-			perror("execve");
-			// ft_free_split(envp_arr);
+			if (ft_strchr(cmd->args[0], '/')) // si c'est un chemin direct
+				check_access_exec(cmd->args[0], cmd->args, envp_arr);
+			else // on cherche dans path
+			{
+				path = get_path(cmd->args[0], env);
+				if (path) // si on trouve on execute
+					check_access_exec(path, cmd->args, envp_arr);
+				else // sinon on tente dans le dir actuel
+					check_access_exec(cmd->args[0], cmd->args, envp_arr);
+			}
 			free(path);
-			exit(127);
 		}
 		else if (pid < 0)
 		{
 			perror("fork");
 			return;
 		}
-
 		// Parent
 		wait_pid_remastered(pid);
 		if (in_fd != 0)

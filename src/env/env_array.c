@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_array.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:38:18 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 15:34:01 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 22:21:55 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ char	*ft_strjoin_3(char *s1, char *s2, char *s3)
 	res = ft_strjoin(tmp, s3);
 	if (!res)
 	{
-		// free(tmp);
+		free(tmp);
 		return (NULL);
 	}
-	// free(tmp);
+	free(tmp);
 	return (res);
 }
 

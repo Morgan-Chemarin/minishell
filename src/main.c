@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 17:38:25 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 23:24:13 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,17 @@ int	main(int argc, char **argv, char **envp)
 		if (!check_syntax_errors(tokens))
 		{
 			free(line);
-			free(pre_tokens);
+			free_token(tokens);
 			continue ;
 		}
 		cmd = parser(tokens);
 		if (cmd)
 			exec_cmd(cmd, env, tokens, line);
+		free(line);
+		free_token(tokens);
+		free_cmd(cmd);
 	}
-	return (0);
+	free_env(env);
+	rl_clear_history();
+	return (g_last_status_exit);
 }

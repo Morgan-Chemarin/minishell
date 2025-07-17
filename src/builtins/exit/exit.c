@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/07/16 17:08:22 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 23:24:25 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,25 @@ int	count_arg(char **arg)
 
 void    free_all(t_cmd *cmd, t_token *token, t_env *env, char *line)
 {
-    // free_cmd(cmd);
-    // free_env(env);
-    // free_token(token);
-    // free(line);
+	if (cmd)
+		free_cmd(cmd);
+	if (env)
+		free_env(env);
+    if (token)
+		free_token(token);
+    if (line)
+		free(line);
     rl_clear_history();
 }
 
 void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line)
 {
-    int        i;
-    int        code;
+    int		i;
+    int		code;
+	int		tty_fd;
 
     i = 0;
-    int tty_fd = open("/dev/tty", O_WRONLY);
+    tty_fd = open("/dev/tty", O_WRONLY);
     if (tty_fd >= 0)
     {
         write(tty_fd, "exit\n", 5);
@@ -46,9 +51,9 @@ void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line)
         write(STDOUT_FILENO, "exit\n", 5);
     if (count_arg(cmd->args) == 1)
     {
-        // free_all(cmd, token, env, line);
+        free_all(cmd, token, env, line);
         close(tty_fd);
-        exit(0);
+        exit(1);
     }
     else if (count_arg(cmd->args) == 2)
     {
@@ -57,7 +62,7 @@ void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line)
             if (!(cmd->args[1][i] >= '0' && cmd->args[1][i] <= '9')
                 && cmd->args[1][i] != '-')
             {
-                // free_all(cmd, token, env, line);
+                free_all(cmd, token, env, line);
                 write(tty_fd, "exit: numeric argument required\n", 32);
                 close(tty_fd);
                 exit(2);
@@ -65,7 +70,7 @@ void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line)
             i++;
         }
         code = ft_atoi(cmd->args[1]);
-        // free_all(cmd, token, env, line);
+        free_all(cmd, token, env, line);
         exit(code);
         close(tty_fd);
     }

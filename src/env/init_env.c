@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:17:17 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 16:30:51 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/16 22:23:05 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_env *create_env_node(char *env_str)
 	equal_sign = ft_strchr(env_str, '=');
 	if (!equal_sign)
 	{
-	    // free(node);
+	    free(node);
 	    return (NULL);
 	}
 	size_t name_len = equal_sign - env_str;
