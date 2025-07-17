@@ -32,6 +32,7 @@ SRCS = \
 		$(SRC_DIR)/exec/pipe_cmd.c \
 		$(SRC_DIR)/exec/heredoc.c \
 		$(SRC_DIR)/exec/execve_utils.c \
+		$(SRC_DIR)/exec/redir.c \
 		$(SRC_DIR)/utils/check_error.c \
 		$(SRC_DIR)/utils/free_functions.c \
 		$(GNL_SRCS)

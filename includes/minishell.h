@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 13:43:09 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 18:21:31 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ extern int	g_last_status_exit;
 int		ft_echo(t_cmd *cmd);
 int		ft_env(t_env *envp);
 int		ft_cd(t_cmd *cmd, t_env **env);
-void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line);
+void	ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line);
 int		ft_unset(t_env **env, t_cmd *cmd);
 int		ft_pwd(void);
 
@@ -117,7 +117,7 @@ void	ft_free_split(char **arr);
 // ** EXEC **
 
 // exec_cmd.c
-void    exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
+void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
 
 // pipe_cmd.c
 t_cmd	*new_cmd(void);
@@ -129,6 +129,9 @@ int		handle_heredoc(t_cmd *cmd, t_env *env);
 // execve_utils.c
 char	*get_path(char *cmd, t_env *env);
 void	check_access_exec(char *cmd, char **args, char **envp);
+
+// redir.c
+void	handle_redirections(t_cmd *cmd);
 
 // ** PARSER **
 
@@ -152,16 +155,15 @@ char	*extract_delimiter(char *line, int *i);
 
 // token_builder.c
 
-
 // ** UTILS **
 
 // check_error.c
 int		check_syntax_errors(t_token *tokens);
 
 //free_utils
-void    free_array_str(char    **str);
-void    free_cmd(t_cmd *cmd);
-void    free_token(t_token *token);
-void    free_env(t_env *env);
+void	free_array_str(char	**str);
+void	free_cmd(t_cmd *cmd);
+void	free_token(t_token *token);
+void	free_env(t_env *env);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 02:25:26 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/17 20:55:47 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,11 @@ t_cmd	*parser(t_token *tokens)
 		while (tokens && tokens->type != PIPE)
 		{
 			if (tokens->type == WORD)
-				current->args[i++] = ft_strdup(tokens->value);
+			{
+				// Correction : ne pas ajouter d'argument vide ou NULL
+				if (tokens->value && tokens->value[0] != '\0')
+					current->args[i++] = ft_strdup(tokens->value);
+			}
 			else if (tokens->type == REDIR_IN)
 			{
 				tokens = tokens->next;
@@ -98,18 +102,22 @@ t_cmd	*parser(t_token *tokens)
 
 t_token_type	get_token_type(char *s)
 {
-	if (!ft_strcmp(s, "|"))
-		return (PIPE);
-	else if (!ft_strcmp(s, "<"))
-		return (REDIR_IN);
-	else if (!ft_strcmp(s, ">"))
-		return (REDIR_OUT);
-	else if (!ft_strcmp(s, ">>"))
-		return (REDIR_APPEND);
-	else if (!ft_strcmp(s, "<<"))
-		return (REDIR_HEREDOC);
-	else
-		return (WORD);
+    // Correction : si s commence et finit par quote, c'est un WORD
+    if ((s[0] == '"' && s[ft_strlen(s)-1] == '"') ||
+        (s[0] == '\'' && s[ft_strlen(s)-1] == '\''))
+        return (WORD);
+    if (!ft_strcmp(s, "|"))
+        return (PIPE);
+    else if (!ft_strcmp(s, "<"))
+        return (REDIR_IN);
+    else if (!ft_strcmp(s, ">"))
+        return (REDIR_OUT);
+    else if (!ft_strcmp(s, ">>"))
+        return (REDIR_APPEND);
+    else if (!ft_strcmp(s, "<<"))
+        return (REDIR_HEREDOC);
+    else
+        return (WORD);
 }
 
 t_token	*create_struct_tokens(char **pre_token)

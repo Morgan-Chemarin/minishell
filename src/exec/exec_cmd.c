@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 14:07:22 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 20:56:12 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,48 +29,17 @@ void	wait_pid_remastered(pid_t pid)
 		g_last_status_exit = 128 + WTERMSIG(status);
 }
 
-int is_stateful_builtin(t_cmd *cmd)
+int	is_stateful_builtin(t_cmd *cmd)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
-		return 0;
+		return (0);
 	return (!strcmp(cmd->args[0], "cd")
 		|| !strcmp(cmd->args[0], "export")
 		|| !strcmp(cmd->args[0], "unset")
 		|| !strcmp(cmd->args[0], "exit"));
 }
 
-void handle_redirections(t_cmd *cmd)
-{
-	int fd;
-
-	if (cmd->input_file)
-	{
-		fd = open(cmd->input_file, O_RDONLY);
-		if (fd < 0)
-			perror(cmd->input_file);
-		else
-		{
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
-	}
-	if (cmd->output_file)
-	{
-		if (cmd->append)
-			fd = open(cmd->output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			fd = open(cmd->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-			perror(cmd->output_file);
-		else
-		{
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		}
-	}
-}
-
-void exec_builtin(t_cmd *cmd, t_env **env, t_token *token, char *line)
+void	exec_builtin(t_cmd *cmd, t_env **env, t_token *token, char *line)
 {
 	if (!strcmp(cmd->args[0], "echo"))
 		g_last_status_exit = ft_echo(cmd);
@@ -88,29 +57,39 @@ void exec_builtin(t_cmd *cmd, t_env **env, t_token *token, char *line)
 		ft_exit(cmd, token, *env, line);
 }
 
-
-void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
+void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 {
 	int		in_fd;
 	int		pipe_fd[2];
 	pid_t	pid;
 	char	*path;
 	char	**envp_arr;
+	int		heredoc_fd;
 
 	in_fd = 0;
 	while (cmd)
 	{
-		int heredoc_fd = -1;
+		heredoc_fd = -1;
 		if (cmd->has_heredoc)
 		{
 			heredoc_fd = handle_heredoc(cmd, env);
 			if (heredoc_fd < 0)
 				return ;
 		}
-
 		int is_last = (cmd->next == NULL);
 		int is_stateful = is_stateful_builtin(cmd);
 
+		// Correction : ignorer si commande vide
+        if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0')
+        {
+            ft_putstr_fd("minishell: : command not found\n", 2);
+            g_last_status_exit = 127;
+            if (heredoc_fd != -1)
+                close(heredoc_fd);
+            cmd = cmd->next;
+            continue;
+        }
+		
 		if (is_last && is_stateful)
 		{
 			int saved_stdin = dup(STDIN_FILENO);
@@ -137,6 +116,11 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 		if (pid == 0)
 		{
 			// Fils
+			if (cmd->args[0] == NULL || cmd->args[0][0] == '\0')
+			{
+				ft_putstr_fd("minishell: : command not found\n", 2);
+				exit(127);
+			}
 			if (in_fd != 0)
 			{
 				dup2(in_fd, STDIN_FILENO);
@@ -163,7 +147,7 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 			{
 				if (!cmd->args[1])
 				{
-					ft_putstr_fd("minishell: .: filename argument required\n", 2);
+					ft_putstr_fd(".: filename argument required\n", 2);
 					exit(2);
 				}
 			}

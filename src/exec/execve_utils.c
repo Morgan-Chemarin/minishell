@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 14:12:15 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 18:07:16 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,31 @@
 
 int	is_directory(const char *path)
 {
-	struct stat path_stat;
+	struct stat	path_stat;
 
 	if (stat(path, &path_stat) != 0)
 		return (0);
 	return (S_ISDIR(path_stat.st_mode));
+}
+
+static void	handle_access_error(char *cmd, char **envp)
+{
+	if (access(cmd, F_OK) != 0)
+	{
+		ft_putstr_fd(cmd, 2);
+		if (ft_strchr(cmd, '/'))
+			ft_putstr_fd(": No such file or directory\n", 2);
+		else
+			ft_putstr_fd(": command not found\n", 2);
+		ft_free_split(envp);
+		exit(127);
+	}
+	else if (access(cmd, X_OK) != 0)
+	{
+		perror(cmd);
+		ft_free_split(envp);
+		exit(126);
+	}
 }
 
 void	check_access_exec(char *cmd, char **args, char **envp)
@@ -29,23 +49,7 @@ void	check_access_exec(char *cmd, char **args, char **envp)
 		ft_putstr_fd(": is a directory\n", 2);
 		exit(126);
 	}
-	if (access(cmd, F_OK) != 0)
-	{
-		ft_putstr_fd("minishell: ", 2);
-        ft_putstr_fd(cmd, 2);
-        if (ft_strchr(cmd, '/'))
-			ft_putstr_fd(": No such file or directory\n", 2);
-		else
-			ft_putstr_fd(": command not found\n", 2);
-        ft_free_split(envp);
-        exit(127);
-	}
-	else if (access(cmd, X_OK) != 0)
-	{
-		perror(cmd);
-		ft_free_split(envp);
-		exit(126);
-	}
+	handle_access_error(cmd, envp);
 	execve(cmd, args, envp);
 	perror("minishell");
 	ft_free_split(envp);

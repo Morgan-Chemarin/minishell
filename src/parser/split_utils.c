@@ -6,11 +6,10 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:18:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 16:30:26 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 18:46:22 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// MAKEFILE .H
 #include "../../includes/minishell.h"
 
 void	skip_spaces(char *line, int *i)

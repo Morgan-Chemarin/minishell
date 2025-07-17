@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 02:21:42 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/17 20:57:44 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,12 @@ char	**split_with_quote(char *line, t_env *env)
 		skip_spaces(line, &i);
 		if (!line[i])
 			break ;
-		if (is_double_operator(&line[i], "<<", &i))
+		if (line[i] == '"' || line[i] == '\'')
+		{
+			// Si c'est une quote, extraire le mot (même si c'est >> ou >)
+			tokens[j++] = extract_word(line, &i, env, 0);
+		}
+		else if (is_double_operator(&line[i], "<<", &i))
 		{
 			tokens[j++] = ft_strdup("<<");
 			heredoc = 1;
@@ -62,9 +67,14 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 			line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
-		{
-			word = extract_quoted(line, i, skip_expand, env);
-		}
+        {
+            word = extract_quoted(line, i, skip_expand, env);
+            // Correction : si quotes vides, ne pas ajouter
+            if (word[0] == '\0') {
+                free(word);
+                continue;
+            }
+        }
 		else
 		{
 			start = *i;
@@ -79,11 +89,21 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 				free(word);
 				word = expanded;
 			}
+			// correction
+			if (word[0] == '\0') {
+                free(word);
+                continue;
+            }
 		}
 		expanded = result;
 		result = ft_strjoin(expanded, word);
 		free(expanded);
 		free(word);
 	}
+	// Correction : si result est vide, retourne NULL
+    if (result[0] == '\0') {
+        free(result);
+        return NULL;
+    }
 	return (result);
 }
