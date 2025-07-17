@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 12:22:11 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 13:43:09 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/types.h>
-# include <sys/wait.h> 
+# include <sys/wait.h>
+# include <sys/stat.h>
 
 # define RESET       "\001\033[0m\002"
 # define RED         "\001\033[1;31m\002"
@@ -103,6 +104,7 @@ int		count_arg(char **arg);
 
 // env_expansion.c
 char	*expand_variables(char *str, t_env *env);
+char	*get_env_value(char *name, t_env *env);
 
 // init_env.c
 t_env	*envp_to_list(char **envp);

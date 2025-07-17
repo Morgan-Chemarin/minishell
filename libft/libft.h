@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:48:31 by mchemari          #+#    #+#             */
-/*   Updated: 2025/07/16 17:20:59 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 12:57:54 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 void	*ft_memset(void	*s, int c, size_t n);
 void	ft_putstr(char *str);
+void	ft_putstr_fd(char *str, int fd);
 int		ft_strlen(char const *str);
 char	*ft_strdup(char *source);
 char	*ft_strchr(char *s, int c);

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 12:26:54 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/17 14:07:22 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,14 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 			{
 				exec_builtin(cmd, &env, token, line);
 				exit(0);
+			}
+			if (ft_strcmp(cmd->args[0], ".") == 0)
+			{
+				if (!cmd->args[1])
+				{
+					ft_putstr_fd("minishell: .: filename argument required\n", 2);
+					exit(2);
+				}
 			}
 			envp_arr = env_list_to_array(env);
 			if (ft_strchr(cmd->args[0], '/')) // si c'est un chemin direct
