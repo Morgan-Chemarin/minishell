@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote_helper.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:19:43 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 22:23:43 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/24 09:05:00 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,14 @@ char	*extract_quoted(char *line, int *i, int skip_expand, t_env *env)
 		(*i)++, len++;
 	(*i)++;
 	word = ft_substr(line, start, len);
+	if (!word)
+		return (NULL);
 	if (!skip_expand && quote == '"')
 	{
 		expanded = expand_variables(word, env);
 		free(word);
+		if (!expanded)
+			return (NULL);
 		word = expanded;
 	}
 	return (word);

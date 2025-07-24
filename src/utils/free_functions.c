@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 19:31:29 by dev               #+#    #+#             */
-/*   Updated: 2025/07/15 19:35:03 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/24 09:06:05 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,17 @@ void    free_env(t_env *env)
         free(env->value);
         free(env);
         env = tmp;
+    }
+}
+
+void    free_export_add_env(t_env *new, char **arg)
+{
+    if (arg)
+        free_array_str(arg);
+    if (new)
+    {
+		if (new->name)
+			free(new->name);
+        free(new);
     }
 }

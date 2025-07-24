@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 20:57:44 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/24 09:05:16 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,7 @@ char	**split_with_quote(char *line, t_env *env)
 		skip_spaces(line, &i);
 		if (!line[i])
 			break ;
-		if (line[i] == '"' || line[i] == '\'')
-		{
-			// Si c'est une quote, extraire le mot (même si c'est >> ou >)
-			tokens[j++] = extract_word(line, &i, env, 0);
-		}
-		else if (is_double_operator(&line[i], "<<", &i))
+		if (is_double_operator(&line[i], "<<", &i))
 		{
 			tokens[j++] = ft_strdup("<<");
 			heredoc = 1;
@@ -49,6 +44,11 @@ char	**split_with_quote(char *line, t_env *env)
 		}
 		else
 			tokens[j++] = extract_word(line, &i, env, 0);
+		if (!tokens[j - 1])
+		{
+			free_array_str(tokens);
+			return(NULL);
+		}
 		
 	}
 	tokens[j] = NULL;
@@ -63,18 +63,20 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 	int		start;
 
 	result = ft_calloc(1, 1);
+	if (!result)
+		return (NULL);
 	while (line[*i] && !ft_isspace(line[*i]) && \
 			line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
-        {
-            word = extract_quoted(line, i, skip_expand, env);
-            // Correction : si quotes vides, ne pas ajouter
-            if (word[0] == '\0') {
-                free(word);
-                continue;
-            }
-        }
+		{
+			word = extract_quoted(line, i, skip_expand, env);
+			if (!word)
+			{
+				free(result);
+				return (NULL);
+			}
+		}
 		else
 		{
 			start = *i;
@@ -83,27 +85,29 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 				line[*i] != '\'' && line[*i] != '"')
 				(*i)++;
 			word = ft_substr(line, start, *i - start);
+			if (!word)
+			{
+				free(result);
+				return (NULL);
+			}
 			if (!skip_expand)
 			{
 				expanded = expand_variables(word, env);
 				free(word);
+				if (!expanded)
+				{
+					free(result);
+					return (NULL);
+				}
 				word = expanded;
 			}
-			// correction
-			if (word[0] == '\0') {
-                free(word);
-                continue;
-            }
 		}
 		expanded = result;
 		result = ft_strjoin(expanded, word);
 		free(expanded);
 		free(word);
+		if (!result)
+			return (NULL);
 	}
-	// Correction : si result est vide, retourne NULL
-    if (result[0] == '\0') {
-        free(result);
-        return NULL;
-    }
 	return (result);
 }

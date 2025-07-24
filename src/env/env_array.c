@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_array.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:38:18 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 22:21:55 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/24 08:54:12 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ char **env_list_to_array(t_env *env)
 	while (tmp)
 	{
 		envp[i] = ft_strjoin_3(tmp->name, "=", tmp->value);
+		if (!envp[i])
+		{
+			ft_free_split(envp);
+			return (NULL);
+		}
 		i++;
 		tmp = tmp->next;
 	}

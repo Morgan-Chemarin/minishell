@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 20:55:47 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/24 09:04:43 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,36 @@ t_cmd	*parser(t_token *tokens)
 	while (tokens)
 	{
 		new = new_cmd();
+		if (!new)
+		{
+			free_cmd(head);
+			return (NULL);
+		}
 		if (!head)
 			head = new;
 		else
 			current->next = new;
 		current = new;
 		current->args = malloc(sizeof(char *) * (count_args(tokens) + 1));
+		if (!current->args)
+		{
+			free_cmd(head);
+			return (NULL);
+		}
 		i = 0;
 		while (tokens && tokens->type != PIPE)
 		{
 			if (tokens->type == WORD)
 			{
-				// Correction : ne pas ajouter d'argument vide ou NULL
-				if (tokens->value && tokens->value[0] != '\0')
-					current->args[i++] = ft_strdup(tokens->value);
+				current->args[i] = ft_strdup(tokens->value);
+				if (!current->args[i])
+				{
+					free_array_str(current->args);
+					current->args = NULL;
+					free_cmd(head);
+					return (NULL);
+				}
+				i++;
 			}
 			else if (tokens->type == REDIR_IN)
 			{
@@ -47,6 +63,11 @@ t_cmd	*parser(t_token *tokens)
 					if (current->input_file)
 						free(current->input_file);
 					current->input_file = ft_strdup(tokens->value);
+					if (!current->input_file)
+					{
+						free_cmd(head);
+						return (NULL);
+					}
 				}
 			}
 			else if (tokens->type == REDIR_HEREDOC)
@@ -55,6 +76,11 @@ t_cmd	*parser(t_token *tokens)
 				if (tokens)
 				{
 					current->heredoc_delim = ft_strdup(tokens->value);
+					if (!current->heredoc_delim)
+					{
+						free_cmd(head);
+						return (NULL);
+					}
 					current->has_heredoc = 1;
 				}
 			}
@@ -66,6 +92,11 @@ t_cmd	*parser(t_token *tokens)
 					if (current->output_file)
 						free(current->output_file);
 					current->output_file = ft_strdup(tokens->value);
+					if (!current->output_file)
+					{
+						free_cmd(head);
+						return (NULL);
+					}
 					current->append = 0;
 				}
 			}
@@ -76,7 +107,12 @@ t_cmd	*parser(t_token *tokens)
 				{
 					if (current->output_file)
 						free(current->output_file);
-					current->output_file = ft_strdup(tokens->value);
+					current->output_file = ft_strdup(tokens->value);\
+					if (!current->output_file)
+					{
+						free_cmd(head);
+						return (NULL);
+					}
 					current->append = 1;
 				}
 			}
@@ -102,22 +138,18 @@ t_cmd	*parser(t_token *tokens)
 
 t_token_type	get_token_type(char *s)
 {
-    // Correction : si s commence et finit par quote, c'est un WORD
-    if ((s[0] == '"' && s[ft_strlen(s)-1] == '"') ||
-        (s[0] == '\'' && s[ft_strlen(s)-1] == '\''))
-        return (WORD);
-    if (!ft_strcmp(s, "|"))
-        return (PIPE);
-    else if (!ft_strcmp(s, "<"))
-        return (REDIR_IN);
-    else if (!ft_strcmp(s, ">"))
-        return (REDIR_OUT);
-    else if (!ft_strcmp(s, ">>"))
-        return (REDIR_APPEND);
-    else if (!ft_strcmp(s, "<<"))
-        return (REDIR_HEREDOC);
-    else
-        return (WORD);
+	if (!ft_strcmp(s, "|"))
+		return (PIPE);
+	else if (!ft_strcmp(s, "<"))
+		return (REDIR_IN);
+	else if (!ft_strcmp(s, ">"))
+		return (REDIR_OUT);
+	else if (!ft_strcmp(s, ">>"))
+		return (REDIR_APPEND);
+	else if (!ft_strcmp(s, "<<"))
+		return (REDIR_HEREDOC);
+	else
+		return (WORD);
 }
 
 t_token	*create_struct_tokens(char **pre_token)
@@ -132,7 +164,20 @@ t_token	*create_struct_tokens(char **pre_token)
 	while (pre_token[i])
 	{
 		new = malloc(sizeof(t_token));
+		if (!new)
+		{
+			free_token(head);
+			free_array_str(pre_token);
+			return (NULL);
+		}
 		new->value = ft_strdup(pre_token[i]);
+		if (!new->value)
+		{
+			free(new);
+			free_token(head);
+			free_array_str(pre_token);
+			return (NULL);
+		}
 		new->type = get_token_type(pre_token[i]);
 		new->next = NULL;
 		if (!head)

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 18:21:31 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/24 09:07:05 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,5 +165,6 @@ void	free_array_str(char	**str);
 void	free_cmd(t_cmd *cmd);
 void	free_token(t_token *token);
 void	free_env(t_env *env);
+void    free_export_add_env(t_env *new, char **arg);
 
 #endif

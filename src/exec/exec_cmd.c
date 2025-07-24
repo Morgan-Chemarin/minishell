@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 20:56:12 by dev              ###   ########.fr       */
+/*   Updated: 2025/07/24 08:58:12 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,25 +57,25 @@ void	exec_builtin(t_cmd *cmd, t_env **env, t_token *token, char *line)
 		ft_exit(cmd, token, *env, line);
 }
 
-void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
+void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 {
 	int		in_fd;
 	int		pipe_fd[2];
 	pid_t	pid;
 	char	*path;
 	char	**envp_arr;
-	int		heredoc_fd;
 
 	in_fd = 0;
 	while (cmd)
 	{
-		heredoc_fd = -1;
+		int heredoc_fd = -1;
 		if (cmd->has_heredoc)
 		{
 			heredoc_fd = handle_heredoc(cmd, env);
 			if (heredoc_fd < 0)
 				return ;
 		}
+
 		int is_last = (cmd->next == NULL);
 		int is_stateful = is_stateful_builtin(cmd);
 
@@ -89,7 +89,7 @@ void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
             cmd = cmd->next;
             continue;
         }
-		
+
 		if (is_last && is_stateful)
 		{
 			int saved_stdin = dup(STDIN_FILENO);
@@ -147,7 +147,7 @@ void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 			{
 				if (!cmd->args[1])
 				{
-					ft_putstr_fd(".: filename argument required\n", 2);
+					ft_putstr_fd("minishell: .: filename argument required\n", 2);
 					exit(2);
 				}
 			}

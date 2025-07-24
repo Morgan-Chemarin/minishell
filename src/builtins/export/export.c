@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:57:04 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/07/08 01:46:21 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/24 08:52:58 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,32 @@ void	add_env(t_env **env, char **arg)
 
 	new = malloc(sizeof(t_env));
 	if (!new)
+	{
+		free_export_add_env(new, arg);
 		return ;
+	}
 	new->name = ft_strdup(arg[0]);
+	if (!new->name)
+	{
+		free_export_add_env(new, arg);
+		return ;
+	}
 	if (arg[1])
+	{
 		new->value = ft_strdup(arg[1]);
-	else if (!arg[1])
+		if (!new->value)
+		{
+			free_export_add_env(new, arg);
+			return ;
+		}
+	}
+	else
 		new->value = NULL;
 	new->next = NULL;
 	if (*env == NULL)
 	{
 		*env = new;
+		free_split(arg);
 		return ;
 	}
 	tmp = *env;
@@ -75,17 +91,21 @@ void	ft_export_exec(char *arg, t_env **env)
 	t_env	*tmp;
 
 	split_arg = ft_split(arg, '=');
+	if (!split_arg)
+		return ;
 	tmp = *env;
-	while (tmp->next != NULL)
+	while (tmp)
 	{
 		if (ft_strcmp(tmp->name, split_arg[0]) == 0)
 			break ;
 		tmp = tmp->next;
 	}
-	if (tmp->next == NULL && ft_strcmp(tmp->name, split_arg[0]) != 0)
+	if (!tmp)
 		add_env(env, split_arg);
 	else if (split_arg[1])
 		update_env(env, split_arg);
+	else
+		free_split(split_arg);
 }
 
 int	ft_export(t_cmd *cmd, t_env **env)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 22:23:00 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/24 08:54:34 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ char	*expand_exit_value(char *result, char *tmp)
 
 	status = ft_itoa(g_last_status_exit);
 	if (!status)
-	{
-		free(result);
 		return (NULL);
-	}
 	tmp = result;
 	result = ft_strjoin(tmp, status);
 	free(tmp);
@@ -49,6 +46,7 @@ char	*expand_variables(char *str, t_env *env)
 	char	tmp_char[2];
 	int		i;
 	int		start;
+	char	*tmp_result;
 
 	result = ft_calloc(1, 1);
 	if (!result)
@@ -58,9 +56,13 @@ char	*expand_variables(char *str, t_env *env)
 	{
 		if (str[i] == '$' && str[i + 1] == '?')
 		{
-			result = expand_exit_value(result, tmp);
-			if (!result)
+			tmp_result = expand_exit_value(result, tmp);
+			if (!tmp_result)
+			{
+				free(result);
 				return (NULL);
+			}
+			result = tmp_result;
 			i += 2;
 		}
 		else if (str[i] == '$' && str[i + 1] && \

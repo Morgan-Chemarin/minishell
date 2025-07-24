@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 12:39:07 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 02:30:38 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/07/24 08:59:26 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 		{
 			expanded = expand_variables(line, env);
 			free(line);
+			if (!expanded)
+				break ;
 			line = expanded;
 		}
 		write(write_fd, line, ft_strlen(line));
