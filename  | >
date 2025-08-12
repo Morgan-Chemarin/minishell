@@ -1,0 +1,6 @@
+[main 76979b5] fusion still reachable / include /
+ 24 files changed, 259 insertions(+), 272 deletions(-)
+ delete mode 100644 AAAAAA
+ create mode 100644 includes/colors.h
+ create mode 100644 includes/prototypes.h
+ create mode 100644 includes/struct.h
