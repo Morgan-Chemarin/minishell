@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/07/16 23:24:13 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:08:00 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,10 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		tokens = create_struct_tokens(pre_tokens);
+		free_array_str(pre_tokens);
 		if (!check_syntax_errors(tokens))
 		{
+			g_last_status_exit = 2;
 			free(line);
 			free_token(tokens);
 			continue ;
@@ -111,9 +113,12 @@ int	main(int argc, char **argv, char **envp)
 		cmd = parser(tokens);
 		if (cmd)
 			exec_cmd(cmd, env, tokens, line);
-		free(line);
-		free_token(tokens);
-		free_cmd(cmd);
+		if (cmd)
+			free_cmd(cmd);
+		if (tokens)
+			free_token(tokens);
+		if (line)
+			free(line);
 	}
 	free_env(env);
 	rl_clear_history();

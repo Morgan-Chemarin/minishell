@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/24 09:04:43 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/12 17:10:21 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ t_cmd	*parser(t_token *tokens)
 
 t_token_type	get_token_type(char *s)
 {
-	if (!ft_strcmp(s, "|"))
+	if (!ft_strcmp(s, "|")) // "ptere || a voir"
 		return (PIPE);
 	else if (!ft_strcmp(s, "<"))
 		return (REDIR_IN);
@@ -191,6 +191,5 @@ t_token	*create_struct_tokens(char **pre_token)
 		}
 		i++;
 	}
-	free_array_str(pre_token);
 	return (head);
 }

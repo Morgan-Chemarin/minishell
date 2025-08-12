@@ -6,17 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/07/24 08:58:12 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/12 17:30:00 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <fcntl.h>
-#include <unistd.h>
-
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/wait.h>
 
 void	wait_pid_remastered(pid_t pid)
 {
@@ -64,8 +58,12 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 	pid_t	pid;
 	char	*path;
 	char	**envp_arr;
+	t_cmd	*cmd_head;
 
 	in_fd = 0;
+	path = NULL;
+	envp_arr = NULL;
+	cmd_head = cmd;
 	while (cmd)
 	{
 		int heredoc_fd = -1;
@@ -80,15 +78,15 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 		int is_stateful = is_stateful_builtin(cmd);
 
 		// Correction : ignorer si commande vide
-        if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0')
-        {
-            ft_putstr_fd("minishell: : command not found\n", 2);
-            g_last_status_exit = 127;
-            if (heredoc_fd != -1)
-                close(heredoc_fd);
-            cmd = cmd->next;
-            continue;
-        }
+        // if (!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0')
+        // {
+        //     ft_putstr_fd("minishell:jxv : command not found\n", 2);
+        //     g_last_status_exit = 127;
+        //     if (heredoc_fd != -1)
+        //         close(heredoc_fd);
+        //     cmd = cmd->next;
+        //     continue;
+        // }
 
 		if (is_last && is_stateful)
 		{
@@ -116,11 +114,12 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 		if (pid == 0)
 		{
 			// Fils
-			if (cmd->args[0] == NULL || cmd->args[0][0] == '\0')
-			{
-				ft_putstr_fd("minishell: : command not found\n", 2);
-				exit(127);
-			}
+			//*PROBLEME GUILLEMENT SOIT "" SOIT REDIR
+			// if (cmd->args[0] == NULL || cmd->args[0][0] == '\0')
+			// {
+			// 	ft_putstr_fd("minishell: dcknd: command not found\n", 2);
+			// 	exit(127);
+			// }
 			if (in_fd != 0)
 			{
 				dup2(in_fd, STDIN_FILENO);
@@ -141,17 +140,29 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 			if (cmd->type == CMD_BUILTNS)
 			{
 				exec_builtin(cmd, &env, token, line);
-				exit(0);
+				if (path)
+					free(path);
+				free_all(cmd_head, token, env, line);
+				exit(g_last_status_exit);
 			}
 			if (ft_strcmp(cmd->args[0], ".") == 0)
 			{
 				if (!cmd->args[1])
 				{
 					ft_putstr_fd("minishell: .: filename argument required\n", 2);
+					ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
+					if (path)
+						free(path);
+					free_all(cmd, token, env, line);
 					exit(2);
 				}
 			}
 			envp_arr = env_list_to_array(env);
+			if (!envp_arr)
+			{
+				free_all(cmd_head, token, env, line);
+				exit(1);
+			}
 			if (ft_strchr(cmd->args[0], '/')) // si c'est un chemin direct
 				check_access_exec(cmd->args[0], cmd->args, envp_arr);
 			else // on cherche dans path
@@ -162,7 +173,10 @@ void exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 				else // sinon on tente dans le dir actuel
 					check_access_exec(cmd->args[0], cmd->args, envp_arr);
 			}
-			free(path);
+			if (path)
+        		free(path);
+			free_all(cmd_head, token, env, line);
+			exit(g_last_status_exit);
 		}
 		else if (pid < 0)
 		{

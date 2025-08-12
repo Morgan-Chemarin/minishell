@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/07/24 08:58:55 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/12 17:32:39 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	check_access_exec(char *cmd, char **args, char **envp)
 	{
 		ft_putstr_fd(cmd, 2);
 		ft_putstr_fd(": is a directory\n", 2);
-		exit(126);
+		g_last_status_exit = 126;
+		return ;
 	}
 	if (access(cmd, F_OK) != 0)
 	{
@@ -38,18 +39,20 @@ void	check_access_exec(char *cmd, char **args, char **envp)
 		else
 			ft_putstr_fd(": command not found\n", 2);
         ft_free_split(envp);
-        exit(127);
+        g_last_status_exit = 127;
+		return ;
 	}
 	else if (access(cmd, X_OK) != 0)
 	{
 		perror(cmd);
 		ft_free_split(envp);
-		exit(126);
+		g_last_status_exit = 126;
+		return ;
 	}
 	execve(cmd, args, envp);
 	perror("minishell");
 	ft_free_split(envp);
-	exit(126);
+	g_last_status_exit = 126;
 }
 
 static char	*search_in_paths(char **paths, char *cmd)

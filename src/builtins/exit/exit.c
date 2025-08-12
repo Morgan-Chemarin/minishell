@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/07/24 08:52:27 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/12 16:59:40 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,6 @@ void    ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line)
         close(tty_fd);
     }
     else if (count_arg(cmd->args) > 2)
-        write(tty_fd, "exit: too many arguments\n", 25);
+        write(tty_fd, "exit: too many arguments\n", 25);\
     close(tty_fd);
 }
