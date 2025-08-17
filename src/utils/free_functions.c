@@ -6,82 +6,82 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 19:31:29 by dev               #+#    #+#             */
-/*   Updated: 2025/08/12 17:03:35 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 13:13:56 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void    free_array_str(char    **str)
+void	free_array_str(char **str)
 {
-    int    i;
+	int	i;
 
-    if (!str)
-        return;
-    i = 0;
-    while (str[i])
-    {
-        free(str[i]);
-        i++;
-    }
-    free(str);
+	if (!str)
+		return ;
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
 }
 
-void    free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
-    t_cmd    *tmp;
+	t_cmd	*tmp;
 
-    while (cmd)
-    {
-        tmp = cmd->next;
-        if (cmd->args)
-            free_array_str(cmd->args);
-        if (cmd->input_file)
-            free(cmd->input_file);
-        if (cmd->output_file)
-            free(cmd->output_file);
-        if (cmd->heredoc_delim)
-            free(cmd->heredoc_delim);
-        free(cmd);
-        cmd = tmp;
-    }
+	while (cmd)
+	{
+		tmp = cmd->next;
+		if (cmd->args)
+			free_array_str(cmd->args);
+		if (cmd->input_file)
+			free(cmd->input_file);
+		if (cmd->output_file)
+			free(cmd->output_file);
+		if (cmd->heredoc_delim)
+			free(cmd->heredoc_delim);
+		free(cmd);
+		cmd = tmp;
+	}
 }
 
-void    free_token(t_token *token)
+void	free_token(t_token *token)
 {
-    t_token    *tmp;
+	t_token	*tmp;
 
-    while (token)
-    {
-        tmp = token->next;
-        free(token->value);
-        free(token);
-        token = tmp;
-    }
+	while (token)
+	{
+		tmp = token->next;
+		free(token->value);
+		free(token);
+		token = tmp;
+	}
 }
 
-void    free_env(t_env *env)
+void	free_env(t_env *env)
 {
-    t_env    *tmp;
+	t_env	*tmp;
 
-    while (env)
-    {
-        tmp = env->next;
-        free(env->name);
-        free(env->value);
-        free(env);
-        env = tmp;
-    }
+	while (env)
+	{
+		tmp = env->next;
+		free(env->name);
+		free(env->value);
+		free(env);
+		env = tmp;
+	}
 }
 
-void    free_export_add_env(t_env *new, char **arg)
+void	free_export_add_env(t_env *new, char **arg)
 {
-    if (arg)
-        free_array_str(arg);
-    if (new)
-    {
+	if (arg)
+		free_array_str(arg);
+	if (new)
+	{
 		if (new->name)
 			free(new->name);
-        free(new);
-    }
+		free(new);
+	}
 }

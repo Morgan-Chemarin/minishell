@@ -3,67 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 17:57:04 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/12 17:00:18 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/14 21:15:35 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void	free_split(char **split_arg)
-{
-	int	i;
-
-	i = 0;
-	while (split_arg[i])
-	{
-		free(split_arg[i]);
-		i++;
-	}
-	free(split_arg);
-}
-
-void	add_env(t_env **env, char **arg)
+t_env	*create_env(char **arg)
 {
 	t_env	*new;
-	t_env	*tmp;
 
 	new = malloc(sizeof(t_env));
 	if (!new)
-	{
-		free_export_add_env(new, arg);
-		return ;
-	}
+		return (NULL);
 	new->name = ft_strdup(arg[0]);
 	if (!new->name)
 	{
-		free_export_add_env(new, arg);
-		return ;
+		free(new);
+		return (NULL);
 	}
 	if (arg[1])
 	{
 		new->value = ft_strdup(arg[1]);
 		if (!new->value)
 		{
-			free_export_add_env(new, arg);
-			return ;
+			free(new->name);
+			free(new);
+			return (NULL);
 		}
 	}
 	else
 		new->value = NULL;
 	new->next = NULL;
-	if (*env == NULL)
+	return (new);
+}
+
+void	add_env(t_env **env, char **arg)
+{
+	t_env	*new;
+
+	new = create_env(arg);
+	if (!new)
 	{
-		*env = new;
 		free_split(arg);
 		return ;
 	}
-	tmp = *env;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	tmp->next = new;
+	add_env_node(env, new);
 	free_split(arg);
 }
 

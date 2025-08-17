@@ -3,46 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:34:18 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/12 17:00:43 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/15 18:27:24 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int    ft_unset(t_env **env, t_cmd *cmd)
+void	free_env_node(t_env *node)
 {
-    int        i;
-    t_env    *current;
-    t_env    *previous;
-    t_env    *to_free;
+	if (!node)
+		return ;
+	free(node->name);
+	if (node->value)
+		free(node->value);
+	free(node);
+}
 
-    i = -1;
-    while (cmd->args[++i])
-    {
-        previous = NULL;
-        current = *env;
-        while (current)
-        {
-            if (ft_strcmp(current->name, cmd->args[i]) == 0)
-            {
-                to_free = current;
-                if (previous)
-                    previous->next = current->next;
-                else
-                    *env = current->next;
-                current = current->next;
-                free(to_free->name);
-                if (to_free->value)
-                    free(to_free->value);
-                free(to_free);
-                continue;
-            }
-            previous = current;
-            current = current->next;
-        }
-    }
-    return (0);
+void	remove_env_var(t_env **env, char *var_name)
+{
+	t_env	*current;
+	t_env	*previous;
+
+	current = *env;
+	previous = NULL;
+	while (current)
+	{
+		if (ft_strcmp(current->name, var_name) == 0)
+		{
+			if (previous)
+				previous->next = current->next;
+			else
+				*env = current->next;
+			free_env_node(current);
+			return ;
+		}
+		previous = current;
+		current = current->next;
+	}
+}
+
+int	ft_unset(t_env **env, t_cmd *cmd)
+{
+	int	i;
+
+	i = 1;
+	while (cmd->args[i])
+	{
+		remove_env_var(env, cmd->args[i]);
+		i++;
+	}
+	return (0);
 }

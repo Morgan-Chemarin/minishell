@@ -18,6 +18,7 @@ SRCS = \
 		$(SRC_DIR)/builtins/exit/exit.c \
 		$(SRC_DIR)/builtins/export/export.c \
 		$(SRC_DIR)/builtins/export/env_export.c \
+		$(SRC_DIR)/builtins/export/export_utils.c \
 		$(SRC_DIR)/builtins/unset/unset.c \
 		$(SRC_DIR)/builtins/pwd/pwd.c \
 		$(SRC_DIR)/builtins/env/env.c \
@@ -27,12 +28,16 @@ SRCS = \
 		$(SRC_DIR)/parser/split_quote.c \
 		$(SRC_DIR)/parser/split_utils.c \
 		$(SRC_DIR)/parser/split_quote_helper.c \
+		$(SRC_DIR)/parser/tokens_redir.c \
+		$(SRC_DIR)/parser/tokens.c \
 		$(SRC_DIR)/parser/parsing.c \
 		$(SRC_DIR)/exec/exec_cmd.c \
 		$(SRC_DIR)/exec/pipe_cmd.c \
 		$(SRC_DIR)/exec/heredoc.c \
 		$(SRC_DIR)/exec/execve_utils.c \
 		$(SRC_DIR)/exec/redir.c \
+		$(SRC_DIR)/exec/exec_cmd_utils.c \
+		$(SRC_DIR)/exec/exec_builtins.c\
 		$(SRC_DIR)/utils/check_error.c \
 		$(SRC_DIR)/utils/free_functions.c \
 		$(GNL_SRCS)

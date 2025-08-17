@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prototypes.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
+/*   Updated: 2025/08/17 13:34:48 by dev              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PROTOTYPES_H
 # define PROTOTYPES_H
 
@@ -6,13 +18,14 @@
 int		ft_echo(t_cmd *cmd);
 int		ft_env(t_env *envp);
 int		ft_cd(t_cmd *cmd, t_env **env);
-void	ft_exit(t_cmd *cmd, t_token *token, t_env *env, char *line);
+void	ft_exit(t_cmd *cmd, t_all *all);
 int		ft_unset(t_env **env, t_cmd *cmd);
 int		ft_pwd(void);
 
 // export
 void	ft_env_export(t_env *envp);
 int		ft_export(t_cmd *cmd, t_env **env);
+void	add_env_node(t_env **env, t_env *new);
 
 // utils_builtins
 int		count_arg(char **arg);
@@ -29,7 +42,6 @@ t_env	*envp_to_list(char **envp);
 // env_array.c
 char	*ft_strjoin_3(char *s1, char *s2, char *s3);
 char	**env_list_to_array(t_env *env);
-void	ft_free_split(char **arr);
 
 // ** EXEC **
 
@@ -47,14 +59,23 @@ int		handle_heredoc(t_cmd *cmd, t_env *env);
 char	*get_path(char *cmd, t_env *env);
 void	check_access_exec(char *cmd, char **args, char **envp);
 
+// exec_cmd_utils.c
+void	check_access(char *path, char **args, char **envp);
+void	setup_child_pipes(t_cmd *cmd, int fds[3]);
+void	restore_fds(int saved_fds[2]);
+void	child_exit_handler(char *path, char **envp_arr, t_all *all);
+
 // redir.c
 void	handle_redirections(t_cmd *cmd);
+
+// exec_builtins.c
+void	exec_builtin(t_cmd *cmd, t_env **env, t_all *all);
+int		is_stateful_builtin(t_cmd *cmd);
 
 // ** PARSER **
 
 // parsing.c
 t_cmd	*parser(t_token *tokens);
-t_token	*create_struct_tokens(char **split);
 
 // split_quote.c
 char	**split_with_quote(char *line, t_env *env);
@@ -70,7 +91,13 @@ int		is_single_operator(char c);
 int		is_double_operator(char *s, const char *op, int *i);
 char	*extract_delimiter(char *line, int *i);
 
-// token_builder.c
+// tokens_redir.c
+int		set_input(t_cmd *cmd, t_token **tokens);
+int		set_output(t_cmd *cmd, t_token **tokens, int append);
+int		set_heredoc(t_cmd *cmd, t_token **tokens);
+
+// tokens.c
+t_token	*create_struct_tokens(char **pre_token);
 
 // ** UTILS **
 
@@ -78,11 +105,12 @@ char	*extract_delimiter(char *line, int *i);
 int		check_syntax_errors(t_token *tokens);
 
 //free_utils
-void    free_array_str(char    **str);
-void    free_cmd(t_cmd *cmd);
-void    free_token(t_token *token);
-void    free_env(t_env *env);
-void    free_export_add_env(t_env *new, char **arg);
-void    free_all(t_cmd *cmd, t_token *token, t_env *env, char *line);
+void	free_array_str(char **str);
+void	free_cmd(t_cmd *cmd);
+void	free_token(t_token *token);
+void	free_env(t_env *env);
+void	free_export_add_env(t_env *new, char **arg);
+void	free_all(t_cmd *cmd, t_token *token, t_env *env, char *line);
+void	free_split(char **split_arg);
 
 #endif

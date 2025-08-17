@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:17:04 by dev               #+#    #+#             */
-/*   Updated: 2025/07/17 18:21:08 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/16 23:10:01 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,14 @@ static void	handle_input(char *file)
 static void	handle_output(char *file, int append)
 {
 	int	fd;
+	int	flags;
 
-	fd = open(file, O_WRONLY | O_CREAT
-			| (append ? O_APPEND : O_TRUNC), 0644);
+	flags = O_WRONLY | O_CREAT;
+	if (append)
+		flags |= O_APPEND;
+	else
+		flags |= O_TRUNC;
+	fd = open(file, flags, 0644);
 	if (fd < 0)
 		perror(file);
 	else

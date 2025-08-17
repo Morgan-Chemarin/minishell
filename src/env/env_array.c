@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:38:18 by dev               #+#    #+#             */
-/*   Updated: 2025/08/12 17:02:07 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 13:10:21 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*ft_strjoin_3(char *s1, char *s2, char *s3)
 {
-	char *tmp;
-	char *res;
-	
+	char	*tmp;
+	char	*res;
+
 	tmp = ft_strjoin(s1, s2);
 	if (!tmp)
 		return (NULL);
@@ -30,50 +30,54 @@ char	*ft_strjoin_3(char *s1, char *s2, char *s3)
 	return (res);
 }
 
-char **env_list_to_array(t_env *env)
+int	count_exportable_env(t_env *env)
 {
-	int count;
-	t_env *tmp;
-    char **envp;
+	int	count;
 
-    count = 0;
-    tmp = env;
-	while (tmp)
+	count = 0;
+	while (env)
 	{
-		count++;
-		tmp = tmp->next;
+		if (env->value)
+			count++;
+		env = env->next;
 	}
-	envp = malloc(sizeof(char *) * (count + 1));
-	if (!envp)
-		return (NULL);
+	return (count);
+}
+
+char	**fill_envp_array(t_env *env, char **envp)
+{
+	int		i;
+	t_env	*tmp;
+
 	tmp = env;
-	int i = 0;
+	i = 0;
 	while (tmp)
 	{
-		envp[i] = ft_strjoin_3(tmp->name, "=", tmp->value);
-		if (!envp[i])
+		if (tmp->value)
 		{
-			ft_free_split(envp);
-			return (NULL);
+			envp[i] = ft_strjoin_3(tmp->name, "=", tmp->value);
+			if (!envp[i])
+			{
+				free_split(envp);
+				return (NULL);
+			}
+			i++;
 		}
-		i++;
 		tmp = tmp->next;
 	}
 	envp[i] = NULL;
 	return (envp);
 }
 
-void	ft_free_split(char **arr)
+char	**env_list_to_array(t_env *env)
 {
-	int	i;
+	int		count;
+	char	**envp;
 
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
+	count = count_exportable_env(env);
+	envp = malloc(sizeof(char *) * (count + 1));
+	if (!envp)
+		return (NULL);
+	envp = fill_envp_array(env, envp);
+	return (envp);
 }

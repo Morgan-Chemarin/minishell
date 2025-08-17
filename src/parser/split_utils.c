@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:18:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/24 09:05:36 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 11:50:04 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ int	is_double_operator(char *s, const char *op, int *i)
 
 char	*extract_delimiter(char *line, int *i)
 {
-	int	start = *i;
+	int	start;
+
+	start = *i;
 	while (line[*i] && !ft_isspace(line[*i])
 		&& line[*i] != '<' && line[*i] != '>' && line[*i] != '|')
 		(*i)++;

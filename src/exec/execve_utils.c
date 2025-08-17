@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/12 17:32:39 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/16 22:30:23 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,39 @@
 
 int	is_directory(const char *path)
 {
-	struct stat path_stat;
+	struct stat	path_stat;
 
 	if (stat(path, &path_stat) != 0)
 		return (0);
 	return (S_ISDIR(path_stat.st_mode));
 }
 
-void	check_access_exec(char *cmd, char **args, char **envp)
+void	handle_exec_error(char *cmd)
 {
 	if (is_directory(cmd))
 	{
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd, 2);
 		ft_putstr_fd(": is a directory\n", 2);
-		g_last_status_exit = 126;
-		return ;
+		exit(126);
 	}
-	if (access(cmd, F_OK) != 0)
+	if (access(cmd, X_OK) != 0)
 	{
 		ft_putstr_fd("minishell: ", 2);
-        ft_putstr_fd(cmd, 2);
-        if (ft_strchr(cmd, '/'))
-			ft_putstr_fd(": No such file or directory\n", 2);
-		else
-			ft_putstr_fd(": command not found\n", 2);
-        ft_free_split(envp);
-        g_last_status_exit = 127;
-		return ;
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		exit(126);
 	}
-	else if (access(cmd, X_OK) != 0)
-	{
-		perror(cmd);
-		ft_free_split(envp);
-		g_last_status_exit = 126;
+}
+
+void	check_access_exec(char *cmd, char **args, char **envp)
+{
+	if (access(cmd, F_OK) != 0)
 		return ;
-	}
+	handle_exec_error(cmd);
 	execve(cmd, args, envp);
 	perror("minishell");
-	ft_free_split(envp);
-	g_last_status_exit = 126;
+	exit(126);
 }
 
 static char	*search_in_paths(char **paths, char *cmd)
@@ -93,6 +87,6 @@ char	*get_path(char *cmd, t_env *env)
 	if (!paths)
 		return (NULL);
 	path = search_in_paths(paths, cmd);
-	ft_free_split(paths);
+	free_split(paths);
 	return (path);
 }

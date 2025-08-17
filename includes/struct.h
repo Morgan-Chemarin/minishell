@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:36:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/12 17:37:28 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 13:09:17 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,14 @@ typedef struct s_cmd
 	t_cmd_type		type;
 	struct s_cmd	*next;
 }	t_cmd;
+
+typedef struct s_all
+{
+	t_cmd		*cmd_head;
+	t_token		*token;
+	t_env		*env;
+	char		*line;
+	int			heredoc_fd;
+}	t_all;
 
 #endif
