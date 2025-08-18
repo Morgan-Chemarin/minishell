@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/16 22:30:23 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/18 12:50:15 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,16 @@ void	handle_exec_error(char *cmd)
 void	check_access_exec(char *cmd, char **args, char **envp)
 {
 	if (access(cmd, F_OK) != 0)
+	{
+		if (ft_strchr(cmd, '/'))
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd, 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+			exit(127);
+		}
 		return ;
+	}
 	handle_exec_error(cmd);
 	execve(cmd, args, envp);
 	perror("minishell");

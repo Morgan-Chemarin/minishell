@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 23:04:40 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/18 12:48:23 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,19 @@ void	execute_child_process(t_cmd *cmd, t_env *env, t_all *all, int fds[3])
 		free_all(all->cmd_head, all->token, env, all->line);
 		exit(g_last_status_exit);
 	}
+	//* filename argument required
+	// if (ft_strcmp(cmd->args[0], ".") == 0)
+	// {
+	// 	if (!cmd->args[1])
+	// 	{
+	// 		ft_putstr_fd("minishell: .: filename argument required\n", 2);
+	// 		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
+	// 		if (path)
+	// 			free(path);
+	// 		free_all(all->cmd_head, all->token, env, all->line);
+	// 		exit(2);
+	// 	}
+	// }
 	envp_arr = env_list_to_array(env);
 	if (ft_strchr(cmd->args[0], '/'))
 		check_access_exec(cmd->args[0], cmd->args, envp_arr);
