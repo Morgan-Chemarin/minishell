@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 13:33:11 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 23:04:40 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,17 @@ void	execute_child_process(t_cmd *cmd, t_env *env, t_all *all, int fds[3])
 	all->env = env;
 	setup_child_pipes(cmd, fds);
 	handle_redirections(cmd);
+	if (!cmd->args[0] || cmd->args[0][0] == '\0')
+	{
+		if (cmd->args[0] && cmd->args[0][0] == '\0')
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd->args[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
+			exit(127);
+		}
+		exit(EXIT_SUCCESS);
+	}
 	if (fds[2] != -1)
 	{
 		dup2(fds[2], STDIN_FILENO);
@@ -107,7 +118,7 @@ void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 	while (cmd)
 	{
 		if (cmd->has_heredoc)
-			fds[2] = handle_heredoc(cmd, env); //* ici copié collé
+			fds[2] = handle_heredoc(cmd, env);
 		if (cmd->next && pipe(fds) < 0)
 			return (perror("pipe"));
 		pid = fork();

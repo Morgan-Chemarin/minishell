@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 12:57:11 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 23:01:56 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,15 @@ static t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 
 static int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 {
+	char	*val;
+
 	if ((*tokens)->type == WORD)
 	{
-		cmd->args[*i] = ft_strdup((*tokens)->value);
+		val = (*tokens)->value;
+		if (val[0] == '\1')
+			cmd->args[*i] = ft_strdup(val + 1);
+		else
+			cmd->args[*i] = ft_strdup(val);
 		if (!cmd->args[*i])
 			return (0);
 		(*i)++;

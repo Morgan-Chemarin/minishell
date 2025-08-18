@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 12:20:26 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/17 22:54:19 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 {
 	char	*word;
 	char	*result;
+	char	*marked;
 
 	result = ft_calloc(1, 1);
 	if (!result)
@@ -60,7 +61,14 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 		line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
+		{
 			word = extract_quoted(line, i, skip_expand, env);
+			if (!word)
+				return (NULL);
+			marked = ft_strjoin("\1", word);
+			free(word);
+			return (marked);
+		}
 		else
 			word = extract_plain_word(line, i, env, skip_expand);
 		if (!word)
@@ -81,7 +89,14 @@ static int	handle_token(char *line, int *i, char **tokens, t_env *env)
 	else if (is_double_operator(&line[*i], ">>", i))
 		return (tokens[0] = ft_strdup(">>"), 1);
 	else if (is_single_operator(line[*i]))
+	{
+		if (line[*i] == '>' || line[*i] == '<')
+		{
+			if (line[*i + 1] && (line[*i + 1] == '"' || line[*i + 1] == '\''))
+				return (tokens[0] = extract_word(line, i, env, 0), 1);
+		}
 		return (tokens[0] = ft_substr(line, (*i)++, 1), 1);
+	}
 	else if (heredoc)
 		return (tokens[0] = extract_delimiter(line, i), heredoc = 0, 1);
 	else
