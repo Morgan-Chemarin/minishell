@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 13:10:33 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/19 16:39:52 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*get_env_value(char *name, t_env *env)
 {
 	while (env)
 	{
-		if (!strcmp(env->name, name))
+		if (!ft_strcmp(env->name, name))
 			return (env->value);
 		env = env->next;
 	}

@@ -1,15 +1,12 @@
 NAME       = minishell
 
 CC         = cc 
-CFLAGS     =  -Iinclude -Ilibft -g3 -I gnl
+CFLAGS     = -Wall -Wextra -Werror -Iinclude -Ilibft -g3 -I gnl
 LDFLAGS    = -lreadline
 
 SRC_DIR    = src
 OBJ_DIR    = obj
 LIBFT_DIR  = libft
-
-GNL_DIR = gnl
-GNL_SRCS = $(GNL_DIR)/get_next_line.c $(GNL_DIR)/get_next_line_utils.c
 
 SRCS = \
 		$(SRC_DIR)/main/main.c \
@@ -42,7 +39,6 @@ SRCS = \
 		$(SRC_DIR)/exec/exec_builtins.c\
 		$(SRC_DIR)/utils/check_error.c \
 		$(SRC_DIR)/utils/free_functions.c \
-		$(GNL_SRCS)
 
 OBJS	= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

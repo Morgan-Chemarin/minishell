@@ -15,6 +15,7 @@
         "fcntl.h": "c",
         "wait.h": "c",
         "ioctl.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "history.h": "c"
     }
 }

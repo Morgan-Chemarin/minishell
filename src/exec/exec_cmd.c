@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/19 11:18:12 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/19 19:48:53 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,6 @@ static void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 
 void	execute_child_process(t_cmd *cmd, t_env *env, t_all *all, int fds[3])
 {
-	char	*path;
-	char	**envp_arr;
-
-	path = NULL;
 	all->env = env;
 	setup_child_pipes(cmd, fds);
 	handle_redirections(cmd);
@@ -90,12 +86,19 @@ int	handle_single_stateful(t_cmd *cmd, t_env **env, t_all *all)
 	{
 		all->heredoc_fd = handle_heredoc(cmd, *env);
 		if (all->heredoc_fd < 0)
-			return (restore_fds(saved_fds), 1);
+		{
+			restore_fds(saved_fds);
+			close(saved_fds[0]);
+			close(saved_fds[1]);
+			return (1);
+		}
 		dup2(all->heredoc_fd, STDIN_FILENO);
 		close(all->heredoc_fd);
 	}
 	exec_builtin(cmd, env, all);
 	restore_fds(saved_fds);
+	close(saved_fds[0]);
+	close(saved_fds[1]);
 	return (1);
 }
 
@@ -107,6 +110,12 @@ void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 	all.token = token;
 	all.line = line;
 	all.env = env;
+	if (cmd->next == NULL && cmd->type == CMD_BUILTNS
+		&& ft_strcmp(cmd->args[0], "exit") == 0)
+	{
+		exec_builtin(cmd, &env, &all);
+		return ;
+	}
 	if (handle_single_stateful(cmd, &env, &all))
 		return ;
 	exec_cmd_loop(cmd, &env, &all);
