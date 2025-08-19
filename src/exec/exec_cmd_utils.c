@@ -3,14 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:38:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/16 22:32:05 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/19 09:21:40 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
+{
+	int		fds[3];
+	pid_t	pid;
+
+	fds[0] = 0;
+	fds[2] = -1;
+	while (cmd)
+	{
+		all->env = *env;
+		if (cmd->has_heredoc)
+			fds[2] = handle_heredoc(cmd, *env);
+		if (cmd->next && pipe(fds) < 0)
+			return (perror("pipe"));
+		pid = fork();
+		if (pid < 0)
+			return (perror("fork"));
+		if (pid == 0)
+			execute_child_process(cmd, *env, all, fds);
+		execute_parent_process(pid, cmd, fds);
+		cmd = cmd->next;
+	}
+}
 
 void	check_access(char *path, char **args, char **envp)
 {

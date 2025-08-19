@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:18:36 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 11:50:04 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/19 11:54:17 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,17 @@ char	*extract_delimiter(char *line, int *i)
 		&& line[*i] != '<' && line[*i] != '>' && line[*i] != '|')
 		(*i)++;
 	return (ft_substr(line, start, *i - start));
+}
+
+char	*handle_quotes(char *line, int *i, int skip_expand, t_env *env)
+{
+	char	*word;
+	char	*marked;
+
+	word = extract_quoted(line, i, skip_expand, env);
+	if (!word)
+		return (NULL);
+	marked = ft_strjoin("\1", word);
+	free(word);
+	return (marked);
 }

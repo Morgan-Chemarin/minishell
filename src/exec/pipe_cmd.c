@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:14:36 by dev               #+#    #+#             */
-/*   Updated: 2025/07/24 08:59:55 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/19 11:18:16 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,18 @@ int	count_args(t_token *token)
 		token = token->next;
 	}
 	return (count);
+}
+
+void	dot_command(t_cmd *cmd, t_env *env, t_all *all)
+{
+	if (ft_strcmp(cmd->args[0], ".") == 0)
+	{
+		if (!cmd->args[1])
+		{
+			ft_putstr_fd("minishell: .: filename argument required\n", 2);
+			ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
+			free_all(all->cmd_head, all->token, env, all->line);
+			exit(2);
+		}
+	}
 }

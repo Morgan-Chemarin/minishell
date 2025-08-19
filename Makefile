@@ -12,7 +12,8 @@ GNL_DIR = gnl
 GNL_SRCS = $(GNL_DIR)/get_next_line.c $(GNL_DIR)/get_next_line_utils.c
 
 SRCS = \
-		$(SRC_DIR)/main.c \
+		$(SRC_DIR)/main/main.c \
+		$(SRC_DIR)/main/main_loop.c \
 		$(SRC_DIR)/builtins/cd/cd.c \
 		$(SRC_DIR)/builtins/echo/echo.c \
 		$(SRC_DIR)/builtins/exit/exit.c \
@@ -36,6 +37,7 @@ SRCS = \
 		$(SRC_DIR)/exec/heredoc.c \
 		$(SRC_DIR)/exec/execve_utils.c \
 		$(SRC_DIR)/exec/redir.c \
+		$(SRC_DIR)/exec/wait_pid_remastered.c \
 		$(SRC_DIR)/exec/exec_cmd_utils.c \
 		$(SRC_DIR)/exec/exec_builtins.c\
 		$(SRC_DIR)/utils/check_error.c \

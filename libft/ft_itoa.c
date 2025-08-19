@@ -3,24 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 16:45:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/07/07 16:45:45 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/19 09:13:09 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	count_n(int n)
+static int	ft_len(long n)
 {
 	int	len;
 
 	len = 0;
-	if (n <= 0)
+	if (n == 0)
+		return (1);
+	if (n < 0)
 	{
-		len = 1;
 		n = -n;
+		len++;
 	}
 	while (n > 0)
 	{
@@ -33,25 +35,26 @@ static int	count_n(int n)
 char	*ft_itoa(int n)
 {
 	char	*str;
+	long	nb;
 	int		len;
 
-	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
-	len = count_n(n);
-	str = malloc(sizeof(char) * (len + 1));
-	if (str == NULL)
+	nb = n;
+	len = ft_len(nb);
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!str)
 		return (NULL);
 	str[len] = '\0';
-	if (n < 0)
+	if (nb == 0)
+		str[0] = '0';
+	if (nb < 0)
 	{
 		str[0] = '-';
-		n = -n;
+		nb = -nb;
 	}
-	while (len > 0 && str[len - 1] != '-')
+	while (nb > 0)
 	{
-		str[len - 1] = (n % 10) + 48;
-		n = n / 10;
-		len--;
+		str[--len] = (nb % 10) + '0';
+		nb = nb / 10;
 	}
 	return (str);
 }

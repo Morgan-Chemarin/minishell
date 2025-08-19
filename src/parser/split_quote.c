@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 22:54:19 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/19 11:54:02 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 {
 	char	*word;
 	char	*result;
-	char	*marked;
 
 	result = ft_calloc(1, 1);
 	if (!result)
@@ -61,14 +60,7 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 		line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
-		{
-			word = extract_quoted(line, i, skip_expand, env);
-			if (!word)
-				return (NULL);
-			marked = ft_strjoin("\1", word);
-			free(word);
-			return (marked);
-		}
+			word = handle_quotes(line, i, skip_expand, env);
 		else
 			word = extract_plain_word(line, i, env, skip_expand);
 		if (!word)

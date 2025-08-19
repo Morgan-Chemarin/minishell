@@ -6,12 +6,17 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 13:34:48 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/19 11:54:36 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PROTOTYPES_H
 # define PROTOTYPES_H
+
+// ** MAIN **
+
+// main_loop.c
+int		process_line(char *line, t_env *env);
 
 // ** BUILTINS **
 
@@ -47,10 +52,13 @@ char	**env_list_to_array(t_env *env);
 
 // exec_cmd.c
 void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
+void	execute_parent_process(pid_t pid, t_cmd *cmd, int fds[3]);
+void	execute_child_process(t_cmd *cmd, t_env *env, t_all *all, int fds[3]);
 
 // pipe_cmd.c
 t_cmd	*new_cmd(void);
 int		count_args(t_token *token);
+void	dot_command(t_cmd *cmd, t_env *env, t_all *all);
 
 // heredoc.c
 int		handle_heredoc(t_cmd *cmd, t_env *env);
@@ -64,6 +72,10 @@ void	check_access(char *path, char **args, char **envp);
 void	setup_child_pipes(t_cmd *cmd, int fds[3]);
 void	restore_fds(int saved_fds[2]);
 void	child_exit_handler(char *path, char **envp_arr, t_all *all);
+void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all);
+
+// wait_pid_remastered.c
+void	wait_pid_remastered(pid_t pid);
 
 // redir.c
 void	handle_redirections(t_cmd *cmd);
@@ -90,6 +102,7 @@ void	skip_spaces(char *line, int *i);
 int		is_single_operator(char c);
 int		is_double_operator(char *s, const char *op, int *i);
 char	*extract_delimiter(char *line, int *i);
+char	*handle_quotes(char *line, int *i, int skip_expand, t_env *env);
 
 // tokens_redir.c
 int		set_input(t_cmd *cmd, t_token **tokens);
