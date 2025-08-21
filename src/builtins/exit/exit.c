@@ -6,7 +6,7 @@
 /*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/15 18:23:01 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/20 22:06:50 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,23 +49,18 @@ int	print_exit_msg(void)
 
 void	exit_with_code(t_cmd *cmd, t_all *all, int tty_fd)
 {
-	int	i;
 	int	code;
 
-	i = 0;
-	while (cmd->args[1][i])
+	if (!is_valid_long_long(cmd->args[1]))
 	{
-		if (!(cmd->args[1][i] >= '0' && cmd->args[1][i] <= '9')
-			&& cmd->args[1][i] != '-')
-		{
-			write(tty_fd, "exit: numeric argument required\n", 32);
-			free_all(cmd, all->token, all->env, all->line);
-			close(tty_fd);
-			exit(2);
-		}
-		i++;
+		write(tty_fd, "minishell: exit: ", 17);
+		write(tty_fd, cmd->args[1], ft_strlen(cmd->args[1]));
+		write(tty_fd, ": numeric argument required\n", 28);
+		free_all(cmd, all->token, all->env, all->line);
+		close(tty_fd);
+		exit(2);
 	}
-	code = ft_atoi(cmd->args[1]);
+	code = (unsigned char)ft_atoi(cmd->args[1]);
 	free_all(cmd, all->token, all->env, all->line);
 	close(tty_fd);
 	exit(code);

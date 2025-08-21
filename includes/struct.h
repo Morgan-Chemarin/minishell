@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:36:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 13:09:17 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/21 14:08:06 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,12 @@ typedef struct s_all
 	char		*line;
 	int			heredoc_fd;
 }	t_all;
+
+typedef struct s_exec_data
+{
+	int		pipe_fd[2];
+	int		in_fd;
+	pid_t	pid;
+}	t_exec_data;
 
 #endif

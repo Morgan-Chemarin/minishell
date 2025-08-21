@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/19 19:48:53 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/21 18:18:42 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 	char	*path;
 	char	**envp_arr;
 
+	g_last_status_exit = 0;
 	if (cmd->type == CMD_BUILTNS)
 	{
 		exec_builtin(cmd, &env, all);
@@ -25,52 +26,35 @@ static void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 	}
 	dot_command(cmd, env, all);
 	envp_arr = env_list_to_array(env);
-	if (ft_strchr(cmd->args[0], '/'))
-		check_access_exec(cmd->args[0], cmd->args, envp_arr);
 	path = get_path(cmd->args[0], env);
 	if (path)
 		check_access_exec(path, cmd->args, envp_arr);
+	if (g_last_status_exit != 0)
+	{
+		free(path);
+		free_split(envp_arr);
+		free_all(all->cmd_head, all->token, all->env, all->line);
+		exit(g_last_status_exit);
+	}
 	child_exit_handler(path, envp_arr, all);
 }
 
-void	execute_child_process(t_cmd *cmd, t_env *env, t_all *all, int fds[3])
+void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data)
 {
-	all->env = env;
-	setup_child_pipes(cmd, fds);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	setup_child_pipes(cmd, data->in_fd, data->pipe_fd);
 	handle_redirections(cmd);
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
 		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-			exit(127);
+			child_exit_handler(NULL, NULL, all);
 		}
+		free_all(cmd, all->token, all->env, all->line);
 		exit(EXIT_SUCCESS);
 	}
-	if (fds[2] != -1)
-	{
-		dup2(fds[2], STDIN_FILENO);
-		close(fds[2]);
-	}
-	run_child_command(cmd, env, all);
-}
-
-void	execute_parent_process(pid_t pid, t_cmd *cmd, int fds[3])
-{
-	wait_pid_remastered(pid);
-	if (fds[0] != 0)
-		close(fds[0]);
-	if (cmd->next)
-	{
-		close(fds[1]);
-		fds[0] = fds[1];
-	}
-	else
-		fds[0] = 0;
-	if (fds[2] != -1)
-		close(fds[2]);
+	run_child_command(cmd, all->env, all);
 }
 
 int	handle_single_stateful(t_cmd *cmd, t_env **env, t_all *all)

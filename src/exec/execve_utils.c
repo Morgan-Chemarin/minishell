@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/18 12:50:15 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/21 15:13:37 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,17 @@ void	handle_exec_error(char *cmd)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd, 2);
 		ft_putstr_fd(": is a directory\n", 2);
-		exit(126);
+		g_last_status_exit = 126;
 	}
-	if (access(cmd, X_OK) != 0)
+	else if (access(cmd, X_OK) != 0)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
-		exit(126);
+		g_last_status_exit = 126;
 	}
+	else
+		g_last_status_exit = 0;
 }
 
 void	check_access_exec(char *cmd, char **args, char **envp)
@@ -48,14 +50,17 @@ void	check_access_exec(char *cmd, char **args, char **envp)
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
-			exit(127);
+			g_last_status_exit = 127;
 		}
 		return ;
 	}
 	handle_exec_error(cmd);
-	execve(cmd, args, envp);
-	perror("minishell");
-	exit(126);
+	if (g_last_status_exit == 0)
+	{
+		execve(cmd, args, envp);
+		perror("minishell");
+		g_last_status_exit = 126;
+	}
 }
 
 static char	*search_in_paths(char **paths, char *cmd)
@@ -70,7 +75,7 @@ static char	*search_in_paths(char **paths, char *cmd)
 		path = ft_strjoin_3(paths[i], "/", cmd);
 		if (!path)
 			break ;
-		if (access(path, X_OK) == 0)
+		if (access(path, X_OK && !is_directory(path)) == 0)
 			return (path);
 		free(path);
 		path = NULL;
@@ -87,6 +92,8 @@ char	*get_path(char *cmd, t_env *env)
 
 	if (!cmd || ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
+	if (ft_strcmp(cmd, "..") == 0)
+		return (NULL);
 	tmp = env;
 	while (tmp && ft_strcmp(tmp->name, "PATH") != 0)
 		tmp = tmp->next;

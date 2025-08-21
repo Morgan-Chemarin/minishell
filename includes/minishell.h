@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/08/19 19:44:19 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/20 21:57:13 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
+# include <limits.h>
 
 # include "struct.h"
 # include "prototypes.h"

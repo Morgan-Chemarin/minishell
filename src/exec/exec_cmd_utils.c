@@ -3,37 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:38:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/19 09:21:40 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/21 14:17:22 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+void	process_command_in_loop(t_cmd *cmd, t_all *all, t_exec_data *data)
+{
+	if (cmd->has_heredoc)
+		data->in_fd = handle_heredoc(cmd, all->env);
+	if (cmd->next && pipe(data->pipe_fd) < 0)
+	{
+		perror("pipe");
+		return ;
+	}
+	data->pid = fork();
+	if (data->pid < 0)
+	{
+		perror("fork");
+		return ;
+	}
+	if (data->pid == 0)
+		execute_child_process(cmd, all, data);
+	if (data->in_fd != STDIN_FILENO)
+		close(data->in_fd);
+	if (cmd->next)
+	{
+		close(data->pipe_fd[1]);
+		data->in_fd = data->pipe_fd[0];
+	}
+}
+
 void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
 {
-	int		fds[3];
-	pid_t	pid;
+	t_exec_data	data;
 
-	fds[0] = 0;
-	fds[2] = -1;
+	data.in_fd = STDIN_FILENO;
+	data.pid = -1;
+	signal(SIGINT, SIG_IGN);
 	while (cmd)
 	{
 		all->env = *env;
-		if (cmd->has_heredoc)
-			fds[2] = handle_heredoc(cmd, *env);
-		if (cmd->next && pipe(fds) < 0)
-			return (perror("pipe"));
-		pid = fork();
-		if (pid < 0)
-			return (perror("fork"));
-		if (pid == 0)
-			execute_child_process(cmd, *env, all, fds);
-		execute_parent_process(pid, cmd, fds);
+		process_command_in_loop(cmd, all, &data);
 		cmd = cmd->next;
 	}
+	wait_all_children(data.pid);
 }
 
 void	check_access(char *path, char **args, char **envp)
@@ -52,38 +70,10 @@ void	check_access(char *path, char **args, char **envp)
 	}
 }
 
-void	setup_child_pipes(t_cmd *cmd, int fds[3])
-{
-	if (fds[0] != 0)
-	{
-		dup2(fds[0], STDIN_FILENO);
-		close(fds[0]);
-	}
-	if (cmd->next)
-	{
-		close(fds[0]);
-		dup2(fds[1], STDOUT_FILENO);
-		close(fds[1]);
-	}
-}
-
 void	restore_fds(int saved_fds[2])
 {
 	dup2(saved_fds[0], STDIN_FILENO);
 	dup2(saved_fds[1], STDOUT_FILENO);
 	close(saved_fds[0]);
 	close(saved_fds[1]);
-}
-
-void	child_exit_handler(char *path, char **envp_arr, t_all *all)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(all->cmd_head->args[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
-	if (path)
-		free(path);
-	if (envp_arr)
-		free_split(envp_arr);
-	free_all(all->cmd_head, all->token, all->env, all->line);
-	exit(127);
 }

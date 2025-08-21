@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prototypes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/19 11:54:36 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/21 14:17:03 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	add_env_node(t_env **env, t_env *new);
 
 // utils_builtins
 int		count_arg(char **arg);
+int		is_valid_long_long(char *str);
 
 // ** ENV **
 
@@ -53,7 +54,7 @@ char	**env_list_to_array(t_env *env);
 // exec_cmd.c
 void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
 void	execute_parent_process(pid_t pid, t_cmd *cmd, int fds[3]);
-void	execute_child_process(t_cmd *cmd, t_env *env, t_all *all, int fds[3]);
+void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data);
 
 // pipe_cmd.c
 t_cmd	*new_cmd(void);
@@ -69,10 +70,13 @@ void	check_access_exec(char *cmd, char **args, char **envp);
 
 // exec_cmd_utils.c
 void	check_access(char *path, char **args, char **envp);
-void	setup_child_pipes(t_cmd *cmd, int fds[3]);
 void	restore_fds(int saved_fds[2]);
-void	child_exit_handler(char *path, char **envp_arr, t_all *all);
 void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all);
+
+// exec_cmd_utils_children.c
+void	wait_all_children(pid_t last_pid);
+void	setup_child_pipes(t_cmd *cmd, int in_fd, int pipe_fd[2]);
+void	child_exit_handler(char *path, char **envp_arr, t_all *all);
 
 // wait_pid_remastered.c
 void	wait_pid_remastered(pid_t pid);
@@ -112,7 +116,8 @@ int		set_heredoc(t_cmd *cmd, t_token **tokens);
 // tokens.c
 t_token	*create_struct_tokens(char **pre_token);
 
-// ** UTILS **
+// SIG
+void	siging_handler(int sig);
 
 // check_error.c
 int		check_syntax_errors(t_token *tokens);

@@ -1,61 +1,79 @@
 NAME       = minishell
 
 CC         = cc 
-CFLAGS     = -Wall -Wextra -Werror -Iinclude -Ilibft -g3 -I gnl
+CFLAGS     = -Wall -Wextra -Werror -MMD -MP -Iincludes -Ilibft -g3 -I gnl
 LDFLAGS    = -lreadline
 
+DIR_SRCS    =    src/builtins/cd \
+                src/builtins/echo \
+                src/builtins/exit \
+                src/builtins/export \
+                src/builtins/env \
+                src/builtins/unset \
+                src/builtins/pwd \
+                src/env \
+                src/parser \
+                src/exec \
+                src/utils \
+                src/main
+
+vpath %.c $(DIR_SRCS)
+vpath %.h includes
+
 SRC_DIR    = src
-OBJ_DIR    = obj
+OBJ_DIR    = .obj
 LIBFT_DIR  = libft
 
-SRCS = \
-		$(SRC_DIR)/main/main.c \
-		$(SRC_DIR)/main/main_loop.c \
-		$(SRC_DIR)/builtins/cd/cd.c \
-		$(SRC_DIR)/builtins/echo/echo.c \
-		$(SRC_DIR)/builtins/exit/exit.c \
-		$(SRC_DIR)/builtins/export/export.c \
-		$(SRC_DIR)/builtins/export/env_export.c \
-		$(SRC_DIR)/builtins/export/export_utils.c \
-		$(SRC_DIR)/builtins/unset/unset.c \
-		$(SRC_DIR)/builtins/pwd/pwd.c \
-		$(SRC_DIR)/builtins/env/env.c \
-		$(SRC_DIR)/env/init_env.c \
-		$(SRC_DIR)/env/env_array.c \
-		$(SRC_DIR)/env/env_expansion.c \
-		$(SRC_DIR)/parser/split_quote.c \
-		$(SRC_DIR)/parser/split_utils.c \
-		$(SRC_DIR)/parser/split_quote_helper.c \
-		$(SRC_DIR)/parser/tokens_redir.c \
-		$(SRC_DIR)/parser/tokens.c \
-		$(SRC_DIR)/parser/parsing.c \
-		$(SRC_DIR)/exec/exec_cmd.c \
-		$(SRC_DIR)/exec/pipe_cmd.c \
-		$(SRC_DIR)/exec/heredoc.c \
-		$(SRC_DIR)/exec/execve_utils.c \
-		$(SRC_DIR)/exec/redir.c \
-		$(SRC_DIR)/exec/wait_pid_remastered.c \
-		$(SRC_DIR)/exec/exec_cmd_utils.c \
-		$(SRC_DIR)/exec/exec_builtins.c\
-		$(SRC_DIR)/utils/check_error.c \
-		$(SRC_DIR)/utils/free_functions.c \
+SRCS =     main.c \
+        main_loop.c \
+        cd.c \
+        echo.c \
+        exit.c \
+        exit_utils.c \
+        export.c \
+        env_export.c \
+        export_utils.c \
+        unset.c \
+        pwd.c \
+        env.c \
+        init_env.c \
+        env_array.c \
+        env_expansion.c \
+        split_quote.c \
+        split_utils.c \
+        split_quote_helper.c \
+        tokens_redir.c \
+        tokens.c \
+        parsing.c \
+        exec_cmd.c \
+        pipe_cmd.c \
+        heredoc.c \
+        execve_utils.c \
+        redir.c \
+        wait_pid_remastered.c \
+        exec_cmd_utils.c \
+		exec_cmd_utils_children.c \
+        exec_builtins.c\
+        check_error.c \
+        free_functions.c \
 
-OBJS	= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJS    = $(SRCS:%.c=$(OBJ_DIR)/%.o)
+DEPS    = $(SRCS:%.c=$(OBJ_DIR)/%.d)
 
-LIBFT      = $(LIBFT_DIR)/libft.a
+LIB_LIBFT      = $(LIBFT_DIR)/libft.a
 
-all: $(OBJ_DIR) $(NAME)
+all: lib $(OBJ_DIR) $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $@
+$(NAME): $(OBJS) $(LIB_LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(LIB_LIBFT) $(LDFLAGS) -o $@
 
-$(LIBFT):
+lib:
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: %.c Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -69,4 +87,6 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+-include $(DEPS)
+
+.PHONY: lib all clean fclean re

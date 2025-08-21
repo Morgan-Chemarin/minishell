@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/08/19 10:25:37 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/20 22:34:18 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	siging_handler(int sig)
 {
 	(void)sig;
 	write(130, "^C", 2);
-	write(1, "\n", 1);
+	write(STDOUT_FILENO, "\n", 1);
 	g_last_status_exit = 130;
 	rl_replace_line("", 0);
 	rl_on_new_line();
