@@ -46,7 +46,7 @@ SRCS =     main.c \
         tokens.c \
         parsing.c \
         exec_cmd.c \
-        pipe_cmd.c \
+        cmd_utils.c \
         heredoc.c \
         execve_utils.c \
         redir.c \

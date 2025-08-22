@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 18:01:21 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
 	if (cmd->next == NULL && cmd->type == CMD_BUILTNS
 		&& ft_strcmp(cmd->args[0], "exit") == 0)
 	{
+		handle_redirections(cmd, &all);
 		exec_builtin(cmd, &env, &all);
 		return ;
 	}

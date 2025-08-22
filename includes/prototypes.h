@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prototypes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 06:55:05 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/22 17:58:46 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
 void	execute_parent_process(pid_t pid, t_cmd *cmd, int fds[3]);
 void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data);
 
-// pipe_cmd.c
+// cmd_utils.c
 t_cmd	*new_cmd(void);
 int		count_args(t_token *token);
 void	dot_command(t_cmd *cmd, t_env *env, t_all *all);
@@ -69,7 +69,6 @@ char	*get_path(char *cmd, t_env *env);
 void	check_access_exec(char *cmd, char **args, char **envp);
 
 // exec_cmd_utils.c
-void	check_access(char *path, char **args, char **envp);
 void	restore_fds(int saved_fds[2]);
 void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all);
 

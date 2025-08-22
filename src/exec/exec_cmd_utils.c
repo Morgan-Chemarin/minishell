@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:38:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 17:58:40 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,22 +52,6 @@ void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
 		cmd = cmd->next;
 	}
 	wait_all_children(data.pid);
-}
-
-void	check_access(char *path, char **args, char **envp)
-{
-	if (access(path, F_OK) == 0)
-	{
-		if (access(path, X_OK) == 0)
-			execve(path, args, envp);
-		else
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(path, 2);
-			ft_putstr_fd(": Permission denied\n", 2);
-			exit(126);
-		}
-	}
 }
 
 void	restore_fds(int saved_fds[2])
