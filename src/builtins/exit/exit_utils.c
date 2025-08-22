@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 21:57:32 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/20 22:11:49 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 int	check_overflow(long long num, int sign, char c)
 {

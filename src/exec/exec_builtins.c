@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:59:31 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/19 19:55:44 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	is_stateful_builtin(t_cmd *cmd)
 {

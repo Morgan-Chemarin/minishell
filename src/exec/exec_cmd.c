@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/21 18:18:42 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 static void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 {
@@ -44,7 +44,7 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	setup_child_pipes(cmd, data->in_fd, data->pipe_fd);
-	handle_redirections(cmd);
+	handle_redirections(cmd, all);
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
@@ -65,7 +65,7 @@ int	handle_single_stateful(t_cmd *cmd, t_env **env, t_all *all)
 		return (0);
 	saved_fds[0] = dup(STDIN_FILENO);
 	saved_fds[1] = dup(STDOUT_FILENO);
-	handle_redirections(cmd);
+	handle_redirections(cmd, all);
 	if (cmd->has_heredoc)
 	{
 		all->heredoc_fd = handle_heredoc(cmd, *env);

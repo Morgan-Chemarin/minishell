@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 06:56:42 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/12 16:58:49 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 void	update_envp(t_env **env, char *old_cwd)
 {

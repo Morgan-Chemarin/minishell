@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 19:31:29 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 13:13:56 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	free_array_str(char **str)
 {

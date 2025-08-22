@@ -6,7 +6,7 @@
 /*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/21 14:17:03 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/22 06:55:05 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	child_exit_handler(char *path, char **envp_arr, t_all *all);
 void	wait_pid_remastered(pid_t pid);
 
 // redir.c
-void	handle_redirections(t_cmd *cmd);
+void	handle_redirections(t_cmd *cmd, t_all *all);
 
 // exec_builtins.c
 void	exec_builtin(t_cmd *cmd, t_env **env, t_all *all);

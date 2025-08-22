@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:57 by dev               #+#    #+#             */
-/*   Updated: 2025/08/17 13:13:22 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	check_syntax_errors(t_token *tokens)
 {

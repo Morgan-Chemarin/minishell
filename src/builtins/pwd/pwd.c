@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:29:57 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/12 17:00:30 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 int	ft_pwd(void)
 {

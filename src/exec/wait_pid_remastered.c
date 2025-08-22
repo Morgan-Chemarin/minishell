@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wait_pid_remastered.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 22:56:14 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/17 22:56:32 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h" 
+#include "minishell.h" 
 
 void	wait_pid_remastered(pid_t pid)
 {

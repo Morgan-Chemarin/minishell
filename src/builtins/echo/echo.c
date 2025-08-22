@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:03:48 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/12 16:59:08 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 int	is_option(char *arg)
 {

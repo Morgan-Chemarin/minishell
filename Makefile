@@ -1,7 +1,7 @@
 NAME       = minishell
 
 CC         = cc 
-CFLAGS     = -Wall -Wextra -Werror -MMD -MP -Iincludes -Ilibft -g3 -I gnl
+CFLAGS     = -Wall -Wextra -Werror -MMD -MP -Iincludes -Ilibft -I gnl
 LDFLAGS    = -lreadline
 
 DIR_SRCS    =    src/builtins/cd \
