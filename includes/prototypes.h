@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 17:58:46 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/23 14:45:44 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ char	**env_list_to_array(t_env *env);
 
 // exec_cmd.c
 void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
-void	execute_parent_process(pid_t pid, t_cmd *cmd, int fds[3]);
 void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data);
 
 // cmd_utils.c
