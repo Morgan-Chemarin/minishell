@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/25 02:59:51 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*append_word(char *result, char *word)
+char	*append_word(char *result, char *word)
 {
 	char	*tmp;
 
@@ -23,7 +23,7 @@ static char	*append_word(char *result, char *word)
 	return (result);
 }
 
-static char	*extract_plain_word(char *line, int *i, t_env *env, int skip_expand)
+char	*extract_plain_word(char *line, int *i, t_env *env, int skip_expand)
 {
 	int		start;
 	char	*word;
@@ -39,7 +39,7 @@ static char	*extract_plain_word(char *line, int *i, t_env *env, int skip_expand)
 		return (NULL);
 	if (!skip_expand)
 	{
-		expanded = expand_variables(word, env);
+		expanded = expand_variables(word, env, 0);
 		free(word);
 		if (!expanded)
 			return (NULL);
@@ -72,7 +72,7 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 	return (result);
 }
 
-static int	handle_token(char *line, int *i, char **tokens, t_env *env)
+int	handle_token(char *line, int *i, char **tokens, t_env *env)
 {
 	static int	heredoc = 0;
 

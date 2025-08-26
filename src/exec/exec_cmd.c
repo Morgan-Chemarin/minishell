@@ -6,13 +6,13 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 18:01:21 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:45:00 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
+void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 {
 	char	*path;
 	char	**envp_arr;
@@ -39,7 +39,7 @@ static void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 	child_exit_handler(path, envp_arr, all);
 }
 
-void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data)
+void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -48,9 +48,7 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data)
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
-		{
-			child_exit_handler(NULL, NULL, all);
-		}
+			child_exit_handler(NULL, NULL, all); // a revoir cette condition
 		free_all(cmd, all->token, all->env, all->line);
 		exit(EXIT_SUCCESS);
 	}
@@ -66,19 +64,6 @@ int	handle_single_stateful(t_cmd *cmd, t_env **env, t_all *all)
 	saved_fds[0] = dup(STDIN_FILENO);
 	saved_fds[1] = dup(STDOUT_FILENO);
 	handle_redirections(cmd, all);
-	if (cmd->has_heredoc)
-	{
-		all->heredoc_fd = handle_heredoc(cmd, *env);
-		if (all->heredoc_fd < 0)
-		{
-			restore_fds(saved_fds);
-			close(saved_fds[0]);
-			close(saved_fds[1]);
-			return (1);
-		}
-		dup2(all->heredoc_fd, STDIN_FILENO);
-		close(all->heredoc_fd);
-	}
 	exec_builtin(cmd, env, all);
 	restore_fds(saved_fds);
 	close(saved_fds[0]);
@@ -86,22 +71,29 @@ int	handle_single_stateful(t_cmd *cmd, t_env **env, t_all *all)
 	return (1);
 }
 
-void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line)
+void	exec_cmd(t_cmd *cmd, t_env **env, t_token *token, char *line)
 {
 	t_all	all;
 
 	all.cmd_head = cmd;
 	all.token = token;
 	all.line = line;
-	all.env = env;
+	all.env = *env;
 	if (cmd->next == NULL && cmd->type == CMD_BUILTNS
 		&& ft_strcmp(cmd->args[0], "exit") == 0)
 	{
 		handle_redirections(cmd, &all);
-		exec_builtin(cmd, &env, &all);
+		exec_builtin(cmd, &all.env, &all);
+		*env = all.env;
+		close_all_heredocs(cmd);
 		return ;
 	}
-	if (handle_single_stateful(cmd, &env, &all))
+	if (handle_single_stateful(cmd, &all.env, &all))
+	{
+		*env = all.env;
+		close_all_heredocs(cmd);
 		return ;
-	exec_cmd_loop(cmd, &env, &all);
+	}
+	exec_cmd_loop(cmd, &all.env, &all);
+	*env = all.env;
 }

@@ -1,7 +1,7 @@
 NAME       = minishell
 
 CC         = cc 
-CFLAGS     = -Wall -Wextra -Werror -MMD -MP -Iincludes -Ilibft -I gnl
+CFLAGS     = -Wall -Wextra -Werror -MMD -MP -Iincludes -Ilibft
 LDFLAGS    = -lreadline
 
 DIR_SRCS    =    src/builtins/cd \
@@ -27,6 +27,7 @@ LIBFT_DIR  = libft
 SRCS =     main.c \
         main_loop.c \
         cd.c \
+        cd_utils.c \
         echo.c \
         exit.c \
         exit_utils.c \
@@ -44,6 +45,7 @@ SRCS =     main.c \
         split_quote_helper.c \
         tokens_redir.c \
         tokens.c \
+        heredoc_prepare.c \
         parsing.c \
         exec_cmd.c \
         cmd_utils.c \
@@ -56,6 +58,7 @@ SRCS =     main.c \
         exec_builtins.c\
         check_error.c \
         free_functions.c \
+        close_heredoc.c \
 
 OBJS    = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS    = $(SRCS:%.c=$(OBJ_DIR)/%.d)

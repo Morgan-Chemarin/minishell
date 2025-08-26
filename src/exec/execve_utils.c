@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/24 01:36:39 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	check_access_exec(char *cmd, char **args, char **envp)
 	}
 }
 
-static char	*search_in_paths(char **paths, char *cmd)
+char	*search_in_paths(char **paths, char *cmd)
 {
 	int		i;
 	char	*path;

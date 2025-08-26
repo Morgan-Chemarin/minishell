@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:36:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/21 14:08:06 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/08/26 15:22:08 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,25 @@ typedef enum e_cmd_type
 	CMD_BUILTNS
 }	t_cmd_type;
 
+typedef enum e_redirection_type
+{
+	R_IN,
+	R_OUT,
+	R_APPEND,
+	R_HEREDOC
+}	t_redirection_type;
+
+typedef struct s_redirection
+{
+	t_redirection_type		type;
+	char					*file;
+	struct s_redirection	*next;
+}	t_redirection;
+
 typedef struct s_cmd
 {
 	char			**args;
-	char			*input_file;
-	char			*output_file;
-	int				append;
-	int				has_heredoc;
-	char			*heredoc_delim;
+	t_redirection	*redir;
 	t_cmd_type		type;
 	struct s_cmd	*next;
 }	t_cmd;
@@ -64,11 +75,11 @@ typedef struct s_all
 	int			heredoc_fd;
 }	t_all;
 
-typedef struct s_exec_data
+typedef struct s_pipe_data
 {
 	int		pipe_fd[2];
 	int		in_fd;
 	pid_t	pid;
-}	t_exec_data;
+}	t_pipe_data;
 
 #endif

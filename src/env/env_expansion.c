@@ -3,14 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/25 02:33:47 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*join_words(char **words)
+{
+	char	*result;
+	char	*tmp;
+	int		i;
+
+	if (!words || !words[0])
+	{
+		if (words)
+			free(words);
+		return (ft_strdup(""));
+	}
+	result = ft_strdup(words[0]);
+	i = 1;
+	while (words[i])
+	{
+		tmp = result;
+		result = ft_strjoin_3(tmp, " ", words[i]);
+		free(tmp);
+		i++;
+	}
+	free_array_str(words);
+	return (result);
+}
 
 char	*get_env_value(char *name, t_env *env)
 {
@@ -85,26 +110,33 @@ char	*handle_regular_char(char *result, char c, int *i)
 	return (result);
 }
 
-char	*expand_variables(char *str, t_env *env)
+char	*expand_variables(char *str, t_env *env, int is_quoted)
 {
 	char	*result;
+	char	*expanded;
+	char	**words;
 	int		i;
 
-	result = ft_calloc(1, 1);
-	if (!result)
+	expanded = ft_calloc(1, 1);
+	if (!expanded)
 		return (NULL);
 	i = 0;
 	while (str[i])
 	{
 		if (str[i] == '$' && str[i + 1] == '?')
-			result = handle_exit_status(result, &i);
+			expanded = handle_exit_status(expanded, &i);
 		else if (str[i] == '$' && str[i + 1]
 			&& (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
-			result = handle_env_variable(result, str, &i, env);
+			expanded = handle_env_variable(expanded, str, &i, env);
 		else
-			result = handle_regular_char(result, str[i], &i);
-		if (!result)
+			expanded = handle_regular_char(expanded, str[i], &i);
+		if (!expanded)
 			return (NULL);
 	}
+	if (is_quoted)
+		return (expanded);
+	words = ft_split(expanded, ' ');
+	free(expanded);
+	result = join_words(words);
 	return (result);
 }

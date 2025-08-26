@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:34:18 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/24 02:50:15 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	free_env_node(t_env *node)
 	free(node);
 }
 
-void	remove_env_var(t_env **env, char *var_name)
+void	remove_env_var(t_env **env, char *var)
 {
 	t_env	*current;
 	t_env	*previous;
@@ -31,7 +31,7 @@ void	remove_env_var(t_env **env, char *var_name)
 	previous = NULL;
 	while (current)
 	{
-		if (ft_strcmp(current->name, var_name) == 0)
+		if (ft_strcmp(current->name, var) == 0)
 		{
 			if (previous)
 				previous->next = current->next;

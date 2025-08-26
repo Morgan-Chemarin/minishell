@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/24 00:52:14 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_exit(t_cmd *cmd, t_all *all)
 	{
 		free_all(cmd, all->token, all->env, all->line);
 		close(tty_fd);
-		exit(1);
+		exit(0);
 	}
 	else if (arg_count == 2)
 		exit_with_code(cmd, all, tty_fd);

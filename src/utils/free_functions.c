@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 19:31:29 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:31:17 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@ void	free_array_str(char **str)
 	free(str);
 }
 
+void	free_redirs(t_redirection *r)
+{
+	t_redirection	*tmp;
+
+	while (r)
+	{
+		tmp = r->next;
+		if (r->file)
+			free(r->file);
+		free(r);
+		r = tmp;
+	}
+}
+
 void	free_cmd(t_cmd *cmd)
 {
 	t_cmd	*tmp;
@@ -36,12 +50,8 @@ void	free_cmd(t_cmd *cmd)
 		tmp = cmd->next;
 		if (cmd->args)
 			free_array_str(cmd->args);
-		if (cmd->input_file)
-			free(cmd->input_file);
-		if (cmd->output_file)
-			free(cmd->output_file);
-		if (cmd->heredoc_delim)
-			free(cmd->heredoc_delim);
+		if (cmd->redir)
+			free_redirs(cmd->redir);
 		free(cmd);
 		cmd = tmp;
 	}

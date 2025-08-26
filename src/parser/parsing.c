@@ -6,13 +6,13 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/08/23 12:08:07 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:40:02 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
+t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 {
 	t_cmd	*new;
 
@@ -37,7 +37,7 @@ static t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 	return (new);
 }
 
-static int	process_token(t_cmd *cmd, t_token **tokens, int *i)
+int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 {
 	char	*val;
 
@@ -53,17 +53,37 @@ static int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 		(*i)++;
 	}
 	else if ((*tokens)->type == REDIR_IN && (*tokens)->next)
-		return (set_input(cmd, tokens));
-	else if ((*tokens)->type == REDIR_HEREDOC && (*tokens)->next)
-		return (set_heredoc(cmd, tokens));
+	{
+		if (!add_redir(cmd, R_IN, (*tokens)->next->value))
+			return (0);
+		*tokens = (*tokens)->next;
+		return (1);
+	}
 	else if ((*tokens)->type == REDIR_OUT && (*tokens)->next)
-		return (set_output(cmd, tokens, 0));
+	{
+		if (!add_redir(cmd, R_OUT, (*tokens)->next->value))
+			return (0);
+		*tokens = (*tokens)->next;
+		return (1);
+	}
 	else if ((*tokens)->type == REDIR_APPEND && (*tokens)->next)
-		return (set_output(cmd, tokens, 1));
+	{
+		if (!add_redir(cmd, R_APPEND, (*tokens)->next->value))
+			return (0);
+		*tokens = (*tokens)->next;
+		return (1);
+	}
+	else if ((*tokens)->type == REDIR_HEREDOC && (*tokens)->next)
+	{
+		if (!add_redir(cmd, R_HEREDOC, (*tokens)->next->value))
+			return (0);
+		*tokens = (*tokens)->next;
+		return (1);
+	}
 	return (1);
 }
 
-static void	set_cmd_type(t_cmd *cmd)
+void	set_cmd_type(t_cmd *cmd)
 {
 	if (cmd->args[0]
 		&& (!ft_strcmp(cmd->args[0], "cd")
@@ -78,7 +98,7 @@ static void	set_cmd_type(t_cmd *cmd)
 		cmd->type = CMD_EXTERNAL;
 }
 
-static int	parse_single_cmd(t_cmd *cmd, t_token **tokens)
+int	parse_single_cmd(t_cmd *cmd, t_token **tokens)
 {
 	int	i;
 
@@ -90,13 +110,19 @@ static int	parse_single_cmd(t_cmd *cmd, t_token **tokens)
 		*tokens = (*tokens)->next;
 	}
 	cmd->args[i] = NULL;
+	// int k = 0;
+	// while (cmd->args[0][k])
+	// {
+	// 	printf("%d\n", cmd->args[0][k]);
+	// 	k++;
+	// }
 	set_cmd_type(cmd);
 	if (*tokens && (*tokens)->type == PIPE)
 		*tokens = (*tokens)->next;
 	return (1);
 }
 
-t_cmd	*parser(t_token *tokens)
+t_cmd	*parser(t_token *tokens, t_env *env)
 {
 	t_cmd	*head;
 	t_cmd	*current;
@@ -113,6 +139,11 @@ t_cmd	*parser(t_token *tokens)
 			free_cmd(head);
 			return (NULL);
 		}
+	}
+	if (!prepare_all_heredocs(head, env))
+	{
+		free_cmd(head);
+		return (NULL);
 	}
 	return (head);
 }

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/23 14:45:44 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:22:54 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // ** MAIN **
 
 // main_loop.c
-int		process_line(char *line, t_env *env);
+int		process_line(char *line, t_env **env);
 
 // ** BUILTINS **
 
@@ -35,11 +35,13 @@ void	add_env_node(t_env **env, t_env *new);
 // utils_builtins
 int		count_arg(char **arg);
 int		is_valid_long_long(char *str);
+void	set_env_var(t_env *node, char *new_value);
+int		no_home(char *old_cwd, char *path);
 
 // ** ENV **
 
 // env_expansion.c
-char	*expand_variables(char *str, t_env *env);
+char	*expand_variables(char *str, t_env *env, int is_quoted);
 char	*get_env_value(char *name, t_env *env);
 
 // init_env.c
@@ -52,8 +54,8 @@ char	**env_list_to_array(t_env *env);
 // ** EXEC **
 
 // exec_cmd.c
-void	exec_cmd(t_cmd *cmd, t_env *env, t_token *token, char *line);
-void	execute_child_process(t_cmd *cmd, t_all *all, t_exec_data *data);
+void	exec_cmd(t_cmd *cmd, t_env **env, t_token *token, char *line);
+void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data);
 
 // cmd_utils.c
 t_cmd	*new_cmd(void);
@@ -61,7 +63,7 @@ int		count_args(t_token *token);
 void	dot_command(t_cmd *cmd, t_env *env, t_all *all);
 
 // heredoc.c
-int		handle_heredoc(t_cmd *cmd, t_env *env);
+int		handle_heredoc(char	*delimiter, t_env *env);
 
 // execve_utils.c
 char	*get_path(char *cmd, t_env *env);
@@ -88,8 +90,11 @@ int		is_stateful_builtin(t_cmd *cmd);
 
 // ** PARSER **
 
+// heredoc_prepare.c
+int		prepare_all_heredocs(t_cmd *head, t_env *env);
+
 // parsing.c
-t_cmd	*parser(t_token *tokens);
+t_cmd	*parser(t_token *tokens, t_env *env);
 
 // split_quote.c
 char	**split_with_quote(char *line, t_env *env);
@@ -107,9 +112,7 @@ char	*extract_delimiter(char *line, int *i);
 char	*handle_quotes(char *line, int *i, int skip_expand, t_env *env);
 
 // tokens_redir.c
-int		set_input(t_cmd *cmd, t_token **tokens);
-int		set_output(t_cmd *cmd, t_token **tokens, int append);
-int		set_heredoc(t_cmd *cmd, t_token **tokens);
+int		add_redir(t_cmd *cmd, t_redirection_type type, char *value);
 
 // tokens.c
 t_token	*create_struct_tokens(char **pre_token);
@@ -120,7 +123,7 @@ void	siging_handler(int sig);
 // check_error.c
 int		check_syntax_errors(t_token *tokens);
 
-//free_utils
+// free_utils
 void	free_array_str(char **str);
 void	free_cmd(t_cmd *cmd);
 void	free_token(t_token *token);
@@ -128,5 +131,8 @@ void	free_env(t_env *env);
 void	free_export_add_env(t_env *new, char **arg);
 void	free_all(t_cmd *cmd, t_token *token, t_env *env, char *line);
 void	free_split(char **split_arg);
+
+// close_heredoc.c
+void	close_all_heredocs(t_cmd *head);
 
 #endif

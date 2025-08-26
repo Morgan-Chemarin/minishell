@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote_helper.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:19:43 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/25 02:29:56 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_quoted_word(char *line, int *i, char quote)
+char	*get_quoted_word(char *line, int *i, char quote)
 {
 	int		start;
 	int		len;
@@ -44,7 +44,7 @@ char	*extract_quoted(char *line, int *i, int skip_expand, t_env *env)
 		return (NULL);
 	if (!skip_expand && quote == '"')
 	{
-		expanded = expand_variables(word, env);
+		expanded = expand_variables(word, env, 1);
 		free(word);
 		if (!expanded)
 			return (NULL);

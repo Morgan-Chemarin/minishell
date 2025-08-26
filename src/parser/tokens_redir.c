@@ -6,58 +6,31 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 12:38:33 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:33:47 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	set_input(t_cmd *cmd, t_token **tokens)
+int	add_redir(t_cmd *cmd, t_redirection_type type, char *value)
 {
-	char	*tmp;
+	t_redirection	*new;
+	t_redirection	*tmp;
 
-	*tokens = (*tokens)->next;
-	if (!*tokens)
+	new = malloc(sizeof(t_redirection));
+	if (!new)
 		return (0);
-	tmp = ft_strdup((*tokens)->value);
-	if (!tmp)
-		return (0);
-	if (cmd->input_file)
-		free(cmd->input_file);
-	cmd->input_file = tmp;
-	return (1);
-}
-
-int	set_output(t_cmd *cmd, t_token **tokens, int append)
-{
-	char	*tmp;
-
-	*tokens = (*tokens)->next;
-	if (!*tokens)
-		return (0);
-	tmp = ft_strdup((*tokens)->value);
-	if (!tmp)
-		return (0);
-	if (cmd->output_file)
-		free(cmd->output_file);
-	cmd->output_file = tmp;
-	cmd->append = append;
-	return (1);
-}
-
-int	set_heredoc(t_cmd *cmd, t_token **tokens)
-{
-	char	*tmp;
-
-	*tokens = (*tokens)->next;
-	if (!*tokens)
-		return (0);
-	tmp = ft_strdup((*tokens)->value);
-	if (!tmp)
-		return (0);
-	if (cmd->heredoc_delim)
-		free(cmd->heredoc_delim);
-	cmd->heredoc_delim = tmp;
-	cmd->has_heredoc = 1;
+	new->type = type;
+	new->file = ft_strdup(value);
+	new->next = NULL;
+	if (!cmd->redir)
+		cmd->redir = new;
+	else
+	{
+		tmp = cmd->redir;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
 	return (1);
 }

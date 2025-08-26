@@ -6,13 +6,13 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 12:39:07 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/25 11:16:03 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_quoted(const char *s)
+int	is_quoted(const char *s)
 {
 	int	len;
 
@@ -25,7 +25,7 @@ static int	is_quoted(const char *s)
 	return (0);
 }
 
-static char	*strip_quotes(char *s)
+char	*strip_quotes(char *s)
 {
 	int		len;
 	char	*res;
@@ -37,7 +37,7 @@ static char	*strip_quotes(char *s)
 	return (res);
 }
 
-static void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
+void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 {
 	char	*line;
 	char	*expanded;
@@ -53,7 +53,7 @@ static void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 		}
 		if (expand)
 		{
-			expanded = expand_variables(line, env);
+			expanded = expand_variables(line, env, 1);
 			free(line);
 			if (!expanded)
 				break ;
@@ -65,7 +65,7 @@ static void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 	}
 }
 
-int	handle_heredoc(t_cmd *cmd, t_env *env)
+int	handle_heredoc(char	*delimiter, t_env *env)
 {
 	int		pipefd[2];
 	char	*clean_delim;
@@ -73,8 +73,8 @@ int	handle_heredoc(t_cmd *cmd, t_env *env)
 
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), -1);
-	expand = !is_quoted(cmd->heredoc_delim);
-	clean_delim = strip_quotes(cmd->heredoc_delim);
+	expand = !is_quoted(delimiter);
+	clean_delim = strip_quotes(delimiter);
 	heredoc_loop(pipefd[1], clean_delim, expand, env);
 	free(clean_delim);
 	close(pipefd[1]);

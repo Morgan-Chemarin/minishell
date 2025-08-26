@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 06:56:42 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:29 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/24 02:42:10 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,20 @@ void	update_envp(t_env **env, char *old_cwd)
 	tmp = *env;
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-	{
-		perror("cd");
-		free(old_cwd);
-	}
+		write(2, "cd: error retrieving current directory\n", 39);
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->name, "PWD") == 0)
-		{
-			free(tmp->value);
-			tmp->value = ft_strdup(cwd);
-		}
+			set_env_var(tmp, cwd);
 		else if (ft_strcmp(tmp->name, "OLDPWD") == 0)
-		{
-			free(tmp->value);
-			tmp->value = ft_strdup(old_cwd);
-		}
+			set_env_var(tmp, old_cwd);
 		tmp = tmp->next;
 	}
-	free(cwd);
+	if (cwd)
+		free(cwd);
 }
 
-char	*find_home(t_env **env)
+char	*find_var(t_env **env, char	*var)
 {
 	char	*path;
 	t_env	*tmp;
@@ -50,22 +42,15 @@ char	*find_home(t_env **env)
 	path = NULL;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->name, "HOME") == 0)
+		if (ft_strcmp(tmp->name, var) == 0)
 		{
-			path = ft_strdup(tmp->value);
+			if (tmp->value)
+				path = ft_strdup(tmp->value);
 			break ;
 		}
 		tmp = tmp->next;
 	}
 	return (path);
-}
-
-int	no_home(char *old_cwd, char *path)
-{
-	perror("cd");
-	free(old_cwd);
-	free(path);
-	return (1);
 }
 
 int	ft_cd_exec(t_cmd *cmd, t_env **env)
@@ -77,7 +62,7 @@ int	ft_cd_exec(t_cmd *cmd, t_env **env)
 	old_cwd = getcwd(NULL, 0);
 	if (!cmd->args[1])
 	{
-		path = find_home(env);
+		path = find_var(env, "HOME");
 		if (!path)
 		{
 			write(2, "cd: HOME not set\n", 17);
@@ -90,9 +75,9 @@ int	ft_cd_exec(t_cmd *cmd, t_env **env)
 	result_path = chdir(path);
 	if (result_path == -1)
 		return (no_home(old_cwd, path));
-	else
-		update_envp(env, old_cwd);
-	free(old_cwd);
+	update_envp(env, old_cwd);
+	if (old_cwd)
+		free(old_cwd);
 	free(path);
 	return (0);
 }

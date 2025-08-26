@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:14:36 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 17:23:26 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/25 11:59:10 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,7 @@ t_cmd	*new_cmd(void)
 	if (!cmd)
 		return (NULL);
 	cmd->args = NULL;
-	cmd->input_file = NULL;
-	cmd->output_file = NULL;
-	cmd->append = 0;
-	cmd->has_heredoc = 0;
-	cmd->heredoc_delim = NULL;
+	cmd->redir = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }

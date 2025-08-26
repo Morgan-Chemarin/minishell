@@ -6,16 +6,14 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:38:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 17:58:40 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:13:20 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	process_command_in_loop(t_cmd *cmd, t_all *all, t_exec_data *data)
+void	process_command_in_loop(t_cmd *cmd, t_all *all, t_pipe_data *data)
 {
-	if (cmd->has_heredoc)
-		data->in_fd = handle_heredoc(cmd, all->env);
 	if (cmd->next && pipe(data->pipe_fd) < 0)
 	{
 		perror("pipe");
@@ -40,7 +38,7 @@ void	process_command_in_loop(t_cmd *cmd, t_all *all, t_exec_data *data)
 
 void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
 {
-	t_exec_data	data;
+	t_pipe_data	data;
 
 	data.in_fd = STDIN_FILENO;
 	data.pid = -1;
@@ -52,6 +50,7 @@ void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
 		cmd = cmd->next;
 	}
 	wait_all_children(data.pid);
+	close_all_heredocs(all->cmd_head);
 }
 
 void	restore_fds(int saved_fds[2])

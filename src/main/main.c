@@ -6,11 +6,11 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/08/22 17:12:45 by dev              ###   ########.fr       */
+/*   Updated: 2025/08/26 15:58:47 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 int	g_last_status_exit = 0;
 
@@ -53,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
 			write(1, "exit\n", 5);
 			break ;
 		}
-		if (!process_line(line, env))
+		if (!process_line(line, &env))
 			continue ;
 		free(line);
 	}
