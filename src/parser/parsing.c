@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 15:40:02 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/10 18:04:14 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	parse_single_cmd(t_cmd *cmd, t_token **tokens)
 	// {
 	// 	printf("%d\n", cmd->args[0][k]);
 	// 	k++;
-	// }
+	// } // pas touche cest pour le \1
 	set_cmd_type(cmd);
 	if (*tokens && (*tokens)->type == PIPE)
 		*tokens = (*tokens)->next;
