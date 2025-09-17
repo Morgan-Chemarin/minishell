@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 15:48:31 by mchemari          #+#    #+#             */
-/*   Updated: 2025/08/19 19:43:55 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/17 20:16:03 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,7 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strndup(const char *s, size_t n);
 int		ft_isspace(char c);
 size_t	ft_strlcpy(char *dest, char *src, size_t size);
+char	*ft_strrchr(const char *s, int c);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 
 #endif

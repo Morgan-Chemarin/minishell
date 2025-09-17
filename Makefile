@@ -40,6 +40,7 @@ SRCS =     main.c \
         init_env.c \
         env_array.c \
         env_expansion.c \
+        env_expansion_utils.c \
         split_quote.c \
         split_utils.c \
         split_quote_helper.c \
@@ -47,6 +48,8 @@ SRCS =     main.c \
         tokens.c \
         heredoc_prepare.c \
         parsing.c \
+        parsing_utils.c \
+        parsing_cmd_utils.c \
         exec_cmd.c \
         cmd_utils.c \
         heredoc.c \
@@ -58,6 +61,7 @@ SRCS =     main.c \
         exec_builtins.c\
         check_error.c \
         free_functions.c \
+        free_env.c \
         close_heredoc.c \
 
 OBJS    = $(SRCS:%.c=$(OBJ_DIR)/%.o)

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:17:04 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 15:44:18 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/17 20:17:05 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 static int	fd_from_fdpath(const char *path)
 {
-	const char	*p;
+	char		*p;
 	int			n;
 
 	if (!path)
 		return (-1);
-	p = strrchr(path, '/');
+	p = ft_strrchr(path, '/');
 	if (!p || !*(p + 1))
 		return (-1);
-	n = atoi(p + 1); // vrai atoi lautre me casse les couilles
+	n = ft_atoi(p + 1);
 	if (n < 0)
 		return (-1);
 	return (n);
@@ -44,8 +44,7 @@ void	handle_redirections(t_cmd *cmd, t_all *all)
 			if (fd < 0)
 			{
 				perror(r->file);
-				//free ?
-				exit(1); // pas sur 
+				exit(1);
 			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);

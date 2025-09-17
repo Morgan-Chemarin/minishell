@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/09/10 18:04:14 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/12 23:18:44 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 {
 	t_cmd	*new;
+	int		capacity;
 
 	new = new_cmd();
 	if (!new)
@@ -22,7 +23,8 @@ t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 		free_cmd(*head);
 		return (NULL);
 	}
-	new->args = malloc(sizeof(char *) * (count_args(tokens) + 1));
+	capacity = compute_args_capacity(tokens);
+	new->args = malloc(sizeof(char *) * (capacity + 1));
 	if (!new->args)
 	{
 		free(new);
@@ -37,88 +39,58 @@ t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 	return (new);
 }
 
-int	process_token(t_cmd *cmd, t_token **tokens, int *i)
+int	process_word_token(t_cmd *cmd, t_token *token, int *i)
 {
-	char	*val;
+	char	**fields;
 
-	if ((*tokens)->type == WORD)
+	strip_inplace(token->value, '\1');
+	if (!ft_strchr(token->value, '\3'))
 	{
-		val = (*tokens)->value;
-		if (val[0] == '\1')
-			cmd->args[*i] = ft_strdup(val + 1);
-		else
-			cmd->args[*i] = ft_strdup(val);
-		if (!cmd->args[*i])
+		cmd->args[(*i)++] = ft_strdup(token->value);
+		if (!cmd->args[*i - 1])
 			return (0);
-		(*i)++;
-	}
-	else if ((*tokens)->type == REDIR_IN && (*tokens)->next)
-	{
-		if (!add_redir(cmd, R_IN, (*tokens)->next->value))
-			return (0);
-		*tokens = (*tokens)->next;
 		return (1);
 	}
-	else if ((*tokens)->type == REDIR_OUT && (*tokens)->next)
-	{
-		if (!add_redir(cmd, R_OUT, (*tokens)->next->value))
-			return (0);
-		*tokens = (*tokens)->next;
+	fields = ft_split(token->value, '\3');
+	if (!fields)
+		return (0);
+	return (add_fields_to_args(cmd, fields, i));
+}
+
+int	process_redir_token(t_cmd *cmd, t_token **tokens)
+{
+	t_token_type	type;
+	int				success;
+
+	type = (*tokens)->type;
+	success = 1;
+	if (!(*tokens)->next)
 		return (1);
-	}
-	else if ((*tokens)->type == REDIR_APPEND && (*tokens)->next)
-	{
-		if (!add_redir(cmd, R_APPEND, (*tokens)->next->value))
-			return (0);
-		*tokens = (*tokens)->next;
-		return (1);
-	}
-	else if ((*tokens)->type == REDIR_HEREDOC && (*tokens)->next)
-	{
-		if (!add_redir(cmd, R_HEREDOC, (*tokens)->next->value))
-			return (0);
-		*tokens = (*tokens)->next;
-		return (1);
-	}
+	strip_inplace((*tokens)->next->value, '\1');
+	if (type == REDIR_IN)
+		success = add_redir(cmd, R_IN, (*tokens)->next->value);
+	else if (type == REDIR_OUT)
+		success = add_redir(cmd, R_OUT, (*tokens)->next->value);
+	else if (type == REDIR_APPEND)
+		success = add_redir(cmd, R_APPEND, (*tokens)->next->value);
+	else if (type == REDIR_HEREDOC)
+		success = add_redir(cmd, R_HEREDOC, (*tokens)->next->value);
+	if (!success)
+		return (0);
+	*tokens = (*tokens)->next;
 	return (1);
 }
 
-void	set_cmd_type(t_cmd *cmd)
+int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 {
-	if (cmd->args[0]
-		&& (!ft_strcmp(cmd->args[0], "cd")
-			|| !ft_strcmp(cmd->args[0], "echo")
-			|| !ft_strcmp(cmd->args[0], "env")
-			|| !ft_strcmp(cmd->args[0], "exit")
-			|| !ft_strcmp(cmd->args[0], "export")
-			|| !ft_strcmp(cmd->args[0], "unset")
-			|| !ft_strcmp(cmd->args[0], "pwd")))
-		cmd->type = CMD_BUILTNS;
-	else
-		cmd->type = CMD_EXTERNAL;
-}
+	t_token_type	type;
 
-int	parse_single_cmd(t_cmd *cmd, t_token **tokens)
-{
-	int	i;
-
-	i = 0;
-	while (*tokens && (*tokens)->type != PIPE)
-	{
-		if (!process_token(cmd, tokens, &i))
-			return (0);
-		*tokens = (*tokens)->next;
-	}
-	cmd->args[i] = NULL;
-	// int k = 0;
-	// while (cmd->args[0][k])
-	// {
-	// 	printf("%d\n", cmd->args[0][k]);
-	// 	k++;
-	// } // pas touche cest pour le \1
-	set_cmd_type(cmd);
-	if (*tokens && (*tokens)->type == PIPE)
-		*tokens = (*tokens)->next;
+	type = (*tokens)->type;
+	if (type == WORD)
+		return (process_word_token(cmd, *tokens, i));
+	else if (type == REDIR_IN || type == REDIR_OUT
+		|| type == REDIR_APPEND || type == REDIR_HEREDOC)
+		return (process_redir_token(cmd, tokens));
 	return (1);
 }
 

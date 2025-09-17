@@ -3,50 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 16:46:57 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/12 23:31:00 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*join_words(char **words)
-{
-	char	*result;
-	char	*tmp;
-	int		i;
-
-	if (!words || !words[0])
-	{
-		if (words)
-			free(words);
-		return (ft_strdup(""));
-	}
-	result = ft_strdup(words[0]);
-	i = 1;
-	while (words[i])
-	{
-		tmp = result;
-		result = ft_strjoin_3(tmp, " ", words[i]);
-		free(tmp);
-		i++;
-	}
-	free_array_str(words);
-	return (result);
-}
-
-char	*get_env_value(char *name, t_env *env)
-{
-	while (env)
-	{
-		if (!ft_strcmp(env->name, name))
-			return (env->value);
-		env = env->next;
-	}
-	return ("");
-}
 
 char	*handle_exit_status(char *result, int *i)
 {
@@ -87,6 +51,8 @@ char	*handle_env_variable(char *result, char *str, int *i, t_env *env)
 		return (NULL);
 	}
 	value = get_env_value(var_name, env);
+	if (value == NULL)
+		value = "";
 	tmp = result;
 	result = ft_strjoin(tmp, value);
 	free(tmp);
@@ -110,11 +76,9 @@ char	*handle_regular_char(char *result, char c, int *i)
 	return (result);
 }
 
-char	*expand_variables(char *str, t_env *env, int is_quoted)
+char	*get_expansion(char *str, t_env *env)
 {
-	char	*result;
 	char	*expanded;
-	char	**words;
 	int		i;
 
 	expanded = ft_calloc(1, 1);
@@ -133,10 +97,24 @@ char	*expand_variables(char *str, t_env *env, int is_quoted)
 		if (!expanded)
 			return (NULL);
 	}
+	return (expanded);
+}
+
+char	*expand_variables(char *str, t_env *env, int is_quoted)
+{
+	char	*result;
+	char	*expanded;
+	char	**words;
+
+	expanded = get_expansion(str, env);
+	if (!expanded)
+		return (NULL);
 	if (is_quoted)
 		return (expanded);
 	words = ft_split(expanded, ' ');
 	free(expanded);
+	if (!words)
+		return (NULL);
 	result = join_words(words);
 	return (result);
 }

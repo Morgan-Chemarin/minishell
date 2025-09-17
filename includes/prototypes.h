@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prototypes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 15:22:54 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/12 23:23:06 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ int		no_home(char *old_cwd, char *path);
 
 // env_expansion.c
 char	*expand_variables(char *str, t_env *env, int is_quoted);
+char	*get_env_value(char *name, t_env *env);
+
+// env_expansion_utils.c
+char	*join_words(char **words);
 char	*get_env_value(char *name, t_env *env);
 
 // init_env.c
@@ -95,6 +99,17 @@ int		prepare_all_heredocs(t_cmd *head, t_env *env);
 
 // parsing.c
 t_cmd	*parser(t_token *tokens, t_env *env);
+int		process_token(t_cmd *cmd, t_token **tokens, int *i);
+
+// parsing_utils.c
+int		count_fields_in_word(char *s);
+int		compute_args_capacity(t_token *tokens);
+void	strip_inplace(char *s, char ch);
+int		add_fields_to_args(t_cmd *cmd, char **fields, int *i);
+
+// parsing_cmd_utils.c
+void	set_cmd_type(t_cmd *cmd);
+int		parse_single_cmd(t_cmd *cmd, t_token **tokens);
 
 // split_quote.c
 char	**split_with_quote(char *line, t_env *env);

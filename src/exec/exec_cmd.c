@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 15:45:00 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/17 19:58:24 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
-			child_exit_handler(NULL, NULL, all); // a revoir cette condition
+			child_exit_handler(NULL, NULL, all);
 		free_all(cmd, all->token, all->env, all->line);
 		exit(EXIT_SUCCESS);
 	}
