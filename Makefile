@@ -54,6 +54,7 @@ SRCS =     main.c \
         cmd_utils.c \
         heredoc.c \
         execve_utils.c \
+        redir_utils.c \
         redir.c \
         wait_pid_remastered.c \
         exec_cmd_utils.c \

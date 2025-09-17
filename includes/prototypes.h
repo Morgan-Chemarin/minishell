@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prototypes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/12 23:23:06 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/17 20:32:27 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,12 @@ void	child_exit_handler(char *path, char **envp_arr, t_all *all);
 
 // wait_pid_remastered.c
 void	wait_pid_remastered(pid_t pid);
+
+// redir_utils.c
+void	handle_in(t_redirection *r);
+void	handle_out(t_redirection *r);
+void	handle_append(t_redirection *r);
+void	handle_hd(t_redirection *r);
 
 // redir.c
 void	handle_redirections(t_cmd *cmd, t_all *all);
