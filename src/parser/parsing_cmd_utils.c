@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 23:16:55 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/17 19:53:43 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/21 15:43:41 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	parse_single_cmd(t_cmd *cmd, t_token **tokens)
 		*tokens = (*tokens)->next;
 	}
 	cmd->args[i] = NULL;
-	set_cmd_type(cmd);
+	// set_cmd_type(cmd);
 	if (*tokens && (*tokens)->type == PIPE)
 		*tokens = (*tokens)->next;
 	return (1);

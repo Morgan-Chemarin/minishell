@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/09/12 23:18:44 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/21 15:47:03 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ t_cmd	*create_cmd(t_cmd **head, t_cmd **current, t_token *tokens)
 		free_cmd(*head);
 		return (NULL);
 	}
+	new->redir = NULL;
+	new->next = NULL;
 	if (!*head)
 		*head = new;
 	else
@@ -96,11 +98,9 @@ int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 
 t_cmd	*parser(t_token *tokens, t_env *env)
 {
-	t_cmd	*head;
-	t_cmd	*current;
+	t_cmd	*head = NULL;
+	t_cmd	*current = NULL;
 
-	head = NULL;
-	current = NULL;
 	while (tokens)
 	{
 		if (!create_cmd(&head, &current, tokens))
@@ -111,6 +111,7 @@ t_cmd	*parser(t_token *tokens, t_env *env)
 			free_cmd(head);
 			return (NULL);
 		}
+		set_cmd_type(current);
 	}
 	if (!prepare_all_heredocs(head, env))
 	{

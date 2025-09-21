@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/17 19:58:24 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/21 15:53:16 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,5 @@ void	exec_cmd(t_cmd *cmd, t_env **env, t_token *token, char *line)
 	}
 	exec_cmd_loop(cmd, &all.env, &all);
 	*env = all.env;
+	close_all_heredocs(cmd);
 }
