@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 15:38:02 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/23 16:27:16 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,6 @@
 # include "colors.h"
 
 extern int	g_last_status_exit;
-extern int	g_heredoc_interrupted;
+extern int	g_interrupted;
 
 #endif

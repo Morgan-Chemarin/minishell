@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 12:39:07 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 16:49:44 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/23 16:29:23 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	heredoc_loop(int write_fd, char *delimiter, int expand, t_env *env)
 	char	*line;
 	char	*expanded;
 
-	while (!g_heredoc_interrupted)
+	while (!g_interrupted)
 	{
 		line = readline("> ");
 		if (!line || !ft_strcmp(line, delimiter))
@@ -77,7 +77,7 @@ int	handle_heredoc(char	*delimiter, t_env *env)
 	heredoc_loop(pipefd[1], clean_delim, expand, env);
 	free(clean_delim);
 	close(pipefd[1]);
-	if (g_heredoc_interrupted)
+	if (g_interrupted)
 	{
 		close(pipefd[0]);
 		return (-1);

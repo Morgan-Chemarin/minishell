@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 20:30:42 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 15:48:39 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/23 16:29:32 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	handle_hd(t_redirection *r)
 	hd = fd_from_fdpath(r->file);
 	if (hd < 0)
 	{
-		if (!g_heredoc_interrupted)
+		if (!g_interrupted)
 			fprintf(stderr, "bad heredoc fd path: %s\n", r->file);
 		exit(1);
 	}

@@ -6,19 +6,19 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:20:50 by dev               #+#    #+#             */
-/*   Updated: 2025/09/22 20:27:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/23 16:29:00 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	set_heredoc_interrupted(int sig)
+void set_heredoc_interrupted(int sig)
 {
-	(void)sig;
-	g_heredoc_interrupted = 1;
-	rl_cleanup_after_signal();
-	write(STDOUT_FILENO, "\n", 1);
-	rl_done = 1;
+    (void)sig;
+    g_interrupted = 130;
+    rl_cleanup_after_signal();
+    write(STDOUT_FILENO, "\n", 1);
+    rl_done = 1;
 }
 
 static char	*make_fd_path(int fd)
@@ -46,14 +46,14 @@ static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_env *env)
 	char			*path;
 
 	r = cmd->redir;
-	while (r && !g_heredoc_interrupted)
+	while (r && !g_interrupted)
 	{
 		if (r->type == R_HEREDOC)
 		{
 			signal(SIGINT, set_heredoc_interrupted);
 			fd = handle_heredoc(r->file, env);
 			signal(SIGINT, siging_handler);
-			if (fd < 0 || g_heredoc_interrupted)
+			if (fd < 0 || g_interrupted)
 				return (0);
 			path = make_fd_path(fd);
 			if (!path)
@@ -66,20 +66,20 @@ static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_env *env)
 		}
 		r = r->next;
 	}
-	return (!g_heredoc_interrupted);
+	return (!g_interrupted);
 }
 
 int	prepare_all_heredocs(t_cmd *head, t_env *env)
 {
 	t_cmd	*c;
 
-	g_heredoc_interrupted = 0;
+	g_interrupted = 0;
 	c = head;
-	while (c && !g_heredoc_interrupted)
+	while (c && !g_interrupted)
 	{
 		if (!prepare_heredocs_one_cmd(c, env))
 			return (0);
 		c = c->next;
 	}
-	return (!g_heredoc_interrupted);
+	return (!g_interrupted);
 }

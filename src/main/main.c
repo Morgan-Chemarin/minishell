@@ -6,14 +6,14 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 15:42:09 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/23 16:49:05 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_last_status_exit = 0;
-int	g_heredoc_interrupted = 0;
+int	g_interrupted = 0;
 
 char	*read_full_line(void)
 {
@@ -25,15 +25,14 @@ char	*read_full_line(void)
 	return (line);
 }
 
-void	siging_handler(int sig)
+void siging_handler(int sig)
 {
-	(void)sig;
-	write(130, "^C", 2);
-	write(STDOUT_FILENO, "\n", 1);
-	g_last_status_exit = 130;
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
+    (void)sig;
+    g_interrupted = 130;
+    write(STDOUT_FILENO, "\n", 1);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -57,6 +56,11 @@ int	main(int argc, char **argv, char **envp)
 		if (!process_line(line, &env))
 			continue ;
 		free(line);
+		if (g_interrupted)
+		{
+			g_last_status_exit = g_interrupted;
+			g_interrupted = 0;
+		}
 	}
 	if (env)
 		free_env(env);
