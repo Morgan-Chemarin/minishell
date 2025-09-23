@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 15:47:03 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/23 15:27:49 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,11 @@ int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 
 t_cmd	*parser(t_token *tokens, t_env *env)
 {
-	t_cmd	*head = NULL;
-	t_cmd	*current = NULL;
+	t_cmd	*head;
+	t_cmd	*current;
 
+	head = NULL;
+	current = NULL;	
 	while (tokens)
 	{
 		if (!create_cmd(&head, &current, tokens))

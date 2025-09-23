@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/17 20:32:27 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/21 16:12:10 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ t_token	*create_struct_tokens(char **pre_token);
 
 // SIG
 void	siging_handler(int sig);
+void	set_heredoc_interrupted(int sig);
 
 // check_error.c
 int		check_syntax_errors(t_token *tokens);

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:20:50 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 15:41:38 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/22 20:27:52 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void	set_heredoc_interrupted(int sig)
 {
 	(void)sig;
 	g_heredoc_interrupted = 1;
+	rl_cleanup_after_signal();
+	write(STDOUT_FILENO, "\n", 1);
+	rl_done = 1;
 }
 
 static char	*make_fd_path(int fd)
