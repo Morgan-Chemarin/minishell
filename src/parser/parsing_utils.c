@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 23:12:30 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/12 23:17:13 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/24 15:08:41 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ int	count_fields_in_word(char *s)
 	int	i;
 	int	count;
 
-	if (!s || !*s)
+	if (!s)
 		return (0);
+	if (!*s)
+		return (1);
 	if (!ft_strchr(s, '\3'))
 		return (1);
 	i = 0;
