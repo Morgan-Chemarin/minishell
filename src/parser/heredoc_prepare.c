@@ -6,19 +6,19 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:20:50 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 12:26:36 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 13:33:42 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void set_heredoc_interrupted(int sig)
+void	set_heredoc_interrupted(int sig)
 {
-    (void)sig;
-    g_interrupted = 130;
-    rl_cleanup_after_signal();
-    write(STDOUT_FILENO, "\n", 1);
-    rl_done = 1;
+	(void)sig;
+	g_interrupted = 130;
+	rl_cleanup_after_signal();
+	write(STDOUT_FILENO, "\n", 1);
+	rl_done = 1;
 }
 
 static char	*make_fd_path(int fd)
@@ -39,7 +39,7 @@ static char	*make_fd_path(int fd)
 	return (path);
 }
 
-static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_env *env, t_all *all)
+static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_all *all)
 {
 	t_redirection	*r;
 	int				fd;
@@ -51,16 +51,13 @@ static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_env *env, t_all *all)
 		if (r->type == R_HEREDOC)
 		{
 			signal(SIGINT, set_heredoc_interrupted);
-			fd = handle_heredoc(r->file, env, all);
+			fd = handle_heredoc(r->file, all);
 			signal(SIGINT, siging_handler);
 			if (fd < 0 || g_interrupted)
 				return (0);
 			path = make_fd_path(fd);
 			if (!path)
-			{
-				close(fd);
-				return (0);
-			}
+				return (close(fd), 0);
 			free(r->file);
 			r->file = path;
 		}
@@ -69,7 +66,7 @@ static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_env *env, t_all *all)
 	return (!g_interrupted);
 }
 
-int	prepare_all_heredocs(t_cmd *head, t_env *env, t_all *all)
+int	prepare_all_heredocs(t_cmd *head, t_all *all)
 {
 	t_cmd	*c;
 
@@ -77,7 +74,7 @@ int	prepare_all_heredocs(t_cmd *head, t_env *env, t_all *all)
 	c = head;
 	while (c && !g_interrupted)
 	{
-		if (!prepare_heredocs_one_cmd(c, env, all))
+		if (!prepare_heredocs_one_cmd(c, all))
 			return (0);
 		c = c->next;
 	}

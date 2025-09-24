@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 12:51:13 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 13:14:25 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // ** MAIN **
 
 // main_loop.c
-int		process_line(char *line, t_env **env, t_all *all);
+int		process_line(char *line, t_all *all);
 
 // ** BUILTINS **
 
@@ -58,16 +58,16 @@ char	**env_list_to_array(t_env *env);
 // ** EXEC **
 
 // exec_cmd.c
-void	exec_cmd(t_cmd *cmd, t_env **env, t_all *all);
+void	exec_cmd(t_cmd *cmd, t_all *all);
 void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data);
 
 // cmd_utils.c
 t_cmd	*new_cmd(void);
 int		count_args(t_token *token);
-void	dot_command(t_cmd *cmd, t_env *env, t_all *all);
+void	dot_command(t_cmd *cmd, t_all *all);
 
 // heredoc.c
-int		handle_heredoc(char	*delimiter, t_env *env, t_all *all);
+int		handle_heredoc(char	*delimiter, t_all *all);
 
 // execve_utils.c
 char	*get_path(char *cmd, t_env *env);
@@ -75,7 +75,7 @@ void	check_access_exec(char *cmd, char **args, char **envp, t_all *all);
 
 // exec_cmd_utils.c
 void	restore_fds(int saved_fds[2]);
-void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all);
+void	exec_cmd_loop(t_cmd *cmd, t_all *all);
 
 // exec_cmd_utils_children.c
 void	wait_all_children(pid_t last_pid, t_all *all);
@@ -92,16 +92,16 @@ void	handle_hd(t_redirection *r);
 void	handle_redirections(t_cmd *cmd, t_all *all);
 
 // exec_builtins.c
-void	exec_builtin(t_cmd *cmd, t_env **env, t_all *all);
+void	exec_builtin(t_cmd *cmd, t_all *all);
 int		is_stateful_builtin(t_cmd *cmd);
 
 // ** PARSER **
 
 // heredoc_prepare.c
-int		prepare_all_heredocs(t_cmd *head, t_env *env, t_all *all);
+int		prepare_all_heredocs(t_cmd *head, t_all *all);
 
 // parsing.c
-t_cmd	*parser(t_token *tokens, t_env *env, t_all *all);
+t_cmd	*parser(t_token *tokens, t_all *all);
 int		process_token(t_cmd *cmd, t_token **tokens, int *i);
 
 // parsing_utils.c

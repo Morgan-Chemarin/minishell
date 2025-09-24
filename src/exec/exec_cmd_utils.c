@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:38:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/24 12:44:21 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 13:06:03 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	process_command_in_loop(t_cmd *cmd, t_all *all, t_pipe_data *data)
 	}
 }
 
-void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
+void	exec_cmd_loop(t_cmd *cmd, t_all *all)
 {
 	t_pipe_data	data;
 
@@ -45,7 +45,6 @@ void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
 	signal(SIGINT, SIG_IGN);
 	while (cmd)
 	{
-		all->env = *env;
 		process_command_in_loop(cmd, all, &data);
 		cmd = cmd->next;
 	}
