@@ -6,13 +6,12 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 11:25:41 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:38:44 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int	g_last_status_exit = 0;
 int	g_interrupted = 0;
 
 char	*read_full_line(void)

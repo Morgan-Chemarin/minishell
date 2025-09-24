@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 12:02:34 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:51:13 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		no_home(char *old_cwd, char *path);
 // ** ENV **
 
 // env_expansion.c
-char	*expand_variables(char *str, t_env *env, int is_quoted);
+char	*expand_variables(char *str, t_env *env, int is_quoted, t_all *all);
 char	*get_env_value(char *name, t_env *env);
 
 // env_expansion_utils.c
@@ -58,7 +58,7 @@ char	**env_list_to_array(t_env *env);
 // ** EXEC **
 
 // exec_cmd.c
-void	exec_cmd(t_cmd *cmd, t_env **env, t_token *token, char *line);
+void	exec_cmd(t_cmd *cmd, t_env **env, t_all *all);
 void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data);
 
 // cmd_utils.c
@@ -67,7 +67,7 @@ int		count_args(t_token *token);
 void	dot_command(t_cmd *cmd, t_env *env, t_all *all);
 
 // heredoc.c
-int		handle_heredoc(char	*delimiter, t_env *env);
+int		handle_heredoc(char	*delimiter, t_env *env, t_all *all);
 
 // execve_utils.c
 char	*get_path(char *cmd, t_env *env);
@@ -98,10 +98,10 @@ int		is_stateful_builtin(t_cmd *cmd);
 // ** PARSER **
 
 // heredoc_prepare.c
-int		prepare_all_heredocs(t_cmd *head, t_env *env);
+int		prepare_all_heredocs(t_cmd *head, t_env *env, t_all *all);
 
 // parsing.c
-t_cmd	*parser(t_token *tokens, t_env *env);
+t_cmd	*parser(t_token *tokens, t_env *env, t_all *all);
 int		process_token(t_cmd *cmd, t_token **tokens, int *i);
 
 // parsing_utils.c
@@ -115,11 +115,11 @@ void	set_cmd_type(t_cmd *cmd);
 int		parse_single_cmd(t_cmd *cmd, t_token **tokens);
 
 // split_quote.c
-char	**split_with_quote(char *line, t_env *env);
-char	*extract_word(char *line, int *i, t_env *env, int skip_expand);
+char	**split_with_quote(char *line, t_all *all);
+char	*extract_word(char *line, int *i, t_all *all, int skip_expand);
 
 // split_quote_helper.c
-char	*extract_quoted(char *line, int *i, int skip_expand, t_env *env);
+char	*extract_quoted(char *line, int *i, int skip_expand, t_all *all);
 int		count_tokens(char *line);
 
 // split_utils.c
@@ -127,7 +127,7 @@ void	skip_spaces(char *line, int *i);
 int		is_single_operator(char c);
 int		is_double_operator(char *s, const char *op, int *i);
 char	*extract_delimiter(char *line, int *i);
-char	*handle_quotes(char *line, int *i, int skip_expand, t_env *env);
+char	*handle_quotes(char *line, int *i, int skip_expand, t_all *all);
 
 // tokens_redir.c
 int		add_redir(t_cmd *cmd, t_redirection_type type, char *value);
@@ -138,6 +138,8 @@ t_token	*create_struct_tokens(char **pre_token);
 // SIG
 void	siging_handler(int sig);
 void	set_heredoc_interrupted(int sig);
+
+// ** UTILS **
 
 // check_error.c
 int		check_syntax_errors(t_token *tokens);

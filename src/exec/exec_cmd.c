@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 11:40:40 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:42:07 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 	envp_arr = env_list_to_array(env);
 	path = get_path(cmd->args[0], env);
 	if (path)
-		check_access_exec(path, cmd->args, envp_arr, &all);
+		check_access_exec(path, cmd->args, envp_arr, all);
 	if (all->last_status_exit != 0)
 	{
 		free(path);
@@ -71,30 +71,26 @@ int	handle_single_stateful(t_cmd *cmd, t_env **env, t_all *all)
 	return (1);
 }
 
-void	exec_cmd(t_cmd *cmd, t_env **env, t_token *token, char *line)
+void	exec_cmd(t_cmd *cmd, t_env **env, t_all *all)
 {
-	t_all	all;
-
-	all.cmd_head = cmd;
-	all.token = token;
-	all.line = line;
-	all.env = *env;
+	all->cmd_head = cmd;
+	all->env = *env;
 	if (cmd->next == NULL && cmd->type == CMD_BUILTNS
 		&& ft_strcmp(cmd->args[0], "exit") == 0)
 	{
-		handle_redirections(cmd, &all);
-		exec_builtin(cmd, &all.env, &all);
-		*env = all.env;
+		handle_redirections(cmd, all);
+		exec_builtin(cmd, &all->env, all);
+		*env = all->env;
 		close_all_heredocs(cmd);
 		return ;
 	}
-	if (handle_single_stateful(cmd, &all.env, &all))
+	if (handle_single_stateful(cmd, &all->env, all))
 	{
-		*env = all.env;
+		*env = all->env;
 		close_all_heredocs(cmd);
 		return ;
 	}
-	exec_cmd_loop(cmd, &all.env, &all);
-	*env = all.env;
+	exec_cmd_loop(cmd, &all->env, all);
+	*env = all->env;
 	close_all_heredocs(cmd);
 }

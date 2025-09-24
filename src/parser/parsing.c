@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/09/23 15:27:49 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:27:44 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	process_token(t_cmd *cmd, t_token **tokens, int *i)
 	return (1);
 }
 
-t_cmd	*parser(t_token *tokens, t_env *env)
+t_cmd	*parser(t_token *tokens, t_env *env, t_all *all)
 {
 	t_cmd	*head;
 	t_cmd	*current;
@@ -115,7 +115,7 @@ t_cmd	*parser(t_token *tokens, t_env *env)
 		}
 		set_cmd_type(current);
 	}
-	if (!prepare_all_heredocs(head, env))
+	if (!prepare_all_heredocs(head, env, all))
 	{
 		free_cmd(head);
 		return (NULL);

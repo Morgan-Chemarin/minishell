@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 11:45:24 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:43:45 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	check_access_exec(char *cmd, char **args, char **envp, t_all *all)
 		}
 		return ;
 	}
-	handle_exec_error(cmd, &all);
+	handle_exec_error(cmd, all);
 	if (all->last_status_exit == 0)
 	{
 		execve(cmd, args, envp);

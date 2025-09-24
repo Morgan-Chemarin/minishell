@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   env_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:06:47 by dev               #+#    #+#             */
-/*   Updated: 2025/09/12 23:31:00 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/24 12:11:33 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*handle_exit_status(char *result, int *i)
+char	*handle_exit_status(char *result, int *i, t_all *all)
 {
 	char	*status;
 	char	*tmp;
 
-	status = ft_itoa(g_last_status_exit);
+	status = ft_itoa(all->last_status_exit);
 	if (!status)
 	{
 		free(result);
@@ -76,7 +76,7 @@ char	*handle_regular_char(char *result, char c, int *i)
 	return (result);
 }
 
-char	*get_expansion(char *str, t_env *env)
+char	*get_expansion(char *str, t_env *env, t_all *all)
 {
 	char	*expanded;
 	int		i;
@@ -88,7 +88,7 @@ char	*get_expansion(char *str, t_env *env)
 	while (str[i])
 	{
 		if (str[i] == '$' && str[i + 1] == '?')
-			expanded = handle_exit_status(expanded, &i);
+			expanded = handle_exit_status(expanded, &i, all);
 		else if (str[i] == '$' && str[i + 1]
 			&& (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
 			expanded = handle_env_variable(expanded, str, &i, env);
@@ -100,13 +100,13 @@ char	*get_expansion(char *str, t_env *env)
 	return (expanded);
 }
 
-char	*expand_variables(char *str, t_env *env, int is_quoted)
+char	*expand_variables(char *str, t_env *env, int is_quoted, t_all *all)
 {
 	char	*result;
 	char	*expanded;
 	char	**words;
 
-	expanded = get_expansion(str, env);
+	expanded = get_expansion(str, env, all);
 	if (!expanded)
 		return (NULL);
 	if (is_quoted)

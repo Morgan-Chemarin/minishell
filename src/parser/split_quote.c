@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/08/25 02:59:51 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/24 12:51:21 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*append_word(char *result, char *word)
 	return (result);
 }
 
-char	*extract_plain_word(char *line, int *i, t_env *env, int skip_expand)
+char	*extract_plain_word(char *line, int *i, t_all *all, int skip_expand)
 {
 	int		start;
 	char	*word;
@@ -39,7 +39,7 @@ char	*extract_plain_word(char *line, int *i, t_env *env, int skip_expand)
 		return (NULL);
 	if (!skip_expand)
 	{
-		expanded = expand_variables(word, env, 0);
+		expanded = expand_variables(word, all->env, 0, all);
 		free(word);
 		if (!expanded)
 			return (NULL);
@@ -48,7 +48,7 @@ char	*extract_plain_word(char *line, int *i, t_env *env, int skip_expand)
 	return (word);
 }
 
-char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
+char	*extract_word(char *line, int *i, t_all *all, int skip_expand)
 {
 	char	*word;
 	char	*result;
@@ -60,9 +60,9 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 		line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
-			word = handle_quotes(line, i, skip_expand, env);
+			word = handle_quotes(line, i, skip_expand, all);
 		else
-			word = extract_plain_word(line, i, env, skip_expand);
+			word = extract_plain_word(line, i, all, skip_expand);
 		if (!word)
 			return (free(result), NULL);
 		result = append_word(result, word);
@@ -72,7 +72,7 @@ char	*extract_word(char *line, int *i, t_env *env, int skip_expand)
 	return (result);
 }
 
-int	handle_token(char *line, int *i, char **tokens, t_env *env)
+int	handle_token(char *line, int *i, char **tokens, t_all *all)
 {
 	static int	heredoc = 0;
 
@@ -85,17 +85,17 @@ int	handle_token(char *line, int *i, char **tokens, t_env *env)
 		if (line[*i] == '>' || line[*i] == '<')
 		{
 			if (line[*i + 1] && (line[*i + 1] == '"' || line[*i + 1] == '\''))
-				return (tokens[0] = extract_word(line, i, env, 0), 1);
+				return (tokens[0] = extract_word(line, i, all, 0), 1);
 		}
 		return (tokens[0] = ft_substr(line, (*i)++, 1), 1);
 	}
 	else if (heredoc)
 		return (tokens[0] = extract_delimiter(line, i), heredoc = 0, 1);
 	else
-		return (tokens[0] = extract_word(line, i, env, 0), 1);
+		return (tokens[0] = extract_word(line, i, all, 0), 1);
 }
 
-char	**split_with_quote(char *line, t_env *env)
+char	**split_with_quote(char *line, t_all *all)
 {
 	char	**tokens;
 	int		i;
@@ -113,7 +113,7 @@ char	**split_with_quote(char *line, t_env *env)
 		skip_spaces(line, &i);
 		if (!line[i])
 			break ;
-		if (!handle_token(line, &i, &tokens[j], env) || !tokens[j])
+		if (!handle_token(line, &i, &tokens[j], all) || !tokens[j])
 			return (free_array_str(tokens), NULL);
 		j++;
 	}

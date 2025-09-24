@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 10:15:52 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 11:23:58 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:51:38 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	process_line(char *line, t_env **env, t_all *all)
 	if (!handle_empty_or_quotes(line))
 		return (0);
 	add_history(line);
-	pre_tokens = split_with_quote(line, *env);
+	pre_tokens = split_with_quote(line, all);
 	if (!pre_tokens)
 		return (0);
 	tokens = create_struct_tokens(pre_tokens);
@@ -75,9 +75,13 @@ int	process_line(char *line, t_env **env, t_all *all)
 		all->last_status_exit = 2;
 		return (free_token(tokens), 0);
 	}
-	cmd = parser(tokens, *env);
+	cmd = parser(tokens, *env, all);
 	if (cmd)
-		exec_cmd(cmd, env, tokens, line);
+	{
+		all->token = tokens;
+		all->line = line;
+		exec_cmd(cmd, env, all);
+	}
 	if (cmd)
 		free_cmd(cmd);
 	if (tokens)

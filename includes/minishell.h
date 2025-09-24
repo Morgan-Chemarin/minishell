@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:42:38 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 11:19:51 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:38:48 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # include "prototypes.h"
 # include "colors.h"
 
-// extern int	g_last_status_exit;
 extern int	g_interrupted;
 
 #endif
