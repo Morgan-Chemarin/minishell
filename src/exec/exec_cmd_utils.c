@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:38:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/26 15:13:20 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:34:29 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all)
 		process_command_in_loop(cmd, all, &data);
 		cmd = cmd->next;
 	}
-	wait_all_children(data.pid);
+	wait_all_children(data.pid, &all);
 	close_all_heredocs(all->cmd_head);
 }
 

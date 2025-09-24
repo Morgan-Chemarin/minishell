@@ -6,13 +6,13 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 14:14:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 17:43:21 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:34:58 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	wait_all_children(pid_t last_pid)
+void	wait_all_children(pid_t last_pid, t_all *all)
 {
 	int	status;
 
@@ -25,10 +25,10 @@ void	wait_all_children(pid_t last_pid)
 			ft_putstr_fd("\n", STDOUT_FILENO);
 		else if (WTERMSIG(status) == SIGQUIT)
 			ft_putstr_fd("Quit (core dumped)\n", STDOUT_FILENO);
-		g_last_status_exit = 128 + WTERMSIG(status);
+		all->last_status_exit = 128 + WTERMSIG(status);
 	}
 	else
-		g_last_status_exit = WEXITSTATUS(status);
+		all->last_status_exit = WEXITSTATUS(status);
 	while (wait(NULL) > 0)
 		;
 	signal(SIGINT, siging_handler);

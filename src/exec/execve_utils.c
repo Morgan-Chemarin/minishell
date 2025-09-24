@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 16:42:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/24 01:36:39 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/24 11:45:24 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,27 @@ int	is_directory(const char *path)
 	return (S_ISDIR(path_stat.st_mode));
 }
 
-void	handle_exec_error(char *cmd)
+void	handle_exec_error(char *cmd, t_all *all)
 {
 	if (is_directory(cmd))
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd, 2);
 		ft_putstr_fd(": is a directory\n", 2);
-		g_last_status_exit = 126;
+		all->last_status_exit = 126;
 	}
 	else if (access(cmd, X_OK) != 0)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
-		g_last_status_exit = 126;
+		all->last_status_exit = 126;
 	}
 	else
-		g_last_status_exit = 0;
+		all->last_status_exit = 0;
 }
 
-void	check_access_exec(char *cmd, char **args, char **envp)
+void	check_access_exec(char *cmd, char **args, char **envp, t_all *all)
 {
 	if (access(cmd, F_OK) != 0)
 	{
@@ -50,16 +50,16 @@ void	check_access_exec(char *cmd, char **args, char **envp)
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd, 2);
 			ft_putstr_fd(": No such file or directory\n", 2);
-			g_last_status_exit = 127;
+			all->last_status_exit = 127;
 		}
 		return ;
 	}
-	handle_exec_error(cmd);
-	if (g_last_status_exit == 0)
+	handle_exec_error(cmd, &all);
+	if (all->last_status_exit == 0)
 	{
 		execve(cmd, args, envp);
 		perror("minishell");
-		g_last_status_exit = 126;
+		all->last_status_exit = 126;
 	}
 }
 

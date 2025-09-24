@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/24 00:52:14 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/24 11:20:26 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	ft_exit(t_cmd *cmd, t_all *all)
 	else if (arg_count > 2)
 	{
 		write(tty_fd, "exit: too many arguments\n", 25);
-		g_last_status_exit = 1;
+		all->last_status_exit = 1;
 	}
 	if (tty_fd >= 0)
 		close(tty_fd);

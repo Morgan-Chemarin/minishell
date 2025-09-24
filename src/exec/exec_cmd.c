@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 15:53:16 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:40:40 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,24 @@ void	run_child_command(t_cmd *cmd, t_env *env, t_all *all)
 	char	*path;
 	char	**envp_arr;
 
-	g_last_status_exit = 0;
+	all->last_status_exit = 0;
 	if (cmd->type == CMD_BUILTNS)
 	{
 		exec_builtin(cmd, &env, all);
 		free_all(all->cmd_head, all->token, env, all->line);
-		exit(g_last_status_exit);
+		exit(all->last_status_exit);
 	}
 	dot_command(cmd, env, all);
 	envp_arr = env_list_to_array(env);
 	path = get_path(cmd->args[0], env);
 	if (path)
-		check_access_exec(path, cmd->args, envp_arr);
-	if (g_last_status_exit != 0)
+		check_access_exec(path, cmd->args, envp_arr, &all);
+	if (all->last_status_exit != 0)
 	{
 		free(path);
 		free_split(envp_arr);
 		free_all(all->cmd_head, all->token, all->env, all->line);
-		exit(g_last_status_exit);
+		exit(all->last_status_exit);
 	}
 	child_exit_handler(path, envp_arr, all);
 }

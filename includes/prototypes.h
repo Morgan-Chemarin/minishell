@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/21 16:12:10 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 12:02:34 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // ** MAIN **
 
 // main_loop.c
-int		process_line(char *line, t_env **env);
+int		process_line(char *line, t_env **env, t_all *all);
 
 // ** BUILTINS **
 
@@ -71,19 +71,16 @@ int		handle_heredoc(char	*delimiter, t_env *env);
 
 // execve_utils.c
 char	*get_path(char *cmd, t_env *env);
-void	check_access_exec(char *cmd, char **args, char **envp);
+void	check_access_exec(char *cmd, char **args, char **envp, t_all *all);
 
 // exec_cmd_utils.c
 void	restore_fds(int saved_fds[2]);
 void	exec_cmd_loop(t_cmd *cmd, t_env **env, t_all *all);
 
 // exec_cmd_utils_children.c
-void	wait_all_children(pid_t last_pid);
+void	wait_all_children(pid_t last_pid, t_all *all);
 void	setup_child_pipes(t_cmd *cmd, int in_fd, int pipe_fd[2]);
 void	child_exit_handler(char *path, char **envp_arr, t_all *all);
-
-// wait_pid_remastered.c
-void	wait_pid_remastered(pid_t pid);
 
 // redir_utils.c
 void	handle_in(t_redirection *r);

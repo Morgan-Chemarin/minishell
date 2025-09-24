@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 10:15:52 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 15:15:07 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:23:58 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	handle_empty_or_quotes(char *line)
 	return (1);
 }
 
-int	process_line(char *line, t_env **env)
+int	process_line(char *line, t_env **env, t_all *all)
 {
 	char	**pre_tokens;
 	t_token	*tokens;
@@ -72,7 +72,7 @@ int	process_line(char *line, t_env **env)
 	free_array_str(pre_tokens);
 	if (!check_syntax_errors(tokens))
 	{
-		g_last_status_exit = 2;
+		all->last_status_exit = 2;
 		return (free_token(tokens), 0);
 	}
 	cmd = parser(tokens, *env);

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:36:53 by dev               #+#    #+#             */
-/*   Updated: 2025/08/26 15:22:08 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:18:21 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_all
 	t_env		*env;
 	char		*line;
 	int			heredoc_fd;
+	int			last_status_exit;
 }	t_all;
 
 typedef struct s_pipe_data

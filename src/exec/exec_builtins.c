@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:59:31 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/08/22 11:24:52 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:31:40 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ int	is_stateful_builtin(t_cmd *cmd)
 void	exec_builtin(t_cmd *cmd, t_env **env, t_all *all)
 {
 	if (!ft_strcmp(cmd->args[0], "echo"))
-		g_last_status_exit = ft_echo(cmd);
+		all->last_status_exit = ft_echo(cmd);
 	else if (!ft_strcmp(cmd->args[0], "cd"))
-		g_last_status_exit = ft_cd(cmd, env);
+		all->last_status_exit = ft_cd(cmd, env);
 	else if (!ft_strcmp(cmd->args[0], "pwd"))
-		g_last_status_exit = ft_pwd();
+		all->last_status_exit = ft_pwd();
 	else if (!ft_strcmp(cmd->args[0], "export"))
-		g_last_status_exit = ft_export(cmd, env);
+		all->last_status_exit = ft_export(cmd, env);
 	else if (!ft_strcmp(cmd->args[0], "unset"))
-		g_last_status_exit = ft_unset(env, cmd);
+		all->last_status_exit = ft_unset(env, cmd);
 	else if (!ft_strcmp(cmd->args[0], "env"))
-		g_last_status_exit = ft_env(*env);
+		all->last_status_exit = ft_env(*env);
 	else if (!ft_strcmp(cmd->args[0], "exit"))
 	{
 		all->env = *env;

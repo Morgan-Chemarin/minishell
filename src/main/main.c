@@ -6,13 +6,13 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/23 16:49:05 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/24 11:25:41 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_last_status_exit = 0;
+// int	g_last_status_exit = 0;
 int	g_interrupted = 0;
 
 char	*read_full_line(void)
@@ -37,33 +37,39 @@ void siging_handler(int sig)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line;
-	t_env	*env;
+	t_all	all;
+	// char	*line;
+	// t_env	*env;
 
 	(void)argc;
 	(void)argv;
-	env = envp_to_list(envp);
+	all.env = envp_to_list(envp);
+    all.line = NULL;
+    all.cmd_head = NULL;
+    all.token = NULL;
+    all.heredoc_fd = -1;
+    all.last_status_exit = 0;
 	signal(SIGINT, siging_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		line = read_full_line();
-		if (!line)
+		all.line = read_full_line();
+		if (!all.line)
 		{
 			write(1, "exit\n", 5);
 			break ;
 		}
-		if (!process_line(line, &env))
+		if (!process_line(all.line, &all.env, &all))
 			continue ;
-		free(line);
+		free(all.line);
 		if (g_interrupted)
 		{
-			g_last_status_exit = g_interrupted;
+			all.last_status_exit = g_interrupted;
 			g_interrupted = 0;
 		}
 	}
-	if (env)
-		free_env(env);
+	if (all.env)
+		free_env(all.env);
 	rl_clear_history();
-	return (g_last_status_exit);
+	return (all.last_status_exit);
 }
