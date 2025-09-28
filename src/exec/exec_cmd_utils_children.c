@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 14:14:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/24 11:34:58 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/28 16:10:54 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ void	setup_child_pipes(t_cmd *cmd, int in_fd, int pipe_fd[2])
 	}
 }
 
-void	child_exit_handler(char *path, char **envp_arr, t_all *all)
+void	child_exit_handler(t_cmd *cmd, char *path, char **envp_arr, t_all *all)
 {
 	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(all->cmd_head->args[0], 2);
+	ft_putstr_fd(cmd->args[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
 	if (path)
 		free(path);

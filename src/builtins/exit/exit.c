@@ -77,7 +77,7 @@ void	ft_exit(t_cmd *cmd, t_all *all)
 	{
 		free_all(cmd, all->token, all->env, all->line);
 		close(tty_fd);
-		exit(0);
+		exit(all->last_status_exit);
 	}
 	else if (arg_count == 2)
 		exit_with_code(cmd, all, tty_fd);

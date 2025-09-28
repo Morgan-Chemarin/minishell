@@ -78,7 +78,11 @@ void	handle_hd(t_redirection *r)
 	if (hd < 0)
 	{
 		if (!g_interrupted)
-			fprintf(stderr, "bad heredoc fd path: %s\n", r->file);
+		{
+			write(2, "bad heredoc fd path: ", 21);
+			write(2, r->file, ft_strlen(r->file));
+			write(2, "\n", 1);
+		}
 		exit(1);
 	}
 	if (dup2(hd, STDIN_FILENO) < 0)

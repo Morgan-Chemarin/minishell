@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 13:16:48 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/28 16:11:37 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	run_child_command(t_cmd *cmd, t_all *all)
 		free_all(all->cmd_head, all->token, all->env, all->line);
 		exit(all->last_status_exit);
 	}
-	child_exit_handler(path, envp_arr, all);
+	child_exit_handler(cmd, path, envp_arr, all);
 }
 
 void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
@@ -48,8 +48,8 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
-			child_exit_handler(NULL, NULL, all);
-		free_all(cmd, all->token, all->env, all->line);
+			child_exit_handler(cmd, NULL, NULL, all);
+		free_all(all->cmd_head, all->token, all->env, all->line);
 		exit(EXIT_SUCCESS);
 	}
 	run_child_command(cmd, all);

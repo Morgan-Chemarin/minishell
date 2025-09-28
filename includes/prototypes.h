@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 13:14:25 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/28 16:09:47 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	exec_cmd_loop(t_cmd *cmd, t_all *all);
 // exec_cmd_utils_children.c
 void	wait_all_children(pid_t last_pid, t_all *all);
 void	setup_child_pipes(t_cmd *cmd, int in_fd, int pipe_fd[2]);
-void	child_exit_handler(char *path, char **envp_arr, t_all *all);
+void	child_exit_handler(t_cmd *cmd, char *path, char **envp_arr, t_all *all);
 
 // redir_utils.c
 void	handle_in(t_redirection *r);
