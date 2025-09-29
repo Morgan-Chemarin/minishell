@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:20:50 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 13:33:42 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/29 19:09:19 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,10 @@ void	set_heredoc_interrupted(int sig)
 	rl_done = 1;
 }
 
-static char	*make_fd_path(int fd)
-{
-	char	*num;
-	char	*path;
-	char	*tmp;
-
-	num = ft_itoa(fd);
-	if (!num)
-		return (NULL);
-	tmp = ft_strjoin("/dev/fd/", num);
-	free(num);
-	if (!tmp)
-		return (NULL);
-	path = ft_strdup(tmp);
-	free(tmp);
-	return (path);
-}
-
 static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_all *all)
 {
 	t_redirection	*r;
 	int				fd;
-	char			*path;
 
 	r = cmd->redir;
 	while (r && !g_interrupted)
@@ -55,11 +36,7 @@ static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_all *all)
 			signal(SIGINT, siging_handler);
 			if (fd < 0 || g_interrupted)
 				return (0);
-			path = make_fd_path(fd);
-			if (!path)
-				return (close(fd), 0);
-			free(r->file);
-			r->file = path;
+			r->heredoc_fd = fd;
 		}
 		r = r->next;
 	}

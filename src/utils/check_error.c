@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:57 by dev               #+#    #+#             */
-/*   Updated: 2025/09/28 16:12:01 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/29 19:12:17 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	check_syntax_errors(t_token *tokens)
         }
 		if (tmp->type == PIPE && !tmp->next)
 		{
-			printf("syntax error near unexpected token 'newline'\n");
+            printf("syntax error near unexpected token '%s'\n", tmp->value);
 			return (0);
 		}
         prev = tmp;

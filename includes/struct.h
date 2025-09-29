@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:36:53 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 11:18:21 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/29 18:46:53 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_redirection
 {
 	t_redirection_type		type;
 	char					*file;
+	int						heredoc_fd;
 	struct s_redirection	*next;
 }	t_redirection;
 
@@ -72,7 +73,6 @@ typedef struct s_all
 	t_token		*token;
 	t_env		*env;
 	char		*line;
-	int			heredoc_fd;
 	int			last_status_exit;
 }	t_all;
 

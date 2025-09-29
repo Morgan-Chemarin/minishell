@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 20:30:42 by dev               #+#    #+#             */
-/*   Updated: 2025/09/23 16:29:32 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/29 18:54:30 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,37 +54,11 @@ void	handle_append(t_redirection *r)
 	close(fd);
 }
 
-static int	fd_from_fdpath(const char *path)
-{
-	char		*p;
-	int			n;
-
-	if (!path)
-		return (-1);
-	p = ft_strrchr(path, '/');
-	if (!p || !*(p + 1))
-		return (-1);
-	n = ft_atoi(p + 1);
-	if (n < 0)
-		return (-1);
-	return (n);
-}
-
 void	handle_hd(t_redirection *r)
 {
 	int	hd;
 
-	hd = fd_from_fdpath(r->file);
-	if (hd < 0)
-	{
-		if (!g_interrupted)
-		{
-			write(2, "bad heredoc fd path: ", 21);
-			write(2, r->file, ft_strlen(r->file));
-			write(2, "\n", 1);
-		}
-		exit(1);
-	}
+	hd = r->heredoc_fd;
 	if (dup2(hd, STDIN_FILENO) < 0)
 	{
 		perror("dup2");

@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 13:50:53 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/29 18:46:32 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static void	init_all(t_all *all, char **envp)
 	all->line = NULL;
 	all->cmd_head = NULL;
 	all->token = NULL;
-	all->heredoc_fd = -1;
 	all->last_status_exit = 0;
 	signal(SIGINT, siging_handler);
 	signal(SIGQUIT, SIG_IGN);
