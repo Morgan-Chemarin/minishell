@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 09:43:00 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 19:33:51 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ char	*extract_plain_word(char *line, int *i, t_all *all, int skip_expand)
 	char	*expanded;
 
 	start = *i;
-	while (line[*i] && !ft_isspace(line[*i]) && \
-		line[*i] != '|' && line[*i] != '<' && line[*i] != '>' && \
-		line[*i] != '\'' && line[*i] != '"')
+	while (line[*i] && !ft_isspace(line[*i])
+		&& line[*i] != '|' && line[*i] != '<' && line[*i] != '>'
+		&& line[*i] != '\'' && line[*i] != '"')
 		(*i)++;
 	word = ft_substr(line, start, *i - start);
 	if (!word)
@@ -56,8 +56,8 @@ char	*extract_word(char *line, int *i, t_all *all, int skip_expand)
 	result = ft_calloc(1, 1);
 	if (!result)
 		return (NULL);
-	while (line[*i] && !ft_isspace(line[*i]) && \
-		line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
+	while (line[*i] && !ft_isspace(line[*i])
+		&& line[*i] != '|' && line[*i] != '<' && line[*i] != '>')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
 			word = handle_quotes(line, i, skip_expand, all);
