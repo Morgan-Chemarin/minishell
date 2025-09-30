@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prototypes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mchemari <mchemari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 18:34:01 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/30 19:08:43 by mchemari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	child_exit_handler(t_cmd *cmd, char *path, char **envp_arr, t_all *all);
 int		handle_in(t_redirection *r);
 int		handle_out(t_redirection *r);
 int		handle_append(t_redirection *r);
-int 	handle_hd(t_redirection *r);
+int		handle_hd(t_redirection *r);
 
 // redir.c
 int		handle_redirections(t_cmd *cmd);

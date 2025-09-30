@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mchemari <mchemari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 18:52:17 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 19:07:04 by mchemari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,14 @@ static void	shell_loop(t_all *all)
 			return ;
 		}
 		if (!process_line(all->line, all))
-        {
-            continue ;
-        }
-        free_token(all->token);
-        all->token = NULL;
-        free_cmd(all->cmd_head);
-        all->cmd_head = NULL;
-        free(all->line);
-        all->line = NULL;
-    }
+			continue ;
+		free_token(all->token);
+		all->token = NULL;
+		free_cmd(all->cmd_head);
+		all->cmd_head = NULL;
+		free(all->line);
+		all->line = NULL;
+	}
 }
 
 int	main(int argc, char **argv, char **envp)

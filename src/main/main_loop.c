@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_loop.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mchemari <mchemari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 10:15:52 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 17:51:41 by pibreiss         ###   ########.fr       */
+/*   Updated: 2025/09/30 19:05:57 by mchemari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,35 +68,35 @@ static t_cmd	*parse_line(char *line, t_all *all)
 		return (NULL);
 	}
 	tokens = create_struct_tokens(pre_tokens);
-    free_array_str(pre_tokens);
-    if (!check_syntax_errors(tokens))
-    {
-        all->last_status_exit = 2;
-        free_token(tokens);
-        return (NULL);
-    }
-    all->token = tokens;
-    cmd = parser(tokens, all);
+	free_array_str(pre_tokens);
+	if (!check_syntax_errors(tokens))
+	{
+		all->last_status_exit = 2;
+		free_token(tokens);
+		return (NULL);
+	}
+	all->token = tokens;
+	cmd = parser(tokens, all);
 	return (cmd);
 }
 
 int	process_line(char *line, t_all *all)
 {
-    t_cmd	*cmd;
+	t_cmd	*cmd;
 
-    cmd = parse_line(line, all);
-    if (!cmd)
-    {
-        if (all->token)
-        {
-            free_token(all->token);
-            all->token = NULL;
-        }
-        free(line);
-        return (0);
-    }
-    all->line = line;
-    all->cmd_head = cmd;
-    exec_cmd(cmd, all);
-    return (1);
+	cmd = parse_line(line, all);
+	if (!cmd)
+	{
+		if (all->token)
+		{
+			free_token(all->token);
+			all->token = NULL;
+		}
+		free(line);
+		return (0);
+	}
+	all->line = line;
+	all->cmd_head = cmd;
+	exec_cmd(cmd, all);
+	return (1);
 }

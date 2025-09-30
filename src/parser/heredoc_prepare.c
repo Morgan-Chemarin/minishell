@@ -3,38 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_prepare.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mchemari <mchemari@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:20:50 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 15:28:56 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 19:03:46 by mchemari         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_interrupt_hook(void)
+int	check_interrupt_hook(void)
 {
-    if (g_interrupted)
-    {
-        rl_done = 1;
-        return 0;
-    }
-    return 0;
+	if (g_interrupted)
+	{
+		rl_done = 1;
+		return (0);
+	}
+	return (0);
 }
 
 void	set_heredoc_interrupted(int sig)
 {
 	(void)sig;
 	g_interrupted = 130;
-	// write(STDOUT_FILENO, "\n", 1); // ptetre de trop aussi
-	rl_done = 1; // ptetre
 }
 
 static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_all *all)
 {
 	t_redirection	*r;
 	int				fd;
-	rl_hook_func_t *old_hook;
+	rl_hook_func_t	*old_hook;
 
 	r = cmd->redir;
 	while (r && !g_interrupted)
@@ -43,16 +41,13 @@ static int	prepare_heredocs_one_cmd(t_cmd *cmd, t_all *all)
 		{
 			old_hook = rl_event_hook;
 			rl_event_hook = check_interrupt_hook;
-			
 			signal(SIGINT, set_heredoc_interrupted);
 			fd = handle_heredoc(r->file, all);
-			
 			rl_event_hook = old_hook;
-            signal(SIGINT, siging_handler);
-            
-            if (fd < 0 || g_interrupted)
-                return (0);
-            r->heredoc_fd = fd;
+			signal(SIGINT, siging_handler);
+			if (fd < 0 || g_interrupted)
+				return (0);
+			r->heredoc_fd = fd;
 		}
 		r = r->next;
 	}
