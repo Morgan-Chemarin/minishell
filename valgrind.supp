@@ -1,13 +1,12 @@
-# filepath: valgrind.supp
 {
-    leak readline
-    Memcheck:Leak
-    ...
-    fun:readline
+   leak readline lib
+   Memcheck:Leak
+   ...
+   obj:*/libreadline.so.*
 }
 {
-    leak add_history
-    Memcheck:Leak
-    ...
-    fun:add_history
+   leak add_history
+   Memcheck:Leak
+   ...
+   fun:add_history
 }

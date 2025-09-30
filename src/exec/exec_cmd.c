@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 15:58:30 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:40:55 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	run_child_command(t_cmd *cmd, t_all *all)
 	if (cmd->type == CMD_BUILTNS)
 	{
 		exec_builtin(cmd, all);
-		free_all(all->cmd_head, all->token, all->env, all->line);
+		free_all(all);
 		exit(all->last_status_exit);
 	}
 	dot_command(cmd, all);
@@ -33,7 +33,7 @@ void	run_child_command(t_cmd *cmd, t_all *all)
 	{
 		free(path);
 		free_split(envp_arr);
-		free_all(all->cmd_head, all->token, all->env, all->line);
+		free_all(all);
 		exit(all->last_status_exit);
 	}
 	child_exit_handler(cmd, path, envp_arr, all);
@@ -49,7 +49,7 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
 			child_exit_handler(cmd, NULL, NULL, all);
-		free_all(all->cmd_head, all->token, all->env, all->line);
+		free_all(all);
 		exit(EXIT_SUCCESS);
 	}
 	run_child_command(cmd, all);
@@ -57,36 +57,34 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 
 int	handle_single_stateful(t_cmd *cmd, t_all *all)
 {
-	int	saved_fds[2];
-
 	if (!(cmd->next == NULL && is_stateful_builtin(cmd)))
 		return (0);
-	saved_fds[0] = dup(STDIN_FILENO);
-	saved_fds[1] = dup(STDOUT_FILENO);
+	all->saved_fds[0] = dup(STDIN_FILENO);
+	all->saved_fds[1] = dup(STDOUT_FILENO);
 	handle_redirections(cmd);
 	exec_builtin(cmd, all);
-	restore_fds(saved_fds);
-	close(saved_fds[0]);
-	close(saved_fds[1]);
+	restore_fds(all->saved_fds);
+	close(all->saved_fds[0]);
+	close(all->saved_fds[1]);
 	return (1);
 }
 
 void	exec_cmd(t_cmd *cmd, t_all *all)
 {
-	all->cmd_head = cmd;
-	if (cmd->next == NULL && cmd->type == CMD_BUILTNS
-		&& ft_strcmp(cmd->args[0], "exit") == 0)
-	{
-		handle_redirections(cmd);
-		exec_builtin(cmd, all);
-		close_all_heredocs(cmd);
+	if (!cmd)
 		return ;
-	}
 	if (handle_single_stateful(cmd, all))
+		return ;
+	save_fds(all->saved_fds);
+	if (!handle_redirections(cmd))
 	{
+		all->last_status_exit = 1;
+		restore_fds(all->saved_fds);
+		close(all->saved_fds[0]);
+		close(all->saved_fds[1]);
 		close_all_heredocs(cmd);
 		return ;
 	}
 	exec_cmd_loop(cmd, all);
-	close_all_heredocs(cmd);
+	restore_fds(all->saved_fds);
 }

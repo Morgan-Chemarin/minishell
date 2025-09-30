@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prototypes.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 13:34:08 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 09:35:41 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:34:01 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	check_access_exec(char *cmd, char **args, char **envp, t_all *all);
 // exec_cmd_utils.c
 void	restore_fds(int saved_fds[2]);
 void	exec_cmd_loop(t_cmd *cmd, t_all *all);
+void	save_fds(int saved_fds[2]);
 
 // exec_cmd_utils_children.c
 void	wait_all_children(pid_t last_pid, t_all *all);
@@ -86,7 +87,7 @@ void	child_exit_handler(t_cmd *cmd, char *path, char **envp_arr, t_all *all);
 int		handle_in(t_redirection *r);
 int		handle_out(t_redirection *r);
 int		handle_append(t_redirection *r);
-void	handle_hd(t_redirection *r);
+int 	handle_hd(t_redirection *r);
 
 // redir.c
 int		handle_redirections(t_cmd *cmd);
@@ -150,7 +151,7 @@ void	free_cmd(t_cmd *cmd);
 void	free_token(t_token *token);
 void	free_env(t_env *env);
 void	free_export_add_env(t_env *new, char **arg);
-void	free_all(t_cmd *cmd, t_token *token, t_env *env, char *line);
+void	free_all(t_all *all);
 void	free_split(char **split_arg);
 
 // close_heredoc.c

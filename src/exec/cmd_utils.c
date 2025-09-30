@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:14:36 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 13:03:38 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:16:19 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	dot_command(t_cmd *cmd, t_all *all)
 		{
 			ft_putstr_fd("minishell: .: filename argument required\n", 2);
 			ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
-			free_all(all->cmd_head, all->token, all->env, all->line);
+			free_all(all);
 			exit(2);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:13:36 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 10:14:51 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 17:21:35 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,6 @@ t_cmd	*parser(t_token *tokens, t_all *all)
 	if (!prepare_all_heredocs(head, all))
 	{
 		free_cmd(head);
-		free_token(all->token); // pour le leak de heredoc
-        all->token = NULL; // pour le leak de heredoc
 		return (NULL);
 	}
 	return (head);

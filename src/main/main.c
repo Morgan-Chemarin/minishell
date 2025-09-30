@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 09:40:42 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:52:17 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,16 @@ static void	shell_loop(t_all *all)
 			return ;
 		}
 		if (!process_line(all->line, all))
-		{
-			free(all->line);
-			continue ;
-		}
-		free(all->line);
-	}
+        {
+            continue ;
+        }
+        free_token(all->token);
+        all->token = NULL;
+        free_cmd(all->cmd_head);
+        all->cmd_head = NULL;
+        free(all->line);
+        all->line = NULL;
+    }
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -75,6 +79,16 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	if (!isatty(STDIN_FILENO))
+	{
+		ft_putstr_fd("Error: minishell must be in an interactive shell.\n", 2);
+		return (1);
+	}
+	if (!isatty(STDOUT_FILENO))
+	{
+		ft_putstr_fd("Error: stdout is not a terminal.\n", 2);
+		return (1);
+	}
 	init_all(&all, envp);
 	shell_loop(&all);
 	if (all.env)

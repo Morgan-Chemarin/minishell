@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:37:29 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/24 11:20:26 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:39:42 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,20 @@ int	count_arg(char **arg)
 	return (i);
 }
 
-void	free_all(t_cmd *cmd, t_token *token, t_env *env, char *line)
+void	free_all(t_all *all)
 {
-	if (cmd)
-		free_cmd(cmd);
-	if (env)
-		free_env(env);
-	if (token)
-		free_token(token);
-	if (line)
-		free(line);
+	if (all->cmd_head)
+		free_cmd(all->cmd_head);
+	if (all->env)
+		free_env(all->env);
+	if (all->token)
+		free_token(all->token);
+	if (all->line)
+		free(all->line);
+	if (all->saved_fds[0])
+		close(all->saved_fds[0]);
+	if (all->saved_fds[1])
+		close(all->saved_fds[1]);
 	rl_clear_history();
 }
 
@@ -56,12 +60,12 @@ void	exit_with_code(t_cmd *cmd, t_all *all, int tty_fd)
 		write(tty_fd, "minishell: exit: ", 17);
 		write(tty_fd, cmd->args[1], ft_strlen(cmd->args[1]));
 		write(tty_fd, ": numeric argument required\n", 28);
-		free_all(cmd, all->token, all->env, all->line);
+		free_all(all);
 		close(tty_fd);
 		exit(2);
 	}
 	code = (unsigned char)ft_atoi(cmd->args[1]);
-	free_all(cmd, all->token, all->env, all->line);
+	free_all(all);
 	close(tty_fd);
 	exit(code);
 }
@@ -75,7 +79,7 @@ void	ft_exit(t_cmd *cmd, t_all *all)
 	arg_count = count_arg(cmd->args);
 	if (arg_count == 1)
 	{
-		free_all(cmd, all->token, all->env, all->line);
+		free_all(all);
 		close(tty_fd);
 		exit(all->last_status_exit);
 	}

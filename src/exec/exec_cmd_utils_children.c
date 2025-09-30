@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_utils_children.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 14:14:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/30 16:01:08 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:17:47 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,6 @@ void	child_exit_handler(t_cmd *cmd, char *path, char **envp_arr, t_all *all)
 		free(path);
 	if (envp_arr)
 		free_split(envp_arr);
-	free_all(all->cmd_head, all->token, all->env, all->line);
+	free_all(all);
 	exit(127);
 }

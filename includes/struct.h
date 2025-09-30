@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:36:53 by dev               #+#    #+#             */
-/*   Updated: 2025/09/29 18:46:53 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 18:13:14 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_all
 	t_env		*env;
 	char		*line;
 	int			last_status_exit;
+	int			saved_fds[2];
 }	t_all;
 
 typedef struct s_pipe_data

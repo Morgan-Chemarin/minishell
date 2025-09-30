@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: pibreiss <pibreiss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 20:30:42 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 09:38:12 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 16:53:08 by pibreiss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	handle_append(t_redirection *r)
 	return (1);
 }
 
-void	handle_hd(t_redirection *r)
+int	handle_hd(t_redirection *r)
 {
 	int	hd;
 
@@ -66,7 +66,8 @@ void	handle_hd(t_redirection *r)
 	{
 		perror("dup2");
 		close(hd);
-		exit(1);
+		return (0);
 	}
 	close(hd);
+	return (1);
 }
