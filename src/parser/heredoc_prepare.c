@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:20:50 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 10:01:02 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 15:28:56 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	set_heredoc_interrupted(int sig)
 {
 	(void)sig;
 	g_interrupted = 130;
-	write(STDOUT_FILENO, "\n", 1); // ptetre de trop aussi
+	// write(STDOUT_FILENO, "\n", 1); // ptetre de trop aussi
 	rl_done = 1; // ptetre
 }
 

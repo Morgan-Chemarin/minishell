@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/30 09:37:06 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 15:58:30 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,7 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	setup_child_pipes(cmd, data->in_fd, data->pipe_fd);
-	if (!handle_redirections(cmd))
-	{
-		free_all(all->cmd_head, all->token, all->env, all->line);
-		exit(1);
-	}
+	handle_redirections(cmd);
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')

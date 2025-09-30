@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 14:14:17 by pibreiss          #+#    #+#             */
-/*   Updated: 2025/09/29 19:37:49 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 16:01:08 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,31 @@ void	wait_all_children(pid_t last_pid, t_all *all)
 		;
 	signal(SIGINT, siging_handler);
 }
+
+// void	wait_all_children(pid_t last_pid, t_all *all)
+// {
+//     int	status;
+//     int	pid;
+
+//     (void)last_pid;
+//     while (1)
+//     {
+//         pid = wait(&status);
+//         if (pid <= 0)
+//             break;
+//         if (WIFSIGNALED(status))
+//         {
+//             if (WTERMSIG(status) == SIGINT)
+//                 ft_putstr_fd("\n", STDOUT_FILENO);
+//             else if (WTERMSIG(status) == SIGQUIT)
+//                 ft_putstr_fd("Quit (core dumped)\n", STDOUT_FILENO);
+//             all->last_status_exit = 128 + WTERMSIG(status);
+//         }
+//         else
+//             all->last_status_exit = WEXITSTATUS(status);
+//     }
+//     signal(SIGINT, siging_handler);
+// }
 
 void	setup_child_pipes(t_cmd *cmd, int in_fd, int pipe_fd[2])
 {
