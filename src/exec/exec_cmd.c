@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:06:51 by dev               #+#    #+#             */
-/*   Updated: 2025/09/29 19:30:53 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 09:37:06 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,11 @@ void	execute_child_process(t_cmd *cmd, t_all *all, t_pipe_data *data)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	setup_child_pipes(cmd, data->in_fd, data->pipe_fd);
-	handle_redirections(cmd, all);
+	if (!handle_redirections(cmd))
+	{
+		free_all(all->cmd_head, all->token, all->env, all->line);
+		exit(1);
+	}
 	if (!cmd->args[0] || cmd->args[0][0] == '\0')
 	{
 		if (cmd->args[0] && cmd->args[0][0] == '\0')
@@ -63,7 +67,7 @@ int	handle_single_stateful(t_cmd *cmd, t_all *all)
 		return (0);
 	saved_fds[0] = dup(STDIN_FILENO);
 	saved_fds[1] = dup(STDOUT_FILENO);
-	handle_redirections(cmd, all);
+	handle_redirections(cmd);
 	exec_builtin(cmd, all);
 	restore_fds(saved_fds);
 	close(saved_fds[0]);
@@ -77,7 +81,7 @@ void	exec_cmd(t_cmd *cmd, t_all *all)
 	if (cmd->next == NULL && cmd->type == CMD_BUILTNS
 		&& ft_strcmp(cmd->args[0], "exit") == 0)
 	{
-		handle_redirections(cmd, all);
+		handle_redirections(cmd);
 		exec_builtin(cmd, all);
 		close_all_heredocs(cmd);
 		return ;

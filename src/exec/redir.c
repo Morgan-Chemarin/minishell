@@ -6,28 +6,37 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:17:04 by dev               #+#    #+#             */
-/*   Updated: 2025/09/17 20:32:59 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 09:38:32 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_redirections(t_cmd *cmd, t_all *all)
+int	handle_redirections(t_cmd *cmd)
 {
 	t_redirection	*r;
 
-	(void)all;
 	r = cmd->redir;
 	while (r)
 	{
 		if (r->type == R_IN)
-			handle_in(r);
+		{
+			if (!handle_in(r))
+				return (0);
+		}
 		else if (r->type == R_OUT)
-			handle_out(r);
+		{
+			if (!handle_out(r))
+				return (0);
+		}
 		else if (r->type == R_APPEND)
-			handle_append(r);
+		{
+			if (!handle_append(r))
+				return (0);
+		}
 		else if (r->type == R_HEREDOC)
 			handle_hd(r);
 		r = r->next;
 	}
+	return (1);
 }

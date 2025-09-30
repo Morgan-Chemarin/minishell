@@ -6,13 +6,13 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 20:30:42 by dev               #+#    #+#             */
-/*   Updated: 2025/09/29 18:54:30 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 09:38:12 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_in(t_redirection *r)
+int	handle_in(t_redirection *r)
 {
 	int	fd;
 
@@ -20,13 +20,14 @@ void	handle_in(t_redirection *r)
 	if (fd < 0)
 	{
 		perror(r->file);
-		exit(1);
+		return (0);
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
+	return (1);
 }
 
-void	handle_out(t_redirection *r)
+int	handle_out(t_redirection *r)
 {
 	int	fd;
 
@@ -34,13 +35,14 @@ void	handle_out(t_redirection *r)
 	if (fd < 0)
 	{
 		perror(r->file);
-		exit(1);
+		return (0);
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
+	return (1);
 }
 
-void	handle_append(t_redirection *r)
+int	handle_append(t_redirection *r)
 {
 	int	fd;
 
@@ -48,10 +50,11 @@ void	handle_append(t_redirection *r)
 	if (fd < 0)
 	{
 		perror(r->file);
-		exit(1);
+		return (0);
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
+	return (1);
 }
 
 void	handle_hd(t_redirection *r)

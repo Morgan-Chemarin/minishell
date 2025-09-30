@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 12:39:07 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 12:57:38 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 09:57:43 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,17 @@ void	heredoc_loop(int write_fd, char *delimiter, int expand, t_all *all)
 	while (!g_interrupted)
 	{
 		line = readline("> ");
-		if (!line || !ft_strcmp(line, delimiter))
-		{
-			free(line);
-			break ;
-		}
+		if (!line || g_interrupted)
+        {
+            if (line)
+                free(line);
+            break;
+        }
+        if (!ft_strcmp(line, delimiter))
+        {
+            free(line);
+            break;
+        }
 		if (expand)
 		{
 			expanded = expand_variables(line, all->env, 1, all);

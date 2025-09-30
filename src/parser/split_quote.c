@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:30:52 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 12:51:21 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 09:43:00 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,7 @@ int	handle_token(char *line, int *i, char **tokens, t_all *all)
 	else if (is_single_operator(line[*i]))
 	{
 		if (line[*i] == '>' || line[*i] == '<')
-		{
-			if (line[*i + 1] && (line[*i + 1] == '"' || line[*i + 1] == '\''))
-				return (tokens[0] = extract_word(line, i, all, 0), 1);
-		}
+			heredoc = 0;
 		return (tokens[0] = ft_substr(line, (*i)++, 1), 1);
 	}
 	else if (heredoc)

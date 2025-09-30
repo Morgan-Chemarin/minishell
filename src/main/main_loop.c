@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 10:15:52 by dev               #+#    #+#             */
-/*   Updated: 2025/09/24 13:46:04 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 10:14:24 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,10 @@ int	handle_empty_or_quotes(char *line)
 	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
 		i++;
 	if (line[i] == '\0')
-	{
-		free(line);
 		return (0);
-	}
 	if (count_unclosed_quotes(line))
 	{
 		ft_putstr("minishell: error: unclosed quote\n");
-		free(line);
 		return (0);
 	}
 	return (1);
@@ -67,20 +63,21 @@ static t_cmd	*parse_line(char *line, t_all *all)
 	add_history(line);
 	pre_tokens = split_with_quote(line, all);
 	if (!pre_tokens)
+	{
+		free(line);
 		return (NULL);
+	}
 	tokens = create_struct_tokens(pre_tokens);
 	free_array_str(pre_tokens);
 	if (!check_syntax_errors(tokens))
 	{
 		all->last_status_exit = 2;
 		free_token(tokens);
+		free(line);
 		return (NULL);
 	}
+	all->token = tokens;
 	cmd = parser(tokens, all);
-	if (!cmd)
-		free_token(tokens);
-	else
-		all->token = tokens;
 	return (cmd);
 }
 
@@ -91,6 +88,15 @@ int	process_line(char *line, t_all *all)
 	cmd = parse_line(line, all);
 	if (!cmd)
 		return (0);
+	// if (!cmd)
+    // {
+    //     if (all->token)
+    //     {
+    //         free_token(all->token);
+    //         all->token = NULL;
+    //     }
+    //     return (0);
+    // }
 	all->line = line;
 	exec_cmd(cmd, all);
 	free_cmd(cmd);

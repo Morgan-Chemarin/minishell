@@ -6,7 +6,7 @@
 /*   By: dev <dev@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 13:32:34 by dev               #+#    #+#             */
-/*   Updated: 2025/09/29 18:46:32 by dev              ###   ########.fr       */
+/*   Updated: 2025/09/30 09:40:42 by dev              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,22 @@ static void	shell_loop(t_all *all)
 	while (1)
 	{
 		all->line = read_full_line();
+		if (g_interrupted)
+		{
+			all->last_status_exit = g_interrupted;
+			g_interrupted = 0;
+		}
 		if (!all->line)
 		{
 			write(1, "exit\n", 5);
 			return ;
 		}
 		if (!process_line(all->line, all))
-			continue ;
-		free(all->line);
-		if (g_interrupted)
 		{
-			all->last_status_exit = g_interrupted;
-			g_interrupted = 0;
+			free(all->line);
+			continue ;
 		}
+		free(all->line);
 	}
 }
 
